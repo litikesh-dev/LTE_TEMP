@@ -1,0 +1,352 @@
+/* ─────────────────────────── CourseCard.css ─────────────────────────── */
+
+.dash-enroll-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+}
+
+.dash-enroll-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+}
+
+.dash-enroll-card--clickable {
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+}
+
+.dash-enroll-card--clickable:focus-visible {
+  box-shadow: 0 0 0 3px rgb(99 102 241 / 40%);
+}
+
+.dash-enroll-thumb-wrap {
+  position: relative;
+  height: 140px;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.dash-enroll-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dash-mat-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  border-radius: 20px;
+  padding: 4px 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dash-mat-badge--top {
+  background: rgb(15 23 42 / 75%);
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+
+.dash-enroll-body {
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.dash-enroll-type-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dash-ip-type {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary-500);
+  background: var(--primary-light);
+  border-radius: 6px;
+  padding: 3px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 2px;
+}
+
+.dash-enroll-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 2.8em;
+}
+
+/* ── Stats ───────────────────────────────────────────────────── */
+.dash-card-stats {
+  display: flex;
+  gap: 20px;
+  margin: 4px 0;
+}
+
+.dash-stat-info-mini {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dash-mini-ring-wrap {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dash-mini-ring-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-mini-lbl {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.dash-info-icon {
+  opacity: 0.6;
+}
+
+.dash-mini-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+/* ── Tags ────────────────────────────────────────────────────── */
+.dash-enroll-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dash-tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  background: #f1f5f9;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.dash-enroll-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.dash-footer-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
+.dash-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dash-enroll-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.dash-status-icon {
+  color: #cbd5e1;
+}
+
+.dash-footer-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dash-user-plus {
+  width: 28px;
+  height: 28px;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f172a;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dash-user-plus:hover {
+  background: #e2e8f0;
+}
+
+.dash-more-btn {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.dash-more-btn:hover {
+  color: #0f172a;
+}
+
+/* ── Illustration (Dashboard) ────────────────────────────────── */
+.enroll-thumb {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.enroll-thumb-deco {
+  position: absolute;
+  inset: 0;
+}
+
+.eth-rect {
+  position: absolute;
+  border-radius: 6px;
+  background: rgb(255 255 255 / 95%);
+}
+
+.eth-rect-1 {
+  width: 48px;
+  height: 36px;
+  top: 20px;
+  left: 18px;
+  transform: rotate(-8deg);
+}
+
+.eth-rect-2 {
+  width: 38px;
+  height: 28px;
+  top: 30px;
+  right: 22px;
+  transform: rotate(6deg);
+}
+
+.eth-circle {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 10%);
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.eth-line {
+  position: absolute;
+  height: 3px;
+  width: 50px;
+  background: rgb(255 255 255 / 45%);
+  border-radius: 3px;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.eth-line-2 {
+  width: 34px;
+  bottom: 20px;
+}
+
+/* ── List Mode Layout ─────────────────────────────────────────── */
+.dash-enroll-card--list {
+  flex-direction: row;
+  height: 140px;
+}
+
+.dash-enroll-card--list .dash-enroll-thumb-wrap {
+  width: 220px;
+  height: 100%;
+}
+
+.dash-enroll-card--list .dash-enroll-body {
+  padding: 16px 24px;
+  flex-direction: row;
+  align-items: center;
+  gap: 32px;
+}
+
+.dash-enroll-card--list .dash-enroll-type-row {
+  display: none;
+}
+
+.dash-enroll-card--list .dash-enroll-title {
+  flex: 1;
+  height: auto;
+  -webkit-line-clamp: 1;
+}
+
+.dash-enroll-card--list .dash-card-stats {
+  flex: 0 0 auto;
+}
+
+.dash-enroll-card--list .dash-enroll-tags {
+  display: none;
+}
+
+.dash-enroll-card--list .dash-enroll-footer {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+  flex: 0 0 auto;
+}
