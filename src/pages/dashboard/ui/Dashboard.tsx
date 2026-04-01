@@ -16,6 +16,9 @@ import {
   Zap,
   Sparkles,
   Calendar,
+  Briefcase,
+  GraduationCap,
+  Building,
 } from 'lucide-react';
 import { CourseCard } from '@/widgets/CourseCard/ui/CourseCard';
 import './dashboard.css';
@@ -222,6 +225,14 @@ function MiniRing({ pct }: { pct: number }) {
   );
 }
 
+const learnerProfile = {
+  grade_level: 'Undergraduate',
+  skill_level: 'Beginner',
+  target_role: 'Backend Engineer',
+  domain: 'Backend Engineering',
+  industry: 'Information Technology & AI',
+};
+
 /* ────────────────────────── main component ──────────────────────── */
 export function Dashboard() {
   const [goalProgress] = useState(6);
@@ -239,8 +250,8 @@ export function Dashboard() {
   return (
     <>
       <div className={`dash-root${animIn ? ' dash-root--in' : ''}`}>
-        {/* ════════════════ LEFT / MAIN COLUMN ════════════════════════════ */}
-        <div className="dash-main">
+        {/* ════════════════ FULL WIDTH HEADER ════════════════════════════ */}
+        <div className="dash-header-full">
           {/* ── Header row ── */}
           <div className="dash-header-row">
             <div className="dash-greeting">
@@ -285,6 +296,61 @@ export function Dashboard() {
               </div>
             </div>
           </div>
+
+          {/* ── Learner Profile Overview ── */}
+          <section className="dash-profile-overview">
+            <div className="dash-po-item">
+              <div className="dash-po-icon dash-po-icon--role">
+                <Target size={20} />
+              </div>
+              <div className="dash-po-details">
+                <span className="dash-po-label">Target Role</span>
+                <span className="dash-po-value">{learnerProfile.target_role}</span>
+              </div>
+            </div>
+            
+            <div className="dash-po-divider" />
+            
+            <div className="dash-po-item">
+              <div className="dash-po-icon dash-po-icon--domain">
+                <Briefcase size={20} />
+              </div>
+              <div className="dash-po-details">
+                <span className="dash-po-label">Domain</span>
+                <span className="dash-po-value">{learnerProfile.domain}</span>
+              </div>
+            </div>
+
+            <div className="dash-po-divider" />
+            
+            <div className="dash-po-item">
+              <div className="dash-po-icon dash-po-icon--industry">
+                <Building size={20} />
+              </div>
+              <div className="dash-po-details">
+                <span className="dash-po-label">Industry</span>
+                <span className="dash-po-value">{learnerProfile.industry}</span>
+              </div>
+            </div>
+
+            <div className="dash-po-divider" />
+            
+            <div className="dash-po-item">
+              <div className="dash-po-icon dash-po-icon--grade">
+                <GraduationCap size={20} />
+              </div>
+              <div className="dash-po-details">
+                <span className="dash-po-label">Academic & Skill</span>
+                <span className="dash-po-value">
+                  {learnerProfile.grade_level} • {learnerProfile.skill_level}
+                </span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* ════════════════ LEFT / MAIN COLUMN ════════════════════════════ */}
+        <div className="dash-main">
 
           {/* ── Announcement banner (Hidden as requested) ── */}
           {/*
