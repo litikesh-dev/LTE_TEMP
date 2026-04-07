@@ -1,14 +1,17 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import {
   Clock,
   BookOpen,
   CheckCircle2,
   Circle,
   PlayCircle,
-  BarChart3,
   ChevronRight,
   Zap,
   Award,
+  Info,
+  Layers,
+  Target,
 } from 'lucide-react';
 import './CourseCard.css';
 
@@ -30,6 +33,10 @@ export interface CourseCardProps {
   why_recommended?: string;
   sequence_no?: number;
   mode?: 'dashboard' | 'grid' | 'list';
+  // New fields from schema
+  domain_name?: string;
+  certification_value?: string;
+  common_course_problem_statement?: string;
 }
 
 /* ─────────────────────────── helpers ────────────────────────── */
@@ -89,6 +96,8 @@ function ProgressRing({ value, size = 36 }: { value: number; size?: number }) {
 /* ─────────────────────────── main widget ─────────────────────── */
 export function CourseCard(props: CourseCardProps) {
   const navigate = useNavigate();
+  const [showProblem, setShowProblem] = useState(false);
+  
   const {
     id,
     course_id,
@@ -104,6 +113,9 @@ export function CourseCard(props: CourseCardProps) {
     match_reason,
     sequence_no,
     mode = 'dashboard',
+    domain_name,
+    certification_value,
+    common_course_problem_statement,
   } = props;
 
   const diffMeta = DIFFICULTY_META[difficulty_level];
@@ -153,16 +165,32 @@ export function CourseCard(props: CourseCardProps) {
 
       {/* ── Body ── */}
       <div className="cc-body">
-        {/* Role tag */}
-        <div className="cc-role-tag">
-          <Zap size={10} />
-          {job_pathway_role}
+        {/* Domain & Role tags */}
+        <div className="cc-tags-row">
+          {domain_name && (
+            <div className="cc-domain-tag">
+              <Layers size={10} />
+              {domain_name}
+            </div>
+          )}
+          <div className="cc-role-tag">
+            <Target size={10} />
+            {job_pathway_role}
+          </div>
         </div>
 
         {/* Title */}
         <h3 className="cc-title" title={title}>
           {title}
         </h3>
+
+        {/* Certification badge */}
+        {certification_value && (
+          <div className="cc-cert-badge">
+            <Award size={11} />
+            <span>{certification_value}</span>
+          </div>
+        )}
 
         {/* Meta row */}
         <div className="cc-meta-row">
@@ -193,7 +221,7 @@ export function CourseCard(props: CourseCardProps) {
               <ProgressRing value={relevance_score} size={36} />
               <div className="cc-stat-text">
                 <span className="cc-stat-val">{relevance_score}%</span>
-                <span className="cc-stat-lbl">Match</span>
+                <span className="cc-stat-lbl">Relevance</span>
               </div>
             </div>
           )}
@@ -206,10 +234,30 @@ export function CourseCard(props: CourseCardProps) {
           </div>
         </div>
 
+        {/* Problem statement (expandable) */}
+        {common_course_problem_statement && (
+          <div className="cc-problem-section">
+            <button
+              className="cc-problem-toggle"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowProblem(!showProblem);
+              }}
+            >
+              <Info size={12} />
+              <span>What you'll solve</span>
+              <ChevronRight size={12} className={showProblem ? 'cc-chevron-down' : ''} />
+            </button>
+            {showProblem && (
+              <p className="cc-problem-text">{common_course_problem_statement}</p>
+            )}
+          </div>
+        )}
+
         {/* Why recommended */}
         {match_reason && (
           <div className="cc-match-reason">
-            <Award size={11} />
+            <Zap size={11} />
             <span>{match_reason}</span>
           </div>
         )}

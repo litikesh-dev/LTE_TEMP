@@ -3,6 +3,7 @@ import { RootLayout } from '@/widgets/layout';
 import { Dashboard } from '@/pages/dashboard';
 import { MyCourses } from '@/pages/my-courses';
 import { CourseDetails } from '@/pages/course-details';
+import { ModuleContent } from '@/pages/module-content';
 import { NotFound } from '@/pages/not-found';
 
 const router = createBrowserRouter([
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: 'courses/:courseId',
         element: <CourseDetails />,
+      },
+      {
+        path: 'courses/:courseId/modules/:moduleId',
+        element: <ModuleContent />,
       },
     ],
   },

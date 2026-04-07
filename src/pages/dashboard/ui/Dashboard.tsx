@@ -21,9 +21,11 @@ import {
   Building,
 } from 'lucide-react';
 import { CourseCard } from '@/widgets/CourseCard/ui/CourseCard';
+import { ProfileSnapshot } from '@/widgets/ProfileSnapshot';
+import { LevelProgress } from '@/widgets/LevelProgress';
+import { getLearnerProfile } from '@/shared/api/mockData';
 import './dashboard.css';
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 interface InProgressCourse {
   id: string;
   type: 'Course';
@@ -49,6 +51,9 @@ interface EnrollmentCard {
   completion_percentage: number;
   relevance_score?: number;
   match_reason?: string;
+  domain_name?: string;
+  certification_value?: string;
+  common_course_problem_statement?: string;
 }
 
 interface LeaderboardEntry {
@@ -98,6 +103,9 @@ const enrollments: EnrollmentCard[] = [
     completion_percentage: 0,
     relevance_score: 85,
     match_reason: 'Matches your Learning Path priority.',
+    domain_name: 'Backend Engineering',
+    certification_value: 'System Debugging',
+    common_course_problem_statement: 'Production backend service begins failing under load and engineers must identify root causes using logs, debugging tools and structured investigation.',
   },
   {
     id: 'lpc-dashboard-2',
@@ -111,6 +119,9 @@ const enrollments: EnrollmentCard[] = [
     completion_percentage: 0,
     relevance_score: 72,
     match_reason: 'Foundation course for design.',
+    domain_name: 'Frontend Engineering',
+    certification_value: 'UI Design Fundamentals',
+    common_course_problem_statement: 'Learn to create user-friendly interfaces that solve real user problems through systematic design thinking.',
   },
 ];
 
@@ -225,12 +236,15 @@ function MiniRing({ pct }: { pct: number }) {
   );
 }
 
+// Fetch learner profile with extended data
+const learnerProfileData = getLearnerProfile('learner-001');
+
 const learnerProfile = {
   grade_level: 'Undergraduate',
   skill_level: 'Beginner',
-  target_role: 'Backend Engineer',
-  domain: 'Backend Engineering',
-  industry: 'Information Technology & AI',
+  target_role: learnerProfileData.target_role || 'Backend Engineer',
+  domain: learnerProfileData.domain || 'Backend Engineering',
+  industry: learnerProfileData.industry || 'Information Technology & AI',
 };
 
 /* ────────────────────────── main component ──────────────────────── */
@@ -351,6 +365,16 @@ export function Dashboard() {
 
         {/* ════════════════ LEFT / MAIN COLUMN ════════════════════════════ */}
         <div className="dash-main">
+          
+          {/* ── Level Progress Widget ── */}
+          <LevelProgress
+            currentLevel={1}
+            totalLevels={5}
+            coursesCompleted={1}
+            coursesRequired={6}
+            nextLevelCourses={2}
+            roleName={learnerProfile.target_role}
+          />
 
           {/* ── Announcement banner (Hidden as requested) ── */}
           {/*
@@ -531,8 +555,12 @@ export function Dashboard() {
           </section>
         </div>
 
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• RIGHT SIDEBAR â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <aside className="dash-right">
+          {/* Profile Snapshot */}
+          {learnerProfileData.profile_snapshot && (
+            <ProfileSnapshot snapshot={learnerProfileData.profile_snapshot} compact />
+          )}
+
           {/* Learning content */}
           <div className="dash-right-card">
             <div className="dash-stat-row">

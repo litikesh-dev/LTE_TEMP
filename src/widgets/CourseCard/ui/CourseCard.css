@@ -266,18 +266,51 @@
   min-width: 0;
 }
 
+/* Tags row */
+.cc-tags-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cc-domain-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #7c3aed;
+  background: #f5f3ff;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #ede9fe;
+}
+
 .cc-role-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--primary-500);
+  background: var(--primary-light);
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #e0e7ff;
+}
+
+.cc-cert-badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--primary-500);
-  background: var(--primary-light);
-  padding: 3px 9px;
+  font-weight: 600;
+  color: #f59e0b;
+  background: #fffbeb;
+  padding: 4px 10px;
   border-radius: 6px;
+  border: 1px solid #fef3c7;
   width: fit-content;
 }
 
@@ -378,9 +411,73 @@
 }
 
 .cc-match-reason svg {
-  color: #f59e0b;
+  color: #6366f1;
   flex-shrink: 0;
   margin-top: 1px;
+}
+
+/* ── Problem statement ─────────────────────────────────────────── */
+.cc-problem-section {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cc-problem-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  text-align: left;
+}
+
+.cc-problem-toggle:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.cc-problem-toggle svg:first-child {
+  color: #6366f1;
+  flex-shrink: 0;
+}
+
+.cc-problem-toggle svg:last-child {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+}
+
+.cc-chevron-down {
+  transform: rotate(90deg);
+}
+
+.cc-problem-text {
+  padding: 0 10px 10px 10px;
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: #334155;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── CTA ───────────────────────────────────────────────────────── */

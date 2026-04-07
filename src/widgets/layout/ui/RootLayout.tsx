@@ -6,7 +6,6 @@ import {
   Compass,
   Trophy,
   Settings,
-  GraduationCap,
   Bell,
   Search,
   ChevronRight,
@@ -32,7 +31,6 @@ const bottomNav = [
   { to: '/help', label: 'Help & Support', icon: HelpCircle, end: false },
 ];
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ breadcrumb helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const routeLabels: Record<string, string> = {
   '/': 'Dashboard',
   '/courses': 'My Courses',
@@ -43,7 +41,6 @@ const routeLabels: Record<string, string> = {
   '/help': 'Help & Support',
 };
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export function RootLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -58,19 +55,14 @@ export function RootLayout() {
 
   return (
     <div className={`rl-shell${collapsed ? ' rl-shell--collapsed' : ''}`}>
-      {/* â•â•â•â•â•â•â•â•â•â• SIDEBAR â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <aside className={`rl-sidebar${isMobileSidebarOpen}`}>
         {/* Logo */}
         <div className="rl-logo">
-          <div className="rl-logo-icon">
-            <GraduationCap size={22} strokeWidth={2} />
-          </div>
-          {!collapsed && (
-            <div className="rl-logo-text">
-              <span className="rl-logo-name">LearnHub</span>
-              <span className="rl-logo-sub">Learning Platform</span>
-            </div>
-          )}
+          <img
+            src="/RareMinds.webp"
+            alt="RareMinds"
+            className={`rl-logo-img${collapsed ? ' rl-logo-img--collapsed' : ''}`}
+          />
         </div>
 
         {/* Main nav */}
