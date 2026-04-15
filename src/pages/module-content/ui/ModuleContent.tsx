@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -36,6 +36,7 @@ import {
   Link,
   Paperclip,
   Trophy,
+  Bot,
 } from 'lucide-react';
 import '../../../pages/course-details/ui/course-details.css';
 
@@ -267,6 +268,251 @@ const MOCK_MODULES: ModuleProg[] = [
   { id: 'mod-005', module_no: 5, title: 'Root Cause Analysis', description: 'Separate symptom and cause to produce evidence-based corrective actions.', engineering_workflow_stage: 'Root Cause Identification', module_specific_problem_statement: 'Engineers fix symptoms rather than root cause.', pressure_points: 'Temporary fixes hide underlying issue.', student_confusion: 'Root cause analysis process.', learning_content: { major_concepts: 'Root cause analysis frameworks', implementation_context_when_to_use: 'Identify underlying system issue', reason_behind_concept: 'Review production incident' }, support: { ai_support_tips: 'Leads into final project', module_continuity_link: 'RCA report drives final resolution and validation in Module 6.' }, knowledge: { technical_concepts_learnt: 'System concepts', academic_refresher_concepts: 'Logs debugger' }, tools: { tools_used: 'Free', tool_type_free_or_paid: null }, status: 'available', completion_percentage: 0, artifact_submitted: false, estimatedTime: '2 hrs', stages: STAGES_ORDER.map(k => ({ key: k, status: 'not_started' as StageStatus, time_spent_seconds: 0 })) },
   { id: 'mod-006', module_no: 6, title: 'Observability Capstone', description: 'Execute end-to-end incident handling from investigation to validated fix and communication.', engineering_workflow_stage: 'Incident Resolution Capstone', module_specific_problem_statement: 'Learners must investigate, diagnose, and resolve a realistic backend production incident.', pressure_points: 'Engineers must combine logs, debugging, and RCA.', student_confusion: 'Complete debugging workflow.', learning_content: { major_concepts: 'Full observability workflow, incident comms, post-mortems', implementation_context_when_to_use: 'End to end investigation', reason_behind_concept: 'Review full production scenario' }, support: { ai_support_tips: 'Integrates all modules', module_continuity_link: 'Integrates all prior module artifacts into one capstone output.' }, knowledge: { technical_concepts_learnt: 'Programming OS', academic_refresher_concepts: 'Logs debugger monitoring' }, tools: { tools_used: 'Free', tool_type_free_or_paid: null }, status: 'available', completion_percentage: 0, artifact_submitted: false, estimatedTime: '4 hrs', stages: STAGES_ORDER.map(k => ({ key: k, status: 'not_started' as StageStatus, time_spent_seconds: 0 })) },
 ];
+
+/* ── AI Facilitator questions per content item ── */
+const AI_FACILITATOR_QUESTIONS: Record<string, { question: string; followUp: string }[]> = {
+  c1: [
+    { question: "You just watched the Incident Kickoff video. In your own words, what was the primary symptom of the API latency spike, and what made it hard to diagnose at first?", followUp: "Interesting take. How do you think the on-call engineer should have prioritised their first 15 minutes of investigation?" },
+    { question: "What signals from the video would you look for first if you were the engineer on call during that incident?", followUp: "Good thinking. Would those signals alone be enough to identify the root cause, or would you need more data?" },
+  ],
+  c2: [
+    { question: "After reviewing the Failure Investigation Worksheet, what do you think is the most important column to fill in first, and why?", followUp: "Nice reasoning. How would you handle a situation where you don't have enough data to fill that column?" },
+  ],
+  c3: [
+    { question: "The Structured Log Analysis Guide covers several log fields. Which field do you think gives the most diagnostic value during an incident, and what's your reasoning?", followUp: "Good point. How does that field help you narrow down from hundreds of log lines to the ones that actually matter?" },
+  ],
+  c4: [
+    { question: "Looking at the Service Architecture Diagram, which service boundary do you think is the most likely source of latency under high load, and why?", followUp: "Solid analysis. What observability would you add at that boundary to catch issues earlier?" },
+  ],
+  c5: [
+    { question: "After watching the Trace IDs video, explain in your own words how a trace ID flows through a distributed system and why it matters for debugging.", followUp: "Great explanation. Can you think of a scenario where trace IDs alone would not be enough to diagnose a problem?" },
+  ],
+  c6: [
+    { question: "You have just reviewed the System Architecture Overview slides. What part of the architecture surprised you most, and how does it affect the way you would approach debugging a failure in it?", followUp: "That is a thoughtful observation. How would you document that insight so that a new team member could benefit from it?" },
+    { question: "Based on the slides, where in the system would you instrument logging first if you had to pick just one layer — and what would you capture there?", followUp: "Good choice. What would you sacrifice by instrumenting only that layer, and how would you compensate?" },
+  ],
+  c7: [
+    { question: "The Request Lifecycle Deep Dive covered many hops. Identify the single hop where you believe latency is most likely to accumulate silently, and explain why.", followUp: "Strong reasoning. What metric would you define to detect latency accumulating at that hop before it becomes a user-visible incident?" },
+  ],
+  c8: [
+    { question: "You have started drafting your logging schema. What is one design decision you are least confident about, and what tradeoffs are you weighing?", followUp: "That is exactly the kind of thinking senior engineers do. What would help you make that decision with more confidence?" },
+  ],
+  c9: [
+    { question: "Looking at the Final Incident Investigation Report requirements, what section do you think will be hardest to complete well, and what makes it challenging?", followUp: "Agreed — that section trips up a lot of engineers. What is your strategy to tackle it?" },
+  ],
+  c10: [
+    { question: "Reflecting on everything you have done in this module: what is one mental model or habit you would do differently in your next real incident, and why?", followUp: "That is a meaningful reflection. How would you share that learning with a teammate who was not on this incident?" },
+  ],
+};
+
+const DEFAULT_FACILITATOR_QUESTIONS = [
+  { question: "Now that you have reviewed this content, what is the most important concept you took away, and how does it connect to the module's main problem statement?", followUp: "Good thinking. How might you apply that concept in a real-world scenario you have encountered before?" },
+];
+
+/* ── AI Facilitator Modal ── */
+interface FacilitatorMessage {
+  role: 'ai' | 'user';
+  text: string;
+}
+
+interface AIFacilitatorProps {
+  contentId: string;
+  contentTitle: string;
+  contentType: string;
+  stageMeta: { label: string; color: string; icon: React.ReactNode };
+  onDismiss: () => void;
+}
+
+function AIFacilitator({ contentId, contentTitle, contentType, stageMeta, onDismiss }: AIFacilitatorProps) {
+  const questions = AI_FACILITATOR_QUESTIONS[contentId] ?? DEFAULT_FACILITATOR_QUESTIONS;
+  const totalQ = questions.reduce((n, q) => n + 1 + (q.followUp ? 1 : 0), 0);
+
+  const [qIndex, setQIndex] = useState(0);
+  const [messages, setMessages] = useState<FacilitatorMessage[]>([
+    { role: 'ai', text: questions[0].question },
+  ]);
+  const [input, setInput] = useState('');
+  const [awaitingFollowUp, setAwaitingFollowUp] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [isDone, setIsDone] = useState(false);
+  const [answeredCount, setAnsweredCount] = useState(0);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isTyping]);
+
+  // auto-focus textarea
+  useEffect(() => {
+    const t = setTimeout(() => textareaRef.current?.focus(), 400);
+    return () => clearTimeout(t);
+  }, []);
+
+  const sendMessage = () => {
+    const trimmed = input.trim();
+    if (!trimmed || isTyping) return;
+
+    setMessages(prev => [...prev, { role: 'user', text: trimmed }]);
+    setInput('');
+    setIsTyping(true);
+    setAnsweredCount(c => c + 1);
+
+    setTimeout(() => {
+      let nextText = '';
+      let done = false;
+
+      if (!awaitingFollowUp && questions[qIndex].followUp) {
+        nextText = questions[qIndex].followUp;
+        setAwaitingFollowUp(true);
+      } else {
+        const nextIdx = qIndex + 1;
+        if (nextIdx < questions.length) {
+          nextText = questions[nextIdx].question;
+          setQIndex(nextIdx);
+          setAwaitingFollowUp(false);
+        } else {
+          nextText = "Excellent work! You have engaged with this content deeply and thoughtfully. That kind of reflective thinking is exactly what separates good engineers from great ones. Keep that mindset as you move forward.";
+          done = true;
+        }
+      }
+
+      setMessages(prev => [...prev, { role: 'ai', text: nextText }]);
+      setIsTyping(false);
+      if (done) setIsDone(true);
+    }, 1400);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  const contentTypeLabel: Record<string, string> = {
+    slide: 'Slides', pdf: 'PDF', video: 'Video', doc: 'Document', image: 'Diagram', text: 'Reading', link: 'Resource',
+  };
+
+  const progress = isDone ? 100 : Math.round((answeredCount / totalQ) * 100);
+
+  return (
+    <div className="cd-fac-overlay" onClick={e => { if (e.target === e.currentTarget) onDismiss(); }}>
+      <div className="cd-fac-sheet">
+
+        {/* ── Sheet header ── */}
+        <div className="cd-fac-sheet-header">
+          <div className="cd-fac-header-left">
+            <div className="cd-fac-orb">
+              <Lightbulb size={20} color="white" />
+            </div>
+            <div>
+              <div className="cd-fac-sheet-title">AI Facilitator</div>
+              <div className="cd-fac-sheet-sub">
+                Reflecting on
+                <span className="cd-fac-sheet-content-name">{contentTitle}</span>
+                <span className="cd-fac-sheet-type-pill" style={{ background: `${stageMeta.color}18`, color: stageMeta.color }}>
+                  {contentTypeLabel[contentType] ?? contentType}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="cd-fac-header-right">
+            <div className="cd-fac-progress-wrap">
+              <div className="cd-fac-progress-label">{isDone ? 'Complete' : `${answeredCount} / ${totalQ} responses`}</div>
+              <div className="cd-fac-progress-bar">
+                <div className="cd-fac-progress-fill" style={{ width: `${progress}%` }} />
+              </div>
+            </div>
+            <button className="cd-fac-close" onClick={onDismiss} title="Close">
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+
+        {/* ── Context pill ── */}
+        <div className="cd-fac-context-row">
+          <span className="cd-fac-context-pill" style={{ borderColor: `${stageMeta.color}40`, color: stageMeta.color }}>
+            {stageMeta.icon}
+            {stageMeta.label} Stage
+          </span>
+          <span className="cd-fac-context-note">Answer in your own words — there are no wrong responses.</span>
+        </div>
+
+        {/* ── Chat messages ── */}
+        <div className="cd-fac-messages">
+          {messages.map((msg, i) => (
+            <div key={i} className={`cd-fac-msg cd-fac-msg--${msg.role}`}>
+              {msg.role === 'ai' && (
+                <div className="cd-fac-ai-avatar">
+                  <Lightbulb size={14} color="white" strokeWidth={2.5} />
+                </div>
+              )}
+              <div className={`cd-fac-bubble cd-fac-bubble--${msg.role}`}>
+                <p>{msg.text}</p>
+              </div>
+            </div>
+          ))}
+
+          {isTyping && (
+            <div className="cd-fac-msg cd-fac-msg--ai">
+              <div className="cd-fac-ai-avatar">
+                <Lightbulb size={14} color="white" strokeWidth={2.5} />
+              </div>
+              <div className="cd-fac-bubble cd-fac-bubble--ai cd-fac-typing-bubble">
+                <span /><span /><span />
+              </div>
+            </div>
+          )}
+          <div ref={bottomRef} />
+        </div>
+
+        {/* ── Input or Done state ── */}
+        {!isDone ? (
+          <div className="cd-fac-input-area">
+            <div className="cd-fac-input-wrap">
+              <textarea
+                ref={textareaRef}
+                className="cd-fac-textarea"
+                placeholder="Write your response here… (Enter to send · Shift+Enter for new line)"
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                rows={3}
+                disabled={isTyping}
+              />
+              <div className="cd-fac-input-actions">
+                <span className="cd-fac-char-hint">Shift+Enter for new line</span>
+                <button
+                  className="cd-fac-send-btn"
+                  onClick={sendMessage}
+                  disabled={!input.trim() || isTyping}
+                >
+                  <Send size={14} />
+                  Send
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="cd-fac-done-banner">
+            <div className="cd-fac-done-icon">
+              <CheckCircle2 size={28} />
+            </div>
+            <div className="cd-fac-done-text">
+              <strong>Reflection complete</strong>
+              <span>You have thoughtfully engaged with this content. Well done.</span>
+            </div>
+            <button className="cd-fac-done-cta" onClick={onDismiss}>
+              Continue Learning <ChevronRight size={15} />
+            </button>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
 
 /* ── Helpers ── */
 function fmtDuration(secs?: number) {
@@ -614,6 +860,17 @@ export function ModuleContent() {
   /* ── Artifact state ── */
   const [artifactMap, setArtifactMap] = useState(ARTIFACT_MAP);
 
+  /* ── AI Facilitator state ── */
+  const [viewedContent, setViewedContent] = useState<Set<string>>(new Set());
+  const [facilitatorContentId, setFacilitatorContentId] = useState<string | null>(null);
+
+  const handleMarkContentViewed = (contentId: string) => {
+    if (!viewedContent.has(contentId)) {
+      setViewedContent(prev => new Set([...prev, contentId]));
+      setFacilitatorContentId(contentId);
+    }
+  };
+
   const activeMod = modules.find(m => m.id === activeModId) ?? modules[0];
   const stageIdx = STAGES_ORDER.indexOf(activeStage);
   const stageMeta = STAGE_META[activeStage];
@@ -797,7 +1054,7 @@ export function ModuleContent() {
             ))}
           </div>
 
-          <div className="cd-content-viewer">
+          <div className="cd-content-viewer" style={{ position: 'relative' }}>
             <div className="cd-content-viewer-header">
               <div>
                 <h3 className="cd-content-title">{activeContent?.title}</h3>
@@ -808,18 +1065,92 @@ export function ModuleContent() {
                 </div>
               </div>
               <div className="cd-content-acts">
+                {viewedContent.has(activeContent?.id ?? '') && facilitatorContentId !== activeContent?.id && (
+                  <div className="cd-ai-header-wrapper">
+                    <button className="cd-topbar-btn cd-ai-ping-btn" onClick={() => setFacilitatorContentId(activeContent!.id)}>
+                      <Lightbulb size={16} className="cd-ai-header-icon" />
+                      <span className="cd-ai-ping-dot"></span>
+                    </button>
+                    <div className="cd-ai-header-tooltip">
+                      Your AI Facilitator has questions about this content
+                    </div>
+                  </div>
+                )}
                 <button className="cd-topbar-btn"><Download size={14} /></button>
                 <button className="cd-topbar-btn"><Maximize2 size={14} /></button>
               </div>
             </div>
 
             <div className="cd-content-body">
-              {(!activeContent || activeContent.content_type === 'video') && (<div className="cd-video-ph"><PlayCircle size={56} className="cd-video-play" /><p>{activeContent?.title}</p></div>)}
-              {activeContent?.content_type === 'pdf' && (<div className="cd-doc-ph"><FileText size={44} /><p>{activeContent.title}</p><button className="cd-btn-sm-outline"><Download size={12} /> Download PDF</button></div>)}
-              {(activeContent?.content_type === 'slide' || activeContent?.content_type === 'image') && (<div className="cd-doc-ph"><Layers size={44} /><p>{activeContent.title}</p></div>)}
-              {activeContent?.content_type === 'doc' && (<div className="cd-doc-ph"><FileText size={44} /><p>{activeContent.title}</p></div>)}
-              {activeContent?.content_type === 'text' && (<div className="cd-text-ph"><p>Reflection content for {stageMeta.label} stage</p></div>)}
+              {/* Video */}
+              {(!activeContent || activeContent.content_type === 'video') && (
+                <div className="cd-video-ph">
+                  <PlayCircle size={56} className="cd-video-play" />
+                  <p>{activeContent?.title}</p>
+                  {activeContent && (
+                    viewedContent.has(activeContent.id)
+                      ? <span className="cd-content-viewed-badge"><CheckCircle2 size={13} /> Watched</span>
+                      : <button className="cd-content-done-trigger" onClick={() => handleMarkContentViewed(activeContent.id)}>
+                          <CheckCircle2 size={14} /> Mark as Watched
+                        </button>
+                  )}
+                </div>
+              )}
+              {/* PDF */}
+              {activeContent?.content_type === 'pdf' && (
+                <div className="cd-doc-ph">
+                  <FileText size={44} />
+                  <p>{activeContent.title}</p>
+                  <button className="cd-btn-sm-outline"><Download size={12} /> Download PDF</button>
+                  {viewedContent.has(activeContent.id)
+                    ? <span className="cd-content-viewed-badge"><CheckCircle2 size={13} /> Read</span>
+                    : <button className="cd-content-done-trigger" onClick={() => handleMarkContentViewed(activeContent.id)}>
+                        <CheckCircle2 size={14} /> Mark as Read
+                      </button>
+                  }
+                </div>
+              )}
+              {/* Slide / Image */}
+              {(activeContent?.content_type === 'slide' || activeContent?.content_type === 'image') && (
+                <div className="cd-doc-ph">
+                  <Layers size={44} />
+                  <p>{activeContent.title}</p>
+                  {viewedContent.has(activeContent.id)
+                    ? <span className="cd-content-viewed-badge"><CheckCircle2 size={13} /> Completed</span>
+                    : <button className="cd-content-done-trigger" onClick={() => handleMarkContentViewed(activeContent.id)}>
+                        <CheckCircle2 size={14} /> Mark as Completed
+                      </button>
+                  }
+                </div>
+              )}
+              {/* Doc */}
+              {activeContent?.content_type === 'doc' && (
+                <div className="cd-doc-ph">
+                  <FileText size={44} />
+                  <p>{activeContent.title}</p>
+                  {viewedContent.has(activeContent.id)
+                    ? <span className="cd-content-viewed-badge"><CheckCircle2 size={13} /> Read</span>
+                    : <button className="cd-content-done-trigger" onClick={() => handleMarkContentViewed(activeContent.id)}>
+                        <CheckCircle2 size={14} /> Mark as Read
+                      </button>
+                  }
+                </div>
+              )}
+              {/* Text */}
+              {activeContent?.content_type === 'text' && (
+                <div className="cd-text-ph">
+                  <p>Reflection content for {stageMeta.label} stage</p>
+                  {viewedContent.has(activeContent.id)
+                    ? <span className="cd-content-viewed-badge"><CheckCircle2 size={13} /> Read</span>
+                    : <button className="cd-content-done-trigger" onClick={() => handleMarkContentViewed(activeContent.id)}>
+                        <CheckCircle2 size={14} /> Mark as Read
+                      </button>
+                  }
+                </div>
+              )}
             </div>
+
+            {/* Removed inline / floating facilitator nudge -> moved to header */}
 
             <div className="cd-stage-ctx" style={{ borderColor: `${stageMeta.color}30` } as React.CSSProperties}>
               <span className="cd-stage-ctx-badge" style={{ background: `${stageMeta.color}15`, color: stageMeta.color } as React.CSSProperties}>{stageMeta.icon} {stageMeta.label}</span>
@@ -827,6 +1158,18 @@ export function ModuleContent() {
               <span className="cd-stage-ctx-purpose">{stageMeta.purposeTag}</span>
             </div>
           </div>
+
+          {/* AI Facilitator — full overlay modal, outside the content viewer */}
+          {facilitatorContentId === activeContent?.id && activeContent && (
+            <AIFacilitator
+              key={`${activeContent.id}-fac`}
+              contentId={activeContent.id}
+              contentTitle={activeContent.title}
+              contentType={activeContent.content_type}
+              stageMeta={stageMeta}
+              onDismiss={() => setFacilitatorContentId(null)}
+            />
+          )}
 
           <div className="cd-content-footer">
             <button className="cd-btn-nav" disabled={stageIdx === 0} onClick={() => goStage('prev')}><ChevronLeft size={15} /> Previous</button>
