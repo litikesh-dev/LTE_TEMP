@@ -36,7 +36,6 @@ import {
   Link,
   Paperclip,
   Trophy,
-  Bot,
 } from 'lucide-react';
 import '../../../pages/course-details/ui/course-details.css';
 

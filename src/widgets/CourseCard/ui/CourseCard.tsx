@@ -24,25 +24,16 @@ export interface CourseCardProps {
   description?: string;
   thumbnail_url?: string;
   job_pathway_role: string;
-  capability_name?: string;
-  level_label?: string;
   duration: string;
   difficulty_level: 'beginner' | 'intermediate' | 'advanced';
   status: 'not_started' | 'in_progress' | 'completed';
   completion_percentage: number;
-  xp_reward?: number;
-  badge?: string;
-  current_level?: number;
-  required_level?: number;
-  gap?: number;
-  priority_band?: string;
-  why_needed?: string;
-  how_to_build?: string;
   relevance_score?: number;
   match_reason?: string;
   why_recommended?: string;
   sequence_no?: number;
   mode?: 'dashboard' | 'grid' | 'list';
+  // New fields from schema
   domain_name?: string;
   certification_value?: string;
   common_course_problem_statement?: string;
@@ -114,18 +105,10 @@ export function CourseCard(props: CourseCardProps) {
     course_code,
     thumbnail_url,
     job_pathway_role,
-    capability_name,
-    level_label,
     duration,
     difficulty_level,
     status,
     completion_percentage,
-    xp_reward,
-    badge,
-    gap,
-    priority_band,
-    why_needed,
-    how_to_build,
     relevance_score,
     match_reason,
     sequence_no,
@@ -182,20 +165,18 @@ export function CourseCard(props: CourseCardProps) {
 
       {/* ── Body ── */}
       <div className="cc-body">
-        {/* Capability & Level tags */}
+        {/* Domain & Role tags */}
         <div className="cc-tags-row">
-          {capability_name && (
+          {domain_name && (
             <div className="cc-domain-tag">
-              <Layers size={11} />
-              {capability_name}
+              <Layers size={10} />
+              {domain_name}
             </div>
           )}
-          {level_label && (
-            <div className="cc-role-tag">
-              <Target size={11} />
-              {level_label}
-            </div>
-          )}
+          <div className="cc-role-tag">
+            <Target size={10} />
+            {job_pathway_role}
+          </div>
         </div>
 
         {/* Title */}
@@ -235,12 +216,12 @@ export function CourseCard(props: CourseCardProps) {
             </div>
           </div>
 
-          {xp_reward && (
+          {relevance_score !== undefined && (
             <div className="cc-stat">
-              <div className="cc-xp-icon">⭐</div>
+              <ProgressRing value={relevance_score} size={36} />
               <div className="cc-stat-text">
-                <span className="cc-stat-val">{xp_reward}</span>
-                <span className="cc-stat-lbl">XP</span>
+                <span className="cc-stat-val">{relevance_score}%</span>
+                <span className="cc-stat-lbl">Relevance</span>
               </div>
             </div>
           )}
@@ -273,27 +254,11 @@ export function CourseCard(props: CourseCardProps) {
           </div>
         )}
 
-        {/* Why needed */}
-        {why_needed && (
+        {/* Why recommended */}
+        {match_reason && (
           <div className="cc-match-reason">
             <Zap size={11} />
-            <span>{why_needed}</span>
-          </div>
-        )}
-
-        {/* Gap info */}
-        {gap !== undefined && gap > 0 && priority_band && priority_band !== 'none' && (
-          <div className="cc-gap-badge">
-            <span className={`cc-gap-priority cc-gap-${priority_band}`}>Priority {priority_band}</span>
-            <span className="cc-gap-text">Gap: {gap} level{gap !== 1 ? 's' : ''}</span>
-          </div>
-        )}
-
-        {/* Earned Badge */}
-        {badge && badge !== 'none' && (
-          <div className="cc-earned-badge">
-            <Award size={13} />
-            <span>{badge}</span>
+            <span>{match_reason}</span>
           </div>
         )}
 
