@@ -38,6 +38,7 @@ import {
   Trophy,
 } from 'lucide-react';
 import '../../../pages/course-details/ui/course-details.css';
+import { loadCourseContent, loadStageMeta } from '@/shared/api/configLoader';
 
 /* ── re-use all types / mock data from course-details ── */
 type StageKey = 'engage' | 'explore' | 'explain' | 'express' | 'empower' | 'evolve';
@@ -95,17 +96,34 @@ interface ContentItem {
   duration_seconds?: number; url: string; status: 'published'; isViewed: boolean;
 }
 
-/* ── Stage meta ── */
-const STAGE_META: Record<StageKey, { label: string; color: string; icon: React.ReactNode; description: string; purposeTag: string; }> = {
-  engage:  { label: 'Engage',  color: '#6366f1', icon: <Lightbulb size={14} />,    description: 'Hook into the real-world problem. Understand the context and stakes.', purposeTag: 'Hook & Context' },
-  explore: { label: 'Explore', color: '#8b5cf6', icon: <FlaskConical size={14} />, description: 'Investigate, gather signals, and form initial hypotheses.',              purposeTag: 'Investigate' },
-  explain: { label: 'Explain', color: '#0ea5e9', icon: <Layers size={14} />,       description: 'Understand the core concepts and principles behind the solution.',       purposeTag: 'Learn Concepts' },
-  express: { label: 'Express', color: '#f59e0b', icon: <Code2 size={14} />,        description: 'Apply knowledge — draft your practice artifact.',                        purposeTag: 'Practice Artifact' },
-  empower: { label: 'Empower', color: '#10b981', icon: <Zap size={14} />,          description: 'Build and submit your final evaluated artifact.',                        purposeTag: 'Final Artifact' },
-  evolve:  { label: 'Evolve',  color: '#ec4899', icon: <TrendingUp size={14} />,   description: 'Reflect on feedback. Advance your understanding beyond basics.',         purposeTag: 'Reflect & Grow' },
+/* ── Stage meta — icons live in code; label/description/purposeTag/color/estLabel
+   are merged from the common JSON (mockDataConfig.json → stageMeta) so they're editable
+   from one place. ── */
+const STAGE_META: Record<StageKey, { label: string; color: string; icon: React.ReactNode; description: string; purposeTag: string; estLabel: string; }> = {
+  engage:  { label: 'Engage',  color: '#6366f1', icon: <Lightbulb size={14} />,    description: 'Hook into the real-world problem. Understand the context and stakes.', purposeTag: 'Hook & Context',    estLabel: '20–30 minutes' },
+  explore: { label: 'Explore', color: '#8b5cf6', icon: <FlaskConical size={14} />, description: 'Investigate, gather signals, and form initial hypotheses.',              purposeTag: 'Investigate',       estLabel: '20–30 minutes' },
+  explain: { label: 'Explain', color: '#0ea5e9', icon: <Layers size={14} />,       description: 'Understand the core concepts and principles behind the solution.',       purposeTag: 'Learn Concepts',    estLabel: '20–30 minutes' },
+  express: { label: 'Express', color: '#f59e0b', icon: <Code2 size={14} />,        description: 'Apply knowledge — draft your practice artifact.',                        purposeTag: 'Practice Artifact', estLabel: '20–30 minutes' },
+  empower: { label: 'Empower', color: '#10b981', icon: <Zap size={14} />,          description: 'Build and submit your final evaluated artifact.',                        purposeTag: 'Final Artifact',    estLabel: '20–30 minutes' },
+  evolve:  { label: 'Evolve',  color: '#ec4899', icon: <TrendingUp size={14} />,   description: 'Reflect on feedback. Advance your understanding beyond basics.',         purposeTag: 'Reflect & Grow',    estLabel: '20–30 minutes' },
 };
 
 const STAGES_ORDER: StageKey[] = ['engage', 'explore', 'explain', 'express', 'empower', 'evolve'];
+
+/* Override the framework defaults with any stage meta defined in the common JSON. */
+{
+  const cfg = loadStageMeta() as Record<string, Partial<{ label: string; color: string; description: string; purposeTag: string; estLabel: string }>>;
+  STAGES_ORDER.forEach(k => {
+    const c = cfg[k];
+    if (c) {
+      if (c.label) STAGE_META[k].label = c.label;
+      if (c.color) STAGE_META[k].color = c.color;
+      if (c.description) STAGE_META[k].description = c.description;
+      if (c.purposeTag) STAGE_META[k].purposeTag = c.purposeTag;
+      if (c.estLabel) STAGE_META[k].estLabel = c.estLabel;
+    }
+  });
+}
 
 /* ── Mock data (same as CourseDetails) ── */
 const MOCK_CONTENT_MAP: Record<string, ContentItem[]> = {
@@ -308,6 +326,89 @@ const DEFAULT_FACILITATOR_QUESTIONS = [
   { question: "Now that you have reviewed this content, what is the most important concept you took away, and how does it connect to the module's main problem statement?", followUp: "Good thinking. How might you apply that concept in a real-world scenario you have encountered before?" },
 ];
 
+/* ── Merge config-driven course content (from mockDataConfig.json → courseContent)
+   over the built-in demo data. Config modules/content/facilitator prompts override or
+   extend the built-ins by id, so editing the Excel (then running scripts/xlsx_to_json.py)
+   — or editing courseContent in mockDataConfig.json directly — updates the player.
+   Anything the config doesn't define falls back to the built-in demo data. ── */
+type ConfigFacilitator = { question: string; follow_up: string };
+type ConfigContent = ContentItem & { stage: StageKey; order?: number; facilitator?: ConfigFacilitator[] };
+type ConfigModule = ModuleProg & {
+  artifacts?: { express?: ModuleArtifact; empower?: ModuleArtifact };
+  content?: ConfigContent[];
+};
+
+/* The built-in demo modules are the seed content for the Observability course only.
+   Every other course shows its own config modules — never the debugging defaults. */
+const SEED_COURSE_ID = 'crs-obs-l2';
+
+interface CourseBucket {
+  modules: Map<string, ModuleProg>;
+  artMap: Record<string, { express?: ModuleArtifact; empower?: ModuleArtifact }>;
+  content: Record<string, Record<string, ContentItem[]>>; // moduleId -> stage -> items
+}
+
+function buildCourseData() {
+  const byCourse: Record<string, CourseBucket> = {};
+  const facilitatorByContent: Record<string, { question: string; followUp: string }[]> = { ...AI_FACILITATOR_QUESTIONS };
+  const bucket = (cid: string): CourseBucket =>
+    (byCourse[cid] ??= { modules: new Map(), artMap: {}, content: {} });
+
+  // Seed the Observability course with the built-in demo data.
+  const seed = bucket(SEED_COURSE_ID);
+  MOCK_MODULES.forEach(m => seed.modules.set(m.id, m));
+  Object.assign(seed.artMap, ARTIFACT_MAP);
+
+  const courses = loadCourseContent() as { id?: string; course_id?: string; modules?: ConfigModule[] }[];
+  courses.forEach(course => {
+    const cid = course.course_id || course.id || '';
+    if (!cid) return;
+    const b = bucket(cid);
+    (course.modules ?? []).forEach(rawMod => {
+      const { artifacts, content, ...modFields } = rawMod;
+      b.modules.set(modFields.id, modFields as ModuleProg);
+      if (artifacts && (artifacts.express || artifacts.empower)) {
+        b.artMap[modFields.id] = { ...b.artMap[modFields.id], ...artifacts };
+      }
+      if (content && content.length) {
+        const byStage: Record<string, ContentItem[]> = {};
+        content.forEach(ci => {
+          const { stage, order: _order, facilitator, ...item } = ci;
+          (byStage[stage] ??= []).push(item as ContentItem);
+          if (facilitator && facilitator.length) {
+            facilitatorByContent[item.id] = facilitator.map(f => ({ question: f.question, followUp: f.follow_up }));
+          }
+        });
+        b.content[modFields.id] = byStage;
+      }
+    });
+  });
+
+  return { byCourse, facilitatorByContent };
+}
+
+const COURSE_DATA = buildCourseData();
+const COURSE_BUCKETS = COURSE_DATA.byCourse;
+const CONFIG_FACILITATOR = COURSE_DATA.facilitatorByContent;
+
+function getCourseModules(courseId: string): ModuleProg[] {
+  const b = COURSE_BUCKETS[courseId];
+  return b ? Array.from(b.modules.values()).sort((a, b2) => a.module_no - b2.module_no) : [];
+}
+
+function getCourseArtMap(courseId: string): Record<string, { express?: ModuleArtifact; empower?: ModuleArtifact }> {
+  return COURSE_BUCKETS[courseId]?.artMap ?? {};
+}
+
+/* Content for a course+module+stage. The seed course falls back to the generic stage
+   map; other courses show only their own defined content. */
+function getStageContent(courseId: string, moduleId: string, stage: StageKey): ContentItem[] {
+  const c = COURSE_BUCKETS[courseId]?.content?.[moduleId]?.[stage];
+  if (c) return c;
+  if (courseId === SEED_COURSE_ID) return MOCK_CONTENT_MAP[stage] ?? [];
+  return [];
+}
+
 /* ── AI Facilitator Modal ── */
 interface FacilitatorMessage {
   role: 'ai' | 'user';
@@ -323,7 +424,7 @@ interface AIFacilitatorProps {
 }
 
 function AIFacilitator({ contentId, contentTitle, contentType, stageMeta, onDismiss }: AIFacilitatorProps) {
-  const questions = AI_FACILITATOR_QUESTIONS[contentId] ?? DEFAULT_FACILITATOR_QUESTIONS;
+  const questions = CONFIG_FACILITATOR[contentId] ?? DEFAULT_FACILITATOR_QUESTIONS;
   const totalQ = questions.reduce((n, q) => n + 1 + (q.followUp ? 1 : 0), 0);
 
   const [qIndex, setQIndex] = useState(0);
@@ -511,6 +612,21 @@ function AIFacilitator({ contentId, contentTitle, contentType, stageMeta, onDism
       </div>
     </div>
   );
+}
+
+/* ── XP / points (temporary local persistence) ── */
+const XP_STORAGE_KEY = 'lte_earned_xp';
+
+function awardXp(amount: number): number {
+  try {
+    const cur = Number(localStorage.getItem(XP_STORAGE_KEY) || '0');
+    const next = cur + amount;
+    localStorage.setItem(XP_STORAGE_KEY, String(next));
+    window.dispatchEvent(new CustomEvent('lte-xp-updated', { detail: next }));
+    return next;
+  } catch {
+    return amount;
+  }
 }
 
 /* ── Helpers ── */
@@ -840,24 +956,31 @@ export function ModuleContent() {
   const [mobileLeftVisible, setMobileLeftVisible] = useState(false);
   const [mobileRightVisible, setMobileRightVisible] = useState(false);
 
-  /* ── Module / stage state — driven by URL ── */
-  const [modules, setModules] = useState<ModuleProg[]>(MOCK_MODULES);
-  const activeModId = moduleId ?? 'mod-001';
+  /* ── Module / stage state — scoped to the active course (from URL) ── */
+  const activeCourseId = courseId ?? SEED_COURSE_ID;
+  const [modules, setModules] = useState<ModuleProg[]>(() => getCourseModules(activeCourseId));
+  const activeModId = moduleId ?? modules[0]?.id ?? '';
   const activeStage = initialStage;
   /* ── Reset content when stage/module changes via URL ── */
   const [activeContentId, setActiveContentId] = useState(() => {
-    const items = MOCK_CONTENT_MAP[activeStage] ?? [];
+    const items = getStageContent(activeCourseId, activeModId, activeStage);
     return items[0]?.id ?? '';
   });
 
   // Keep content in sync when URL stage changes
   React.useEffect(() => {
-    const items = MOCK_CONTENT_MAP[activeStage] ?? [];
+    const items = getStageContent(activeCourseId, activeModId, activeStage);
     setActiveContentId(items[0]?.id ?? '');
-  }, [activeStage, activeModId]);
+  }, [activeCourseId, activeStage, activeModId]);
 
   /* ── Artifact state ── */
-  const [artifactMap, setArtifactMap] = useState(ARTIFACT_MAP);
+  const [artifactMap, setArtifactMap] = useState(() => getCourseArtMap(activeCourseId));
+
+  /* ── Submission evaluation overlay ── */
+  const [evalOverlay, setEvalOverlay] = useState<
+    | { stage: 'evaluating' | 'complete'; type: ArtifactType; xp: number; score: number | null; totalXp: number }
+    | null
+  >(null);
 
   /* ── AI Facilitator state ── */
   const [viewedContent, setViewedContent] = useState<Set<string>>(new Set());
@@ -871,9 +994,28 @@ export function ModuleContent() {
   };
 
   const activeMod = modules.find(m => m.id === activeModId) ?? modules[0];
+
+  // Course has no modules defined yet (only the Observability course is seeded).
+  if (!activeMod) {
+    return (
+      <div className="cd-viewer">
+        <div className="cd-viewer-topbar">
+          <div className="cd-topbar-left">
+            <button className="cd-topbar-back" onClick={() => navigate(`/courses/${courseId}`)}>
+              <ArrowLeft size={14} /> Overview
+            </button>
+          </div>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', color: '#94a3b8', fontSize: '0.95rem' }}>
+          Content for this course is coming soon.
+        </div>
+      </div>
+    );
+  }
+
   const stageIdx = STAGES_ORDER.indexOf(activeStage);
   const stageMeta = STAGE_META[activeStage];
-  const contentItems = MOCK_CONTENT_MAP[activeStage] ?? [];
+  const contentItems = getStageContent(activeCourseId, activeModId, activeStage);
   const activeContent = contentItems.find(c => c.id === activeContentId) ?? contentItems[0];
   const isArtifactStage = activeStage === 'express' || activeStage === 'empower';
   const currentArtifact = isArtifactStage ? artifactMap[activeModId]?.[activeStage === 'express' ? 'express' : 'empower'] : undefined;
@@ -920,20 +1062,65 @@ export function ModuleContent() {
   };
 
   const handleArtifactSubmit = (_modId: string, artifactId: string, text: string, mode: 'fast' | 'normal', url?: string) => {
-    setArtifactMap(prev => {
-      const modArts = prev[activeModId] ?? {};
-      const key = artifactId === modArts.express?.id ? 'express' : 'empower';
-      const art = modArts[key];
-      if (!art) return prev;
-      const attemptNo = art.submissions.length + 1;
-      const prevSubId = art.submissions.find(s => s.is_latest)?.id ?? null;
-      const newSub: Submission = { id: `as-new-${Date.now()}`, attempt_no: attemptNo, version_label: `v${attemptNo}`, is_latest: true, previous_submission_id: prevSubId, submission_mode: mode, submission_text: text || null, submission_url: url || null, status: 'submitted', overall_status: 'in_progress', current_eval_stage: 'ai', submitted_at: new Date().toISOString(), sealed_at: new Date().toISOString() };
-      const updatedSubs = art.submissions.map(s => ({ ...s, is_latest: false })).concat(newSub);
-      return { ...prev, [activeModId]: { ...modArts, [key]: { ...art, submissions: updatedSubs } } };
-    });
-    if (activeStage === 'empower') {
-      setModules(prev => prev.map(m => m.id === activeModId ? { ...m, artifact_submitted: true } : m));
+    const modArts = artifactMap[activeModId] ?? {};
+    const key = artifactId === modArts.express?.id ? 'express' : 'empower';
+    const art = modArts[key];
+    if (!art) return;
+
+    const isFinal = art.artifact_type === 'final';
+    const newSubId = `as-new-${Date.now()}`;
+
+    // Step 1 — record the submission as "evaluating" (under review)
+    if (isFinal) {
+      setArtifactMap(prev => {
+        const pModArts = prev[activeModId] ?? {};
+        const pArt = pModArts[key];
+        if (!pArt) return prev;
+        const attemptNo = pArt.submissions.length + 1;
+        const prevSubId = pArt.submissions.find(s => s.is_latest)?.id ?? null;
+        const newSub: Submission = { id: newSubId, attempt_no: attemptNo, version_label: `v${attemptNo}`, is_latest: true, previous_submission_id: prevSubId, submission_mode: mode, submission_text: text || null, submission_url: url || null, status: 'under_review', overall_status: 'in_progress', current_eval_stage: 'ai', submitted_at: new Date().toISOString(), sealed_at: new Date().toISOString() };
+        const updatedSubs = pArt.submissions.map(s => ({ ...s, is_latest: false })).concat(newSub);
+        return { ...prev, [activeModId]: { ...pModArts, [key]: { ...pArt, submissions: updatedSubs } } };
+      });
     }
+
+    // Show the "Evaluating…" overlay
+    setEvalOverlay({ stage: 'evaluating', type: art.artifact_type, xp: 0, score: null, totalXp: 0 });
+
+    // Step 2 — finish evaluation, award points, mark complete
+    window.setTimeout(() => {
+      const score = isFinal ? 78 + Math.floor(Math.random() * 19) : null; // 78–96
+      const xp = isFinal ? Math.round((score as number) * 1.5) : 25; // points awarded
+      const totalXp = awardXp(xp);
+
+      if (isFinal) {
+        setArtifactMap(prev => {
+          const pModArts = prev[activeModId] ?? {};
+          const pArt = pModArts[key];
+          if (!pArt) return prev;
+          const updatedSubs = pArt.submissions.map(s =>
+            s.id === newSubId
+              ? {
+                  ...s,
+                  status: 'evaluated' as SubmissionStatus,
+                  overall_status: 'approved' as Submission['overall_status'],
+                  current_eval_stage: 'ai' as const,
+                  ai_score: score as number,
+                  ai_feedback: 'Strong submission. Clear structure and solid evidence — well done.',
+                  ai_improvements: 'Consider expanding on edge cases for an even higher score.',
+                }
+              : s
+          );
+          return { ...prev, [activeModId]: { ...pModArts, [key]: { ...pArt, submissions: updatedSubs } } };
+        });
+        setModules(prev => prev.map(m => (m.id === activeModId ? { ...m, artifact_submitted: true } : m)));
+        completeStage(activeModId, 'empower');
+      } else {
+        completeStage(activeModId, 'express');
+      }
+
+      setEvalOverlay({ stage: 'complete', type: art.artifact_type, xp, score, totalXp });
+    }, 2600);
   };
 
   return (
@@ -1200,7 +1387,7 @@ export function ModuleContent() {
                 <div className="cd-stage-info">
                   <h4 style={{ color: stageMeta.color }}>{stageMeta.label} Stage</h4>
                   <p>{stageMeta.description}</p>
-                  <div className="cd-stage-info-row"><Clock size={13} /> Est. 20–30 minutes</div>
+                  <div className="cd-stage-info-row"><Clock size={13} /> Est. {stageMeta.estLabel}</div>
                   <div className="cd-stage-info-row"><Target size={13} /> {contentItems.length} content items</div>
                   <div className="cd-stage-info-row"><GraduationCap size={13} />{STAGE_META[activeStage].purposeTag}</div>
                 </div>
@@ -1227,6 +1414,54 @@ export function ModuleContent() {
           </div>
         </aside>
       </div>
+
+      {/* ── Evaluation overlay: Evaluating → Complete → Points awarded ── */}
+      {evalOverlay && (
+        <div className="cd-eval-overlay" onClick={e => { if (e.target === e.currentTarget && evalOverlay.stage === 'complete') setEvalOverlay(null); }}>
+          <div className={`cd-eval-modal cd-eval-modal--${evalOverlay.stage}`}>
+            {evalOverlay.stage === 'evaluating' ? (
+              <>
+                <div className="cd-eval-spinner"><Loader2 size={40} className="cd-spin" /></div>
+                <h3 className="cd-eval-modal-title">Evaluating your artifact…</h3>
+                <p className="cd-eval-modal-sub">
+                  {evalOverlay.type === 'final'
+                    ? 'Our AI reviewer is assessing your submission against the rubric.'
+                    : 'Reviewing your practice work.'}
+                </p>
+                <div className="cd-eval-progress-track"><div className="cd-eval-progress-bar" /></div>
+              </>
+            ) : (
+              <>
+                <div className="cd-eval-success-ring">
+                  <CheckCircle2 size={48} strokeWidth={2.2} />
+                </div>
+                <h3 className="cd-eval-modal-title">Evaluation Complete!</h3>
+                {evalOverlay.score != null && (
+                  <p className="cd-eval-modal-sub">
+                    You scored <strong>{evalOverlay.score}/100</strong> on this artifact.
+                  </p>
+                )}
+                <div className="cd-eval-xp-badge">
+                  <Star size={18} />
+                  <span className="cd-eval-xp-amount">+{evalOverlay.xp} XP</span>
+                  <span className="cd-eval-xp-label">earned</span>
+                </div>
+                <p className="cd-eval-total-xp">
+                  Total points: <strong>{evalOverlay.totalXp.toLocaleString()} XP</strong>
+                </p>
+                <div className="cd-eval-actions">
+                  <button className="cd-eval-dashboard-btn" onClick={() => navigate('/')}>
+                    <Trophy size={14} /> View on Dashboard
+                  </button>
+                  <button className="cd-eval-continue-btn" onClick={() => setEvalOverlay(null)}>
+                    Continue <ChevronRight size={14} />
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

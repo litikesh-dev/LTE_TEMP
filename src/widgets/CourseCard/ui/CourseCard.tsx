@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import {
   Clock,
   BookOpen,
@@ -9,7 +8,6 @@ import {
   ChevronRight,
   Zap,
   Award,
-  Info,
   Layers,
   Target,
 } from 'lucide-react';
@@ -96,8 +94,7 @@ function ProgressRing({ value, size = 36 }: { value: number; size?: number }) {
 /* ─────────────────────────── main widget ─────────────────────── */
 export function CourseCard(props: CourseCardProps) {
   const navigate = useNavigate();
-  const [showProblem, setShowProblem] = useState(false);
-  
+
   const {
     id,
     course_id,
@@ -115,7 +112,6 @@ export function CourseCard(props: CourseCardProps) {
     mode = 'dashboard',
     domain_name,
     certification_value,
-    common_course_problem_statement,
   } = props;
 
   const diffMeta = DIFFICULTY_META[difficulty_level];
@@ -233,26 +229,6 @@ export function CourseCard(props: CourseCardProps) {
             </span>
           </div>
         </div>
-
-        {/* Problem statement (expandable) */}
-        {common_course_problem_statement && (
-          <div className="cc-problem-section">
-            <button
-              className="cc-problem-toggle"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowProblem(!showProblem);
-              }}
-            >
-              <Info size={12} />
-              <span>What you'll solve</span>
-              <ChevronRight size={12} className={showProblem ? 'cc-chevron-down' : ''} />
-            </button>
-            {showProblem && (
-              <p className="cc-problem-text">{common_course_problem_statement}</p>
-            )}
-          </div>
-        )}
 
         {/* Why recommended */}
         {match_reason && (

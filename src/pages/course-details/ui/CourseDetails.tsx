@@ -26,6 +26,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import './course-details.css';
+import { loadCourseContent } from '@/shared/api/configLoader';
 
 /* ═══════════════════════════════════════════════════════════════
    TYPES  (aligned with JSON schemas)
@@ -457,6 +458,43 @@ const INIT_PROBLEM_ARTIFACTS: ProblemArtifact[] = [
   },
 ];
 
+/* ── Config-driven course content (from mockDataConfig.json → courseContent).
+   Falls back to the built-in demo data when the config doesn't define a course. ── */
+interface ConfigCourse {
+  id: string;
+  course_id?: string;
+  title?: string;
+  description?: string;
+  job_pathway_role?: string;
+  domain_name?: string;
+  difficulty_level?: string;
+  duration?: string;
+  certification_value?: string;
+  problem_statement?: { title: string; description: string };
+  problem_artifacts?: ProblemArtifact[];
+  modules?: ModuleProg[];
+}
+
+/* The built-in module set is the seed content for the Observability course only —
+   other courses show their own modules (or an empty state), never the debugging ones. */
+const SEED_COURSE_ID = 'crs-obs-l2';
+
+function cap(s?: string) {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+}
+const CONFIG_COURSES = loadCourseContent() as ConfigCourse[];
+
+function getConfigCourse(courseId?: string): ConfigCourse | undefined {
+  if (!CONFIG_COURSES.length) return undefined;
+  return CONFIG_COURSES.find(c => c.id === courseId || c.course_id === courseId) ?? CONFIG_COURSES[0];
+}
+
+const FALLBACK_PROBLEM = {
+  title: 'Production backend service begins failing under load',
+  description:
+    'A production backend service fails under load and engineers must identify root causes using logs, debugging tools and structured investigation. Complete 6 progressive artifacts to resolve this incident using a professional observability workflow.',
+};
+
 /* ═══════════════════════════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════════ */
@@ -464,22 +502,54 @@ export function CourseDetails() {
   const navigate = useNavigate();
   const { courseId } = useParams<{ courseId: string }>();
 
-  /* ── Module data (learner_module_progress) ── */
-  const [modules] = useState<ModuleProg[]>(MOCK_MODULES);
-
   /* ── Learning mode ── */
   const [learningMode, setLearningMode] = useState<'module' | 'problem' | null>('module');
 
-  /* ── Problem track state ── */
+  /* ── Problem track state (config-driven, falls back to built-in) ── */
+  const configCourse = getConfigCourse(courseId);
+
+  /* ── Module data — scoped to the resolved course ──
+     Observability (seed) shows the built-in modules merged with any config overrides;
+     every other course shows only its own config modules (empty until defined). */
+  const modules: ModuleProg[] = (() => {
+    if (configCourse?.course_id === SEED_COURSE_ID) {
+      const byId = new Map<string, ModuleProg>(MOCK_MODULES.map(m => [m.id, m]));
+      (configCourse.modules ?? []).forEach(m => byId.set(m.id, m));
+      return Array.from(byId.values()).sort((a, b) => a.module_no - b.module_no);
+    }
+    return configCourse?.modules ?? [];
+  })();
+  // When a real course is resolved, use ITS own track — never leak another course's
+  // (e.g. the Observability) artifacts. The hardcoded fallback applies only when no
+  // course content exists in config at all.
+  const initProblemArtifacts = configCourse
+    ? (configCourse.problem_artifacts ?? [])
+    : INIT_PROBLEM_ARTIFACTS;
+  const problemBanner = configCourse
+    ? (configCourse.problem_statement?.title
+        ? configCourse.problem_statement
+        : { title: configCourse.title || '', description: configCourse.description || '' })
+    : FALLBACK_PROBLEM;
+
+  /* ── Hero (driven by the resolved course) ── */
+  const heroTitle = configCourse?.title || 'Debugging & Observability for Backend Systems';
+  const heroDesc =
+    configCourse?.description ||
+    'Master production-grade debugging and observability using real-world incident scenarios. Build from structured logging through full incident resolution.';
+  const heroTag = configCourse?.job_pathway_role || configCourse?.domain_name || 'Backend Engineering';
+  const heroLevel = cap(configCourse?.difficulty_level) || 'Beginner';
+  const heroDuration = configCourse?.duration || '45 hours';
+  const heroCert = configCourse?.certification_value || 'Certificate';
+
   const [problemArtifacts, setProblemArtifacts] =
-    useState<ProblemArtifact[]>(INIT_PROBLEM_ARTIFACTS);
-  const [activeProblemId, setActiveProblemId] = useState('pa1');
+    useState<ProblemArtifact[]>(initProblemArtifacts);
+  const [activeProblemId, setActiveProblemId] = useState(initProblemArtifacts[0]?.id ?? 'pa1');
 
   /* ── Derived course stats ── */
   const completedMods = modules.filter(m => m.status === 'completed').length;
-  const overallPct = Math.round(
-    modules.reduce((a, m) => a + m.completion_percentage, 0) / modules.length
-  );
+  const overallPct = modules.length
+    ? Math.round(modules.reduce((a, m) => a + m.completion_percentage, 0) / modules.length)
+    : 0;
 
   /* ── Navigate to module content page ── */
   const enterViewer = (modId: string, stage: StageKey) => {
@@ -489,7 +559,7 @@ export function CourseDetails() {
   /* ═════════════════════════════════════════════════
      COURSE OVERVIEW
      ═════════════════════════════════════════════════ */
-  const activeProblem = problemArtifacts.find(a => a.id === activeProblemId)!;
+  const activeProblem = problemArtifacts.find(a => a.id === activeProblemId) ?? null;
 
   return (
     <div className="cd-overview">
@@ -503,36 +573,30 @@ export function CourseDetails() {
             <div className="cd-hero-layout">
               <div className="cd-hero-left">
                 <div className="cd-hero-tags">
-                  <span className="cd-hero-tag">Backend Engineering</span>
-                  <span className="cd-hero-tag cd-hero-tag--level">Beginner</span>
+                  <span className="cd-hero-tag">{heroTag}</span>
+                  <span className="cd-hero-tag cd-hero-tag--level">{heroLevel}</span>
                 </div>
-                <h1 className="cd-hero-title">
-                  Debugging &amp; Observability
-                  <br />
-                  for Backend Systems
-                </h1>
-                <p className="cd-hero-desc">
-                  Master production-grade debugging and observability using real-world incident
-                  scenarios. Build from structured logging through full incident resolution.
-                </p>
+                <h1 className="cd-hero-title">{heroTitle}</h1>
+                <p className="cd-hero-desc">{heroDesc}</p>
                 <div className="cd-hero-meta">
                   <span>
-                    <Clock size={13} /> 45 hours
+                    <Clock size={13} /> {heroDuration}
                   </span>
                   <span>
-                    <Layers size={13} /> 6 modules
+                    <Layers size={13} /> {modules.length} modules
                   </span>
                   <span>
-                    <Target size={13} /> 6 artifacts
+                    <Target size={13} /> {problemArtifacts.length} artifacts
                   </span>
                   <span>
-                    <Award size={13} /> Certificate
+                    <Award size={13} /> {heroCert}
                   </span>
                 </div>
                 <div className="cd-hero-actions">
                   <button
                     className="cd-btn-primary"
-                    onClick={() => enterViewer('mod-001', 'explain')}
+                    disabled={modules.length === 0}
+                    onClick={() => modules[0] && enterViewer(modules[0].id, 'explain')}
                   >
                     Continue Learning <ChevronRight size={16} />
                   </button>
@@ -663,13 +727,8 @@ export function CourseDetails() {
             <div className="cd-prob-banner">
               <div className="cd-prob-banner-left">
                 <div className="cd-prob-banner-tag">Course Problem Statement</div>
-                <h3>Production backend service begins failing under load</h3>
-                <p>
-                  A production backend service fails under load and engineers must identify root
-                  causes using logs, debugging tools and structured investigation. Complete 6
-                  progressive artifacts to resolve this incident using a professional observability
-                  workflow.
-                </p>
+                <h3>{problemBanner.title}</h3>
+                <p>{problemBanner.description}</p>
               </div>
               <div className="cd-prob-prog-card">
                 <div className="cd-prob-prog-num">
@@ -723,9 +782,11 @@ export function CourseDetails() {
 
               {/* Editor */}
               <div className="cd-prob-editor">
+                {activeProblem ? (
+                <>
                 <div className="cd-prob-editor-header">
                   <div>
-                    <span className="cd-prob-artifact-no">Artifact {activeProblem.no} of 6</span>
+                    <span className="cd-prob-artifact-no">Artifact {activeProblem.no} of {problemArtifacts.length}</span>
                     <h4 className="cd-prob-artifact-title">{activeProblem.title}</h4>
                     <p className="cd-prob-artifact-mod">{activeProblem.module}</p>
                   </div>
@@ -807,6 +868,12 @@ export function CourseDetails() {
                     )}
                   </div>
                 )}
+                </>
+                ) : (
+                  <div className="cd-prob-empty">
+                    No problem artifacts have been defined for this course yet.
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -817,8 +884,14 @@ export function CourseDetails() {
           <div className="cd-module-track">
             <div className="cd-module-track-header">
               <h2>Course Modules</h2>
-              <span>6 modules · 6E Problem-Based Learning Framework</span>
+              <span>{modules.length} modules · 6E Problem-Based Learning Framework</span>
             </div>
+
+            {modules.length === 0 && (
+              <div className="cd-prob-empty">
+                Modules for this course are coming soon.
+              </div>
+            )}
 
             <div className="cd-module-list">
               {modules.map(mod => (
