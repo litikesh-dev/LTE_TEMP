@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Compass, Trophy, TrendingUp, Sparkles, ArrowLeft, Hammer } from 'lucide-react';
+import { Compass, Trophy, TrendingUp, Sparkles, ArrowLeft, Hammer, Settings, HelpCircle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import './coming-soon.css';
 
@@ -7,6 +7,8 @@ const ICONS: Record<string, LucideIcon> = {
   explore: Compass,
   achievements: Trophy,
   progress: TrendingUp,
+  settings: Settings,
+  help: HelpCircle,
 };
 
 interface ComingSoonProps {

@@ -59,6 +59,26 @@ const router = createBrowserRouter([
           />
         ),
       },
+      {
+        path: 'settings',
+        element: (
+          <ComingSoon
+            iconKey="settings"
+            title="Settings"
+            description="Manage your account, preferences, and notifications all in one place. We're putting the finishing touches on it."
+          />
+        ),
+      },
+      {
+        path: 'help',
+        element: (
+          <ComingSoon
+            iconKey="help"
+            title="Help & Support"
+            description="Find answers, guides, and ways to reach our support team. This space is on its way."
+          />
+        ),
+      },
     ],
   },
 ]);
