@@ -24,3 +24,6 @@ build
 *.njsproj
 *.sln
 *.sw?
+
+# Local env (secrets)
+.env
