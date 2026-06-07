@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Compass, Trophy, TrendingUp, Sparkles, ArrowLeft, Hammer, Settings, HelpCircle } from 'lucide-react';
+import { Compass, Trophy, TrendingUp, Sparkles, ArrowLeft, Settings, HelpCircle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import './coming-soon.css';
 
@@ -24,7 +24,7 @@ export function ComingSoon({ title, description, iconKey }: ComingSoonProps) {
     <div className="cs-root">
       <div className="cs-card">
         <span className="cs-badge">
-          <Hammer size={13} /> Under Construction
+          <Sparkles size={13} /> Feature Coming Soon
         </span>
 
         <div className="cs-icon-orb">
