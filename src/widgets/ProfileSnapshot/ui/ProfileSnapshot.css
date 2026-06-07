@@ -1,0 +1,350 @@
+/* Profile Snapshot Component - Redesigned */
+
+.ps-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.ps-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.ps-header-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.ps-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 2px 0;
+}
+
+.ps-subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Sections */
+.ps-section {
+  margin-bottom: 24px;
+}
+
+.ps-section:last-child {
+  margin-bottom: 0;
+}
+
+.ps-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.ps-section-icon {
+  color: #6366f1;
+}
+
+.ps-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* Top Strengths */
+.ps-strengths-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.ps-strength-card {
+  padding: 16px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.ps-strength-card:hover {
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.ps-strength-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.ps-strength-medal {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.ps-strength-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ps-strength-name {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 2px;
+}
+
+.ps-strength-rank {
+  display: block;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.ps-strength-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ps-strength-bar {
+  flex: 1;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.ps-strength-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 4px;
+  transition: width 0.8s ease;
+}
+
+.ps-strength-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #6366f1;
+  white-space: nowrap;
+}
+
+/* Learning Style */
+.ps-style-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.ps-style-card {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.ps-style-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.ps-style-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ps-style-icon--strength {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  color: #2563eb;
+}
+
+.ps-style-icon--motivation {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  color: #059669;
+}
+
+.ps-style-icon--enjoyment {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  color: #dc2626;
+}
+
+.ps-style-icon--workstyle {
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+  color: #7c3aed;
+}
+
+.ps-style-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.ps-style-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.ps-style-text {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.5;
+  margin: 0;
+}
+
+
+
+/* Compact Version */
+.ps-compact {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.ps-compact-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.ps-compact-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.ps-compact-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 2px 0;
+}
+
+.ps-compact-subtitle {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+.ps-aptitudes-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ps-apt-mini {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.ps-apt-mini:hover {
+  border-color: #cbd5e1;
+  transform: translateX(2px);
+}
+
+.ps-apt-mini-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.ps-apt-mini-medal {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.ps-apt-mini-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+}
+
+.ps-apt-mini-pct {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6366f1;
+  white-space: nowrap;
+  padding: 4px 8px;
+  background: #eff6ff;
+  border-radius: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ps-card {
+    padding: 20px;
+  }
+
+  .ps-title {
+    font-size: 16px;
+  }
+
+  .ps-strength-card {
+    padding: 14px;
+  }
+
+  .ps-strength-medal {
+    font-size: 20px;
+  }
+
+  .ps-strength-name {
+    font-size: 14px;
+  }
+
+  .ps-style-card {
+    padding: 12px;
+  }
+
+  .ps-style-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ps-style-text {
+    font-size: 13px;
+  }
+}

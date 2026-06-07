@@ -1,0 +1,297 @@
+/* Level Progress Component */
+
+.lp-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.lp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.lp-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lp-header-icon {
+  color: #f59e0b;
+}
+
+.lp-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 2px 0;
+}
+
+.lp-subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.lp-level-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Level Timeline */
+.lp-timeline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 10px;
+}
+
+.lp-timeline-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  flex: 1;
+}
+
+.lp-level-node {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid;
+  background: #fff;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.lp-level-node--completed {
+  border-color: #10b981;
+  background: #10b981;
+  color: #fff;
+}
+
+.lp-level-node--active {
+  border-color: #6366f1;
+  background: #fff;
+  color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.lp-level-node--locked {
+  border-color: #cbd5e1;
+  background: #fff;
+  color: #94a3b8;
+}
+
+.lp-level-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.lp-level-connector {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  width: 100%;
+  height: 3px;
+  background: #e2e8f0;
+  z-index: 1;
+}
+
+.lp-level-connector--filled {
+  background: #10b981;
+}
+
+/* Progress Section */
+.lp-progress-section {
+  margin-bottom: 20px;
+}
+
+.lp-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.lp-progress-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.lp-progress-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6366f1;
+}
+
+.lp-progress-bar {
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.lp-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 5px;
+  transition: width 0.6s ease;
+}
+
+/* Status Messages */
+.lp-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.lp-status--complete {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1px solid #a7f3d0;
+}
+
+.lp-status--progress {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.lp-status-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6366f1;
+  flex-shrink: 0;
+}
+
+.lp-status-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.lp-status-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 4px 0;
+}
+
+.lp-status-text {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.lp-status-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #10b981;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.lp-status-btn:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+/* Next Level Preview */
+.lp-next-level {
+  padding: 14px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+}
+
+.lp-next-level-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.lp-next-level-icon {
+  color: #94a3b8;
+}
+
+.lp-next-level-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.lp-next-level-text {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .lp-card {
+    padding: 20px;
+  }
+
+  .lp-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .lp-timeline {
+    padding: 16px;
+    overflow-x: auto;
+  }
+
+  .lp-level-node {
+    width: 36px;
+    height: 36px;
+  }
+
+  .lp-status {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lp-status-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

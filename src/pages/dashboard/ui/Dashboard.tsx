@@ -16,11 +16,31 @@ import {
   Zap,
   Sparkles,
   Calendar,
+  Briefcase,
+  GraduationCap,
+  Building,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { CourseCard } from '@/widgets/CourseCard/ui/CourseCard';
+import { ProfileSnapshot } from '@/widgets/ProfileSnapshot';
+import { LevelProgress } from '@/widgets/LevelProgress';
+import { getLearnerProfile } from '@/shared/api/mockData';
+import { loadDashboard } from '@/shared/api/configLoader';
 import './dashboard.css';
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* icon map so JSON can reference icons by name */
+const ICONS: Record<string, LucideIcon> = {
+  trophy: Trophy,
+  medal: Medal,
+  scroll: ScrollText,
+  book: BookOpen,
+  clock: Clock,
+  zap: Zap,
+  target: Target,
+  star: Star,
+  calendar: Calendar,
+};
+
 interface InProgressCourse {
   id: string;
   type: 'Course';
@@ -46,6 +66,9 @@ interface EnrollmentCard {
   completion_percentage: number;
   relevance_score?: number;
   match_reason?: string;
+  domain_name?: string;
+  certification_value?: string;
+  common_course_problem_statement?: string;
 }
 
 interface LeaderboardEntry {
@@ -57,97 +80,23 @@ interface LeaderboardEntry {
   isCurrentUser?: boolean;
 }
 
-const inProgress: InProgressCourse[] = [
-  {
-    id: '1',
-    type: 'Course',
-    title: 'Mastering UI/UX Design: A Guide...',
-    materials: 5,
-    completion: null,
-    deadline: '1 Day',
-    deadlineUrgent: false,
-    action: 'Start',
-    thumbColor: '#eef2ff',
-  },
-  {
-    id: '2',
-    type: 'Course',
-    title: 'Creating Engaging Learning Jour...',
-    materials: 12,
-    completion: 64,
-    deadline: '12 hrs',
-    deadlineUrgent: true,
-    action: 'Continue',
-    thumbColor: '#ede9fe',
-  },
-];
+/* all dashboard content loaded from mockDataConfig.json (edit there) */
+const dashboardData = loadDashboard();
 
-const enrollments: EnrollmentCard[] = [
-  {
-    id: 'lpc-dashboard-1',
-    course_id: 'SE-BE-OBS-01',
-    course_code: 'BE-OBS-101',
-    title: 'Debugging & Observability for Backend Systems',
-    job_pathway_role: 'Backend Engineer',
-    duration: '45 hours',
-    difficulty_level: 'beginner',
-    status: 'not_started',
-    completion_percentage: 0,
-    relevance_score: 85,
-    match_reason: 'Matches your Learning Path priority.',
-  },
-  {
-    id: 'lpc-dashboard-2',
-    course_id: 'UIUX-101',
-    course_code: 'UIUX-101',
-    title: 'UI/UX 101 – For Beginner to be great and good Designer',
-    job_pathway_role: 'UI Designer',
-    duration: '25 hours',
-    difficulty_level: 'beginner',
-    status: 'not_started',
-    completion_percentage: 0,
-    relevance_score: 72,
-    match_reason: 'Foundation course for design.',
-  },
-];
+const inProgress = dashboardData.inProgress as InProgressCourse[];
+const enrollments = dashboardData.enrollments as EnrollmentCard[];
+const leaderboard = dashboardData.leaderboard.entries as LeaderboardEntry[];
+const pathNodes = dashboardData.pathNodes;
+const sixEStages = dashboardData.sixEStages;
+const greeting = dashboardData.greeting;
+const statBadges = dashboardData.statBadges;
+const levelProgressCfg = dashboardData.levelProgress;
+const currentModule = dashboardData.currentModule;
+const rightStats = dashboardData.rightStats;
+const activityStreak = dashboardData.activityStreak;
+const goalsCfg = dashboardData.goals;
+const achievements = dashboardData.achievements;
 
-const leaderboard: LeaderboardEntry[] = [
-  { rank: 1, name: 'Arif Brata', role: 'Jr UI/UX Designer', points: 1250, initials: 'AB' },
-  { rank: 2, name: 'Siti Rahma', role: 'Sr Product Manager', points: 1185, initials: 'SR' },
-  { rank: 3, name: 'Dimas Prayoga', role: 'Frontend Developer', points: 1122, initials: 'DP' },
-  { rank: 118, name: 'Nadia Putri', role: 'Instructional Designer', points: 498, initials: 'NP' },
-  { rank: 119, name: 'Kevin Aditya', role: 'Learning Specialist', points: 493, initials: 'KA' },
-  {
-    rank: 120,
-    name: 'Adit Pratama',
-    role: 'Product Design Learner',
-    points: 487,
-    initials: 'AP',
-    isCurrentUser: true,
-  },
-  { rank: 121, name: 'Maya Salsabila', role: 'UI Designer', points: 482, initials: 'MS' },
-];
-
-const pathNodes = [
-  { id: '1', label: 'Start', status: 'completed' },
-  { id: '2', label: 'Mod1', status: 'completed' },
-  { id: '3', label: 'Mod2', status: 'completed' },
-  { id: '4', label: 'Mod3', status: 'current' },
-  { id: '5', label: 'Mod4', status: 'upcoming' },
-  { id: '6', label: 'Mod5', status: 'upcoming' },
-  { id: '7', label: 'Goal', status: 'upcoming' },
-];
-
-const sixEStages = [
-  { name: 'Engage', status: 'completed', value: 100 },
-  { name: 'Explore', status: 'completed', value: 100 },
-  { name: 'Explain', status: 'completed', value: 100 },
-  { name: 'Express', status: 'in_progress', value: 50 },
-  { name: 'Empower', status: 'not_started', value: 0 },
-  { name: 'Evolve', status: 'not_started', value: 0 },
-];
-
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ SVG circular ring â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function CircularProgress({
   value,
   max,
@@ -222,12 +171,45 @@ function MiniRing({ pct }: { pct: number }) {
   );
 }
 
+// Fetch learner profile with extended data
+const learnerProfileData = getLearnerProfile('learner-001');
+
+const learnerProfile = {
+  grade_level: dashboardData.learnerProfile.grade_level,
+  skill_level: dashboardData.learnerProfile.skill_level,
+  target_role: learnerProfileData.target_role || dashboardData.learnerProfile.target_role,
+  domain: learnerProfileData.domain || dashboardData.learnerProfile.domain,
+  industry: learnerProfileData.industry || dashboardData.learnerProfile.industry,
+};
+
+/* color classes applied to the header stat badges, by position */
+const BADGE_COLORS = ['dash-badge-icon--yellow', 'dash-badge-icon--orange', 'dash-badge-icon--amber'];
+
 /* ────────────────────────── main component ──────────────────────── */
+const XP_STORAGE_KEY = 'lte_earned_xp';
+
 export function Dashboard() {
-  const [goalProgress] = useState(6);
-  const [goalMax] = useState(30);
+  const [goalProgress] = useState(goalsCfg.progress);
+  const [goalMax] = useState(goalsCfg.max);
   const [animIn, setAnimIn] = useState(false);
   const mounted = useRef(false);
+
+  /* ── Points earned from artifact submissions (temporary local store) ── */
+  const [earnedXp, setEarnedXp] = useState(() => {
+    try { return Number(localStorage.getItem(XP_STORAGE_KEY) || '0'); } catch { return 0; }
+  });
+
+  useEffect(() => {
+    const refresh = () => {
+      try { setEarnedXp(Number(localStorage.getItem(XP_STORAGE_KEY) || '0')); } catch { /* ignore */ }
+    };
+    window.addEventListener('lte-xp-updated', refresh);
+    window.addEventListener('storage', refresh);
+    return () => {
+      window.removeEventListener('lte-xp-updated', refresh);
+      window.removeEventListener('storage', refresh);
+    };
+  }, []);
 
   useEffect(() => {
     if (!mounted.current) {
@@ -239,52 +221,113 @@ export function Dashboard() {
   return (
     <>
       <div className={`dash-root${animIn ? ' dash-root--in' : ''}`}>
-        {/* ════════════════ LEFT / MAIN COLUMN ════════════════════════════ */}
-        <div className="dash-main">
+        {/* ════════════════ FULL WIDTH HEADER ════════════════════════════ */}
+        <div className="dash-header-full">
           {/* ── Header row ── */}
           <div className="dash-header-row">
             <div className="dash-greeting">
               <h1 className="dash-greeting-title">
-                Good morning, Adit
+                {greeting.title}
                 <span className="dash-wave" aria-hidden="true">
-                  👋
+                  {greeting.emoji}
                 </span>
               </h1>
-              <p className="dash-greeting-sub">
-                Welcome to Trenning, check your priority learning.
-              </p>
+              <p className="dash-greeting-sub">{greeting.subtitle}</p>
             </div>
 
             <div className="dash-stat-badges">
-              <div className="dash-badge">
-                <span className="dash-badge-icon-wrap dash-badge-icon--yellow">
-                  <Trophy size={16} />
-                </span>
-                <div>
-                  <p className="dash-badge-val">100</p>
-                  <p className="dash-badge-lbl">Point</p>
+              {earnedXp > 0 && (
+                <div className="dash-badge" key="earned-xp">
+                  <span className="dash-badge-icon-wrap dash-badge-icon--yellow">
+                    <Star size={16} />
+                  </span>
+                  <div>
+                    <p className="dash-badge-val">{earnedXp.toLocaleString()}</p>
+                    <p className="dash-badge-lbl">Points Earned</p>
+                  </div>
                 </div>
-              </div>
-              <div className="dash-badge">
-                <span className="dash-badge-icon-wrap dash-badge-icon--orange">
-                  <Medal size={16} />
-                </span>
-                <div>
-                  <p className="dash-badge-val">32</p>
-                  <p className="dash-badge-lbl">Badges</p>
-                </div>
-              </div>
-              <div className="dash-badge">
-                <span className="dash-badge-icon-wrap dash-badge-icon--amber">
-                  <ScrollText size={16} />
-                </span>
-                <div>
-                  <p className="dash-badge-val">12</p>
-                  <p className="dash-badge-lbl">Certificates</p>
-                </div>
-              </div>
+              )}
+              {statBadges.map((badge, i) => {
+                const Icon = ICONS[badge.icon] ?? Trophy;
+                return (
+                  <div className="dash-badge" key={badge.label}>
+                    <span className={`dash-badge-icon-wrap ${BADGE_COLORS[i] ?? ''}`}>
+                      <Icon size={16} />
+                    </span>
+                    <div>
+                      <p className="dash-badge-val">{badge.value}</p>
+                      <p className="dash-badge-lbl">{badge.label}</p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
+
+          {/* ── Learner Profile Overview ── */}
+          <section className="dash-profile-overview">
+            <div className="dash-po-item">
+              <div className="dash-po-icon dash-po-icon--role">
+                <Target size={20} />
+              </div>
+              <div className="dash-po-details">
+                <span className="dash-po-label">Target Role</span>
+                <span className="dash-po-value">{learnerProfile.target_role}</span>
+              </div>
+            </div>
+            
+            <div className="dash-po-divider" />
+            
+            <div className="dash-po-item">
+              <div className="dash-po-icon dash-po-icon--domain">
+                <Briefcase size={20} />
+              </div>
+              <div className="dash-po-details">
+                <span className="dash-po-label">Domain</span>
+                <span className="dash-po-value">{learnerProfile.domain}</span>
+              </div>
+            </div>
+
+            <div className="dash-po-divider" />
+            
+            <div className="dash-po-item">
+              <div className="dash-po-icon dash-po-icon--industry">
+                <Building size={20} />
+              </div>
+              <div className="dash-po-details">
+                <span className="dash-po-label">Industry</span>
+                <span className="dash-po-value">{learnerProfile.industry}</span>
+              </div>
+            </div>
+
+            <div className="dash-po-divider" />
+            
+            <div className="dash-po-item">
+              <div className="dash-po-icon dash-po-icon--grade">
+                <GraduationCap size={20} />
+              </div>
+              <div className="dash-po-details">
+                <span className="dash-po-label">Academic & Skill</span>
+                <span className="dash-po-value">
+                  {learnerProfile.grade_level} • {learnerProfile.skill_level}
+                </span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* ════════════════ LEFT / MAIN COLUMN ════════════════════════════ */}
+        <div className="dash-main">
+          
+          {/* ── Level Progress Widget ── */}
+          <LevelProgress
+            currentLevel={levelProgressCfg.currentLevel}
+            totalLevels={levelProgressCfg.totalLevels}
+            coursesCompleted={levelProgressCfg.coursesCompleted}
+            coursesRequired={levelProgressCfg.coursesRequired}
+            nextLevelCourses={levelProgressCfg.nextLevelCourses}
+            roleName={learnerProfile.target_role}
+          />
 
           {/* ── Announcement banner (Hidden as requested) ── */}
           {/*
@@ -306,9 +349,7 @@ export function Dashboard() {
           {/* ── Progress Timeline ── */}
           <section className="dash-section dash-timeline-section">
             <div className="dash-section-head">
-              <h2 className="dash-section-title">
-                Current Learning Path: Product Design Foundation
-              </h2>
+              <h2 className="dash-section-title">{dashboardData.currentLearningPathTitle}</h2>
             </div>
             <div className="dash-timeline-card">
               <div className="dash-timeline-track-wrapper">
@@ -332,11 +373,11 @@ export function Dashboard() {
               <div className="dash-timeline-module-info">
                 <div className="dash-tm-header">
                   <div className="dash-tm-header-text">
-                    <span className="dash-tm-subtitle">CURRENT MODULE</span>
-                    <h3 className="dash-tm-title">Module 3: Visual Hierarchy</h3>
+                    <span className="dash-tm-subtitle">{currentModule.subtitle}</span>
+                    <h3 className="dash-tm-title">{currentModule.title}</h3>
                   </div>
                   <button className="dash-tm-cta">
-                    Continue Course <ChevronRight size={16} />
+                    {currentModule.cta} <ChevronRight size={16} />
                   </button>
                 </div>
 
@@ -445,7 +486,6 @@ export function Dashboard() {
             </div>
           </section>
 
-          {/* â”€â”€ New enrollment section â”€â”€ */}
           <section className="dash-section">
             <div className="dash-section-head">
               <h2 className="dash-section-title">
@@ -465,35 +505,30 @@ export function Dashboard() {
           </section>
         </div>
 
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• RIGHT SIDEBAR â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <aside className="dash-right">
-          {/* Learning content */}
-          <div className="dash-right-card">
-            <div className="dash-stat-row">
-              <div className="dash-stat-icon-wrap dash-stat-icon-wrap--purple">
-                <BookOpen size={18} strokeWidth={1.8} />
-              </div>
-              <div className="dash-stat-info">
-                <p className="dash-stat-num">120</p>
-                <p className="dash-stat-desc">Learning content</p>
-              </div>
-              <ChevronRight size={18} className="dash-stat-arrow" />
-            </div>
-          </div>
+          {/* Profile Snapshot */}
+          {learnerProfileData.profile_snapshot && (
+            <ProfileSnapshot snapshot={learnerProfileData.profile_snapshot} compact />
+          )}
 
-          {/* Learning time */}
-          <div className="dash-right-card">
-            <div className="dash-stat-row">
-              <div className="dash-stat-icon-wrap dash-stat-icon-wrap--teal">
-                <Clock size={18} strokeWidth={1.8} />
+          {/* Learning stats */}
+          {rightStats.map(stat => {
+            const Icon = ICONS[stat.icon] ?? BookOpen;
+            return (
+              <div className="dash-right-card" key={stat.desc}>
+                <div className="dash-stat-row">
+                  <div className={`dash-stat-icon-wrap dash-stat-icon-wrap--${stat.color}`}>
+                    <Icon size={18} strokeWidth={1.8} />
+                  </div>
+                  <div className="dash-stat-info">
+                    <p className="dash-stat-num">{stat.num}</p>
+                    <p className="dash-stat-desc">{stat.desc}</p>
+                  </div>
+                  <ChevronRight size={18} className="dash-stat-arrow" />
+                </div>
               </div>
-              <div className="dash-stat-info">
-                <p className="dash-stat-num">44</p>
-                <p className="dash-stat-desc">Learning time</p>
-              </div>
-              <ChevronRight size={18} className="dash-stat-arrow" />
-            </div>
-          </div>
+            );
+          })}
 
           {/* Activity Streak */}
           <div className="dash-right-card dash-streak-card">
@@ -502,21 +537,21 @@ export function Dashboard() {
               Activity Streak
             </h3>
             <p className="dash-streak-sub">
-              Your Longest Streak: <span className="dash-fire">143 days</span>
+              Your Longest Streak: <span className="dash-fire">{activityStreak.longestStreak}</span>
             </p>
 
             <div className="dash-streak-week">
-              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d, i) => (
-                <div key={d} className="dash-streak-day">
-                  <span className="dash-s-dayname">{d}</span>
-                  <div className={`dash-s-check ${i < 5 ? 'active' : ''}`}>
-                    {i < 5 ? <CheckCircle2 size={12} strokeWidth={3} /> : '-'}
+              {activityStreak.days.map(d => (
+                <div key={d.name} className="dash-streak-day">
+                  <span className="dash-s-dayname">{d.name}</span>
+                  <div className={`dash-s-check ${d.active ? 'active' : ''}`}>
+                    {d.active ? <CheckCircle2 size={12} strokeWidth={3} /> : '-'}
                   </div>
                 </div>
               ))}
             </div>
             <p className="dash-streak-curr">
-              Current Streak: <strong>18 days</strong>
+              Current Streak: <strong>{activityStreak.currentStreak}</strong>
             </p>
           </div>
 
@@ -538,9 +573,9 @@ export function Dashboard() {
             </p>
             <p className="dash-goals-streak">
               <Zap size={13} className="dash-streak-icon" />
-              Your Longest streak: <strong>1 Day</strong>
+              Your Longest streak: <strong>{goalsCfg.longestStreak}</strong>
             </p>
-            <p className="dash-goals-dates">(28 Sep 23 â€“ 4 Okt 23)</p>
+            <p className="dash-goals-dates">{goalsCfg.dateRange}</p>
             <a href="#" className="dash-see-detail">
               See Detail
             </a>
@@ -553,60 +588,32 @@ export function Dashboard() {
               Recent Achievements
             </h3>
             <div className="dash-achievements-list">
-              <div className="dash-achieve-row">
-                <div className="dash-achieve-icon-wrap">
-                  <Zap size={14} color="#eab308" />
-                </div>
-                <div className="dash-achieve-info">
-                  <h4>Fast Learner</h4>
-                  <p>Completed 5 modules in one week</p>
-                  <span>2 days ago</span>
-                </div>
-              </div>
-              <div className="dash-achieve-row">
-                <div className="dash-achieve-icon-wrap">
-                  <Target size={14} color="#3b82f6" />
-                </div>
-                <div className="dash-achieve-info">
-                  <h4>Problem Solver</h4>
-                  <p>Submitted first artifact</p>
-                  <span>1 week ago</span>
-                </div>
-              </div>
-              <div className="dash-achieve-row">
-                <div className="dash-achieve-icon-wrap">
-                  <Star size={14} color="#f97316" />
-                </div>
-                <div className="dash-achieve-info">
-                  <h4>Design Master</h4>
-                  <p>Scored 100% on Prototyping quiz</p>
-                  <span>2 weeks ago</span>
-                </div>
-              </div>
-              <div className="dash-achieve-row">
-                <div className="dash-achieve-icon-wrap">
-                  <Calendar size={14} color="#10b981" />
-                </div>
-                <div className="dash-achieve-info">
-                  <h4>Consistent Scholar</h4>
-                  <p>Maintained a 14-day study streak</p>
-                  <span>3 weeks ago</span>
-                </div>
-              </div>
+              {achievements.map(ach => {
+                const Icon = ICONS[ach.icon] ?? Zap;
+                return (
+                  <div className="dash-achieve-row" key={ach.title}>
+                    <div className="dash-achieve-icon-wrap">
+                      <Icon size={14} color={ach.color} />
+                    </div>
+                    <div className="dash-achieve-info">
+                      <h4>{ach.title}</h4>
+                      <p>{ach.desc}</p>
+                      <span>{ach.time}</span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </aside>
 
-        {/* â”€â”€ Leaderboard section (Full Width) â”€â”€ */}
         <section className="dash-section dash-section--full dash-section--leaderboard">
           <div className="dash-section-head">
             <h2 className="dash-section-title">
               Leaderboard
               <Info size={14} className="dash-info-icon" />
             </h2>
-            <p className="dash-lbm-track">
-              Your rank: <strong>#120</strong> of 1,842 learners
-            </p>
+            <p className="dash-lbm-track">{dashboardData.leaderboard.rankSummary}</p>
           </div>
 
           <div className="dash-leaderboard-main">
@@ -653,7 +660,7 @@ export function Dashboard() {
                     <td>
                       <div className="dash-lbm-col-points">
                         <Star size={14} className="dash-lbm-star" />
-                        <span>{entry.points.toLocaleString()}</span>
+                        <span>{(entry.points + (entry.isCurrentUser ? earnedXp : 0)).toLocaleString()}</span>
                       </div>
                     </td>
                   </tr>

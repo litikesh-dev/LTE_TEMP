@@ -1,0 +1,2046 @@
+{
+  "domains": [
+    {
+      "id": "dom-001",
+      "code": "D001",
+      "name": "Backend Engineering",
+      "industry": "Information Technology & AI",
+      "is_active": true,
+      "created_at": "2026-03-30T00:00:00Z",
+      "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "dom-002",
+      "code": "D002",
+      "name": "Frontend Engineering",
+      "industry": "Information Technology & AI",
+      "is_active": true,
+      "created_at": "2026-03-30T00:00:00Z",
+      "updated_at": "2026-03-30T00:00:00Z"
+    }
+  ],
+  "roles": [
+    {
+      "id": "role-001",
+      "domain_id": "dom-001",
+      "name": "Backend Engineer",
+      "description": "Designs and builds server-side services, APIs, and data layers.",
+      "is_active": true,
+      "created_at": "2026-03-31T00:00:00Z",
+      "updated_at": "2026-03-31T00:00:00Z"
+    },
+    {
+      "id": "role-002",
+      "domain_id": "dom-001",
+      "name": "Full-Stack Engineer",
+      "description": "Builds both frontend and backend components of an application.",
+      "is_active": true,
+      "created_at": "2026-03-31T00:00:00Z",
+      "updated_at": "2026-03-31T00:00:00Z"
+    }
+  ],
+  "learnerProfile": {
+    "id": "learner-001",
+    "student_id": "3531e63e-589e-46e7-9248-4a769e84b00d",
+    "grade_level": "ug",
+    "skill_level": "beginner",
+    "is_active": true,
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-01-01T00:00:00Z"
+  },
+  "learnerCapabilities": [
+    {
+      "id": "lc-001",
+      "learner_id": "learner-001",
+      "assessment_id": "d9c8e5f2-1a2b-4c3d-9e8f-7a6b5c4d3e2f",
+      "capability_id": "SE-CAP-08",
+      "current_score": 20,
+      "current_level": "beginner",
+      "target_level": 4,
+      "gap_score": 60,
+      "priority_band": "A",
+      "why_needed": "Monitor production systems and diagnose runtime issues",
+      "how_to_build": "Complete observability course with logging, debugging, and monitoring tools",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "lc-002",
+      "learner_id": "learner-001",
+      "assessment_id": "d9c8e5f2-1a2b-4c3d-9e8f-7a6b5c4d3e2f",
+      "capability_id": "SE-CAP-02",
+      "current_score": 40,
+      "current_level": "emerging",
+      "target_level": 4,
+      "gap_score": 40,
+      "priority_band": "A",
+      "why_needed": "Build scalable, efficient backend services",
+      "how_to_build": "Learn REST/GraphQL principles and database indexing strategies",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "lc-003",
+      "learner_id": "learner-001",
+      "assessment_id": "d9c8e5f2-1a2b-4c3d-9e8f-7a6b5c4d3e2f",
+      "capability_id": "SE-CAP-01",
+      "current_score": 20,
+      "current_level": "beginner",
+      "target_level": 3,
+      "gap_score": 40,
+      "priority_band": "B",
+      "why_needed": "Architect robust backend solutions for production",
+      "how_to_build": "Study architecture patterns and scalability principles",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "skillGap": {
+    "id": "sg-001",
+    "learner_id": "learner-001",
+    "assessment_id": "454cae3d-bf98-40cf-9b13-db27d343f5e9",
+    "attempt_id": "ad872bf9-cb65-4d6a-9b07-1d27f8d013ba",
+    "priorities": [
+      {
+        "priority_type": "A",
+        "skill": "Debugging & Observability",
+        "whyNeeded": "Monitor production systems and diagnose runtime issues",
+        "howToBuild": "Complete observability course with logging, debugging, and monitoring tools",
+        "targetLevel": 4,
+        "currentLevel": 1
+      },
+      {
+        "priority_type": "A",
+        "skill": "API Design & Implementation",
+        "whyNeeded": "Build scalable, efficient backend services",
+        "howToBuild": "Learn REST/GraphQL principles and database indexing strategies",
+        "targetLevel": 4,
+        "currentLevel": 2
+      },
+      {
+        "priority_type": "B",
+        "skill": "Backend Architecture",
+        "whyNeeded": "Architect robust backend solutions for production",
+        "howToBuild": "Study architecture patterns and scalability principles",
+        "targetLevel": 3,
+        "currentLevel": 1
+      }
+    ],
+    "learning_tracks": [
+      {
+        "track": "Backend Fundamentals",
+        "topics": "Node.js/Python, REST APIs, Database design, Authentication",
+        "suggestedIf": "Interested in backend development"
+      },
+      {
+        "track": "Production Readiness",
+        "topics": "Logging, Monitoring, Error handling, Performance optimization",
+        "suggestedIf": "Ready for production-level systems"
+      }
+    ],
+    "current_strengths": [
+      "Logical reasoning",
+      "Problem-solving",
+      "Systematic thinking"
+    ],
+    "recommended_track": "Backend Fundamentals",
+    "created_at": "2026-03-23T06:47:13.8812+00:00",
+    "updated_at": "2026-03-23T06:47:13.8812+00:00"
+  },
+  "profileSnapshot": {
+    "id": "ps-001",
+    "learner_id": "learner-001",
+    "assessment_id": "454cae3d-bf98-40cf-9b13-db27d343f5e9",
+    "attempt_id": "ad872bf9-cb65-4d6a-9b07-1d27f8d013ba",
+    "key_patterns": {
+      "strength": "Strong logical reasoning and systematic problem-solving",
+      "enjoyment": "Building systems and solving technical challenges",
+      "workStyle": "Methodical and detail-oriented",
+      "motivation": "Desire to create reliable, scalable solutions"
+    },
+    "aptitude_strengths": [
+      {
+        "name": "Logical reasoning",
+        "percentile": "95"
+      },
+      {
+        "name": "Analytical thinking",
+        "percentile": "88"
+      },
+      {
+        "name": "Problem-solving",
+        "percentile": "82"
+      }
+    ],
+    "created_at": "2026-03-23T06:47:13.8812+00:00",
+    "updated_at": "2026-03-23T06:47:13.8812+00:00"
+  },
+  "learningPath": {
+    "id": "path-001",
+    "learning_track_id": "track-001",
+    "learner_id": "learner-001",
+    "role_id": "role-001",
+    "level": 1,
+    "status": "in_progress",
+    "is_active": true,
+    "version_no": 1,
+    "is_latest": true,
+    "started_at": "2024-01-15T00:00:00Z",
+    "completed_at": null,
+    "created_at": "2024-01-15T00:00:00Z",
+    "updated_at": "2024-01-15T00:00:00Z"
+  },
+  "learningPathCourses": [
+    {
+      "id": "lpc-001",
+      "learning_path_id": "path-001",
+      "course_id": "SE-BE-OBS-01",
+      "sequence_no": 1,
+      "relevance_score": 85,
+      "match_reason": "Covers essential backend development skills aligned with your learning track.",
+      "why_recommended": "Covers essential backend development skills aligned with your learning track.",
+      "status": "in_progress",
+      "completion_percentage": 17,
+      "started_at": "2024-01-15T00:00:00Z",
+      "completed_at": null,
+      "created_at": "2024-01-15T00:00:00Z",
+      "updated_at": "2024-01-15T00:00:00Z"
+    },
+    {
+      "id": "lpc-002",
+      "learning_path_id": "path-001",
+      "course_id": "SE-API-01",
+      "sequence_no": 2,
+      "relevance_score": 91,
+      "match_reason": "Core capability for your Backend Engineer target role.",
+      "why_recommended": "Core capability for your Backend Engineer target role.",
+      "status": "not_started",
+      "completion_percentage": 0,
+      "started_at": null,
+      "completed_at": null,
+      "created_at": "2024-01-15T00:00:00Z",
+      "updated_at": "2024-01-15T00:00:00Z"
+    },
+    {
+      "id": "lpc-003",
+      "learning_path_id": "path-001",
+      "course_id": "SE-DB-01",
+      "sequence_no": 3,
+      "relevance_score": 78,
+      "match_reason": "Addresses a priority B capability gap in your profile.",
+      "why_recommended": "Addresses a priority B capability gap in your profile.",
+      "status": "not_started",
+      "completion_percentage": 0,
+      "started_at": null,
+      "completed_at": null,
+      "created_at": "2024-01-15T00:00:00Z",
+      "updated_at": "2024-01-15T00:00:00Z"
+    },
+    {
+      "id": "lpc-004",
+      "learning_path_id": "path-001",
+      "course_id": "SE-AUTH-01",
+      "sequence_no": 4,
+      "relevance_score": 68,
+      "match_reason": "Security is a foundational capability for production systems.",
+      "why_recommended": "Security is a foundational capability for production systems.",
+      "status": "not_started",
+      "completion_percentage": 0,
+      "started_at": null,
+      "completed_at": null,
+      "created_at": "2024-01-15T00:00:00Z",
+      "updated_at": "2024-01-15T00:00:00Z"
+    },
+    {
+      "id": "lpc-005",
+      "learning_path_id": "path-001",
+      "course_id": "SE-TEST-01",
+      "sequence_no": 5,
+      "relevance_score": 75,
+      "match_reason": "Testing is essential for reliable backend services.",
+      "why_recommended": "Testing is essential for reliable backend services.",
+      "status": "not_started",
+      "completion_percentage": 0,
+      "started_at": null,
+      "completed_at": null,
+      "created_at": "2024-01-15T00:00:00Z",
+      "updated_at": "2024-01-15T00:00:00Z"
+    },
+    {
+      "id": "lpc-006",
+      "learning_path_id": "path-001",
+      "course_id": "SE-CICD-01",
+      "sequence_no": 6,
+      "relevance_score": 60,
+      "match_reason": "Essential DevOps knowledge for backend engineers.",
+      "why_recommended": "Essential DevOps knowledge for backend engineers.",
+      "status": "not_started",
+      "completion_percentage": 0,
+      "started_at": null,
+      "completed_at": null,
+      "created_at": "2024-01-15T00:00:00Z",
+      "updated_at": "2024-01-15T00:00:00Z"
+    }
+  ],
+  "learningTracks": [
+    {
+      "id": "track-001",
+      "learner_id": "learner-001",
+      "assessment_id": "assessment-001",
+      "fit": "High",
+      "track": "Backend Fundamentals",
+      "matchScore": 92,
+      "topics": "Node.js/Python, REST APIs, Database design, Authentication",
+      "duration": "3 months",
+      "whyItFits": "The student's logical abilities and systematic thinking make backend engineering an ideal career path for building scalable systems."
+    },
+    {
+      "id": "track-002",
+      "learner_id": "learner-001",
+      "assessment_id": "assessment-001",
+      "fit": "High",
+      "track": "Production Readiness",
+      "matchScore": 85,
+      "topics": "Logging, Monitoring, Error handling, Performance optimization",
+      "duration": "2 months",
+      "whyItFits": "The student's problem-solving capability and emerging system design skills prepare them to handle production incidents and maintain reliable backend services."
+    }
+  ],
+  "trackEvidence": [
+    {
+      "id": "lte-001",
+      "learning_track_id": "track-001",
+      "learner_id": "learner-001",
+      "assessment_id": "assessment-001",
+      "evidence_values": "Values logical thinking and systematic problem-solving",
+      "evidence_aptitude": "Logical reasoning strength supports backend architecture",
+      "evidence_interest": "Strong inclination towards system design and infrastructure (RIASEC R score of 24)",
+      "evidence_personality": "High conscientiousness and logical thinking indicate strong fit for backend roles",
+      "evidence_employability": "Demonstrates strong problem-solving and teamwork skills",
+      "evidence_adaptive_aptitude": "Emerging aptitude level indicates potential for growth in backend development",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "dashboard": {
+    "greeting": {
+      "title": "Good morning, Adit",
+      "emoji": "👋",
+      "subtitle": "Welcome to Trenning, check your priority learning."
+    },
+    "statBadges": [
+      {
+        "icon": "trophy",
+        "value": "100",
+        "label": "Point"
+      },
+      {
+        "icon": "medal",
+        "value": "32",
+        "label": "Badges"
+      },
+      {
+        "icon": "scroll",
+        "value": "12",
+        "label": "Certificates"
+      }
+    ],
+    "learnerProfile": {
+      "grade_level": "Undergraduate",
+      "skill_level": "Beginner",
+      "target_role": "Backend Engineer",
+      "domain": "Backend Engineering",
+      "industry": "Information Technology & AI"
+    },
+    "levelProgress": {
+      "currentLevel": 1,
+      "totalLevels": 5,
+      "coursesCompleted": 1,
+      "coursesRequired": 6,
+      "nextLevelCourses": 2
+    },
+    "currentLearningPathTitle": "Current Learning Path: Product Design Foundation",
+    "currentModule": {
+      "subtitle": "CURRENT MODULE",
+      "title": "Module 3: Visual Hierarchy",
+      "cta": "Continue Course"
+    },
+    "pathNodes": [
+      {
+        "id": "1",
+        "label": "Start",
+        "status": "completed"
+      },
+      {
+        "id": "2",
+        "label": "Mod1",
+        "status": "completed"
+      },
+      {
+        "id": "3",
+        "label": "Mod2",
+        "status": "completed"
+      },
+      {
+        "id": "4",
+        "label": "Mod3",
+        "status": "current"
+      },
+      {
+        "id": "5",
+        "label": "Mod4",
+        "status": "upcoming"
+      },
+      {
+        "id": "6",
+        "label": "Mod5",
+        "status": "upcoming"
+      },
+      {
+        "id": "7",
+        "label": "Goal",
+        "status": "upcoming"
+      }
+    ],
+    "sixEStages": [
+      {
+        "name": "Engage",
+        "status": "completed",
+        "value": 100
+      },
+      {
+        "name": "Explore",
+        "status": "completed",
+        "value": 100
+      },
+      {
+        "name": "Explain",
+        "status": "completed",
+        "value": 100
+      },
+      {
+        "name": "Express",
+        "status": "in_progress",
+        "value": 50
+      },
+      {
+        "name": "Empower",
+        "status": "not_started",
+        "value": 0
+      },
+      {
+        "name": "Evolve",
+        "status": "not_started",
+        "value": 0
+      }
+    ],
+    "inProgress": [
+      {
+        "id": "1",
+        "type": "Course",
+        "title": "Mastering UI/UX Design: A Guide...",
+        "materials": 5,
+        "completion": null,
+        "deadline": "1 Day",
+        "deadlineUrgent": false,
+        "action": "Start",
+        "thumbColor": "#eef2ff"
+      },
+      {
+        "id": "2",
+        "type": "Course",
+        "title": "Creating Engaging Learning Jour...",
+        "materials": 12,
+        "completion": 64,
+        "deadline": "12 hrs",
+        "deadlineUrgent": true,
+        "action": "Continue",
+        "thumbColor": "#ede9fe"
+      }
+    ],
+    "enrollments": [
+      {
+        "id": "lpc-dashboard-1",
+        "course_id": "SE-BE-OBS-01",
+        "course_code": "BE-OBS-101",
+        "title": "Debugging & Observability for Backend Systems",
+        "job_pathway_role": "Backend Engineer",
+        "duration": "45 hours",
+        "difficulty_level": "beginner",
+        "status": "not_started",
+        "completion_percentage": 0,
+        "relevance_score": 85,
+        "match_reason": "Matches your Learning Path priority.",
+        "domain_name": "Backend Engineering",
+        "certification_value": "System Debugging",
+        "common_course_problem_statement": "Production backend service begins failing under load and engineers must identify root causes using logs, debugging tools and structured investigation."
+      },
+      {
+        "id": "lpc-dashboard-2",
+        "course_id": "UIUX-101",
+        "course_code": "UIUX-101",
+        "title": "UI/UX 101 – For Beginner to be great and good Designer",
+        "job_pathway_role": "UI Designer",
+        "duration": "25 hours",
+        "difficulty_level": "beginner",
+        "status": "not_started",
+        "completion_percentage": 0,
+        "relevance_score": 72,
+        "match_reason": "Foundation course for design.",
+        "domain_name": "Frontend Engineering",
+        "certification_value": "UI Design Fundamentals",
+        "common_course_problem_statement": "Learn to create user-friendly interfaces that solve real user problems through systematic design thinking."
+      }
+    ],
+    "rightStats": [
+      {
+        "icon": "book",
+        "color": "purple",
+        "num": "120",
+        "desc": "Learning content"
+      },
+      {
+        "icon": "clock",
+        "color": "teal",
+        "num": "44",
+        "desc": "Learning time"
+      }
+    ],
+    "activityStreak": {
+      "longestStreak": "143 days",
+      "currentStreak": "18 days",
+      "days": [
+        {
+          "name": "Mon",
+          "active": true
+        },
+        {
+          "name": "Tue",
+          "active": true
+        },
+        {
+          "name": "Wed",
+          "active": true
+        },
+        {
+          "name": "Thu",
+          "active": true
+        },
+        {
+          "name": "Fri",
+          "active": true
+        },
+        {
+          "name": "Sat",
+          "active": false
+        },
+        {
+          "name": "Sun",
+          "active": false
+        }
+      ]
+    },
+    "goals": {
+      "progress": 6,
+      "max": 30,
+      "longestStreak": "1 Day",
+      "dateRange": "(28 Sep 23 – 4 Okt 23)"
+    },
+    "achievements": [
+      {
+        "icon": "zap",
+        "color": "#eab308",
+        "title": "Fast Learner",
+        "desc": "Completed 5 modules in one week",
+        "time": "2 days ago"
+      },
+      {
+        "icon": "target",
+        "color": "#3b82f6",
+        "title": "Problem Solver",
+        "desc": "Submitted first artifact",
+        "time": "1 week ago"
+      },
+      {
+        "icon": "star",
+        "color": "#f97316",
+        "title": "Design Master",
+        "desc": "Scored 100% on Prototyping quiz",
+        "time": "2 weeks ago"
+      },
+      {
+        "icon": "calendar",
+        "color": "#10b981",
+        "title": "Consistent Scholar",
+        "desc": "Maintained a 14-day study streak",
+        "time": "3 weeks ago"
+      }
+    ],
+    "leaderboard": {
+      "rankSummary": "Your rank: #120 of 1,842 learners",
+      "entries": [
+        {
+          "rank": 1,
+          "name": "Arif Brata",
+          "role": "Jr UI/UX Designer",
+          "points": 1250,
+          "initials": "AB"
+        },
+        {
+          "rank": 2,
+          "name": "Siti Rahma",
+          "role": "Sr Product Manager",
+          "points": 1185,
+          "initials": "SR"
+        },
+        {
+          "rank": 3,
+          "name": "Dimas Prayoga",
+          "role": "Frontend Developer",
+          "points": 1122,
+          "initials": "DP"
+        },
+        {
+          "rank": 118,
+          "name": "Nadia Putri",
+          "role": "Instructional Designer",
+          "points": 498,
+          "initials": "NP"
+        },
+        {
+          "rank": 119,
+          "name": "Kevin Aditya",
+          "role": "Learning Specialist",
+          "points": 493,
+          "initials": "KA"
+        },
+        {
+          "rank": 120,
+          "name": "Adit Pratama",
+          "role": "Product Design Learner",
+          "points": 487,
+          "initials": "AP",
+          "isCurrentUser": true
+        },
+        {
+          "rank": 121,
+          "name": "Maya Salsabila",
+          "role": "UI Designer",
+          "points": 482,
+          "initials": "MS"
+        }
+      ]
+    }
+  },
+  "courseContent": {
+    "courses": [
+      {
+        "id": "lpc-001",
+        "course_id": "crs-obs-l2",
+        "course_code": "OBS-L2",
+        "title": "Observability: Logging, Monitoring & Debugging",
+        "description": "Learn how to debug and monitor backend systems for better performance and stability.",
+        "thumbnail_url": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2670&auto=format&fit=crop",
+        "job_pathway_role": "Backend Engineer",
+        "capability_name": "Observability & Debugging",
+        "level_label": "Applied Skill",
+        "domain_name": "Software Engineering",
+        "duration": "45 hours",
+        "difficulty_level": "intermediate",
+        "certification_value": "Industry-recognized certificate",
+        "status": "in_progress",
+        "completion_percentage": 17,
+        "xp_reward": 500,
+        "badge": "none",
+        "current_level": 1,
+        "required_level": 3,
+        "gap": 2,
+        "priority_band": "A",
+        "why_needed": "Monitor production systems and diagnose runtime issues",
+        "how_to_build": "Complete observability course with logging, debugging, and monitoring tools",
+        "sequence_no": 1,
+        "started_at": "2024-01-15T00:00:00Z",
+        "completed_at": null,
+        "common_course_problem_statement": "Engineers struggle to investigate and resolve production incidents systematically.",
+        "problem_statement": {
+          "title": "Production backend service begins failing under load",
+          "description": "A production backend service fails under load and engineers must identify root causes using logs, debugging tools and structured investigation. Complete 6 progressive artifacts to resolve this incident using a professional observability workflow."
+        },
+        "problem_artifacts": [
+          {
+            "id": "pa1",
+            "no": 1,
+            "title": "System Failure Investigation Report",
+            "module": "System Failure Investigation",
+            "prompt": "Production API latency increases during peak traffic. Create a first-pass incident map and list root-cause hypotheses.",
+            "text": "",
+            "status": "not_started",
+            "score": 0
+          },
+          {
+            "id": "pa2",
+            "no": 2,
+            "title": "Structured Logging Plan",
+            "module": "Structured Logging",
+            "prompt": "System failures lack traceability. Design a structured logging schema with severity levels and correlation IDs.",
+            "text": "",
+            "status": "not_started",
+            "score": 0
+          },
+          {
+            "id": "pa3",
+            "no": 3,
+            "title": "Debugging Trace & Root Cause",
+            "module": "Debugging Tools",
+            "prompt": "Backend bug crashes services. Produce a debug trace and identify the root cause.",
+            "text": "",
+            "status": "not_started",
+            "score": 0
+          },
+          {
+            "id": "pa4",
+            "no": 4,
+            "title": "Bug Reproduction Plan",
+            "module": "Reproducing Bugs",
+            "prompt": "Intermittent production bug cannot be replicated. Create a controlled reproduction plan.",
+            "text": "",
+            "status": "not_started",
+            "score": 0
+          },
+          {
+            "id": "pa5",
+            "no": 5,
+            "title": "Root Cause Analysis Document",
+            "module": "Root Cause Analysis",
+            "prompt": "Engineers fix symptoms rather than root cause. Produce an evidence-based RCA document.",
+            "text": "",
+            "status": "not_started",
+            "score": 0
+          },
+          {
+            "id": "pa6",
+            "no": 6,
+            "title": "Incident Resolution Capstone",
+            "module": "Observability Capstone",
+            "prompt": "Investigate, diagnose, and resolve a realistic backend production incident using a full observability workflow.",
+            "text": "",
+            "status": "not_started",
+            "score": 0
+          }
+        ],
+        "modules": [
+          {
+            "id": "mod-001",
+            "module_no": 1,
+            "title": "System Failure Investigation",
+            "description": "Learn how to investigate and debug system failures in production environments.",
+            "engineering_workflow_stage": "System Investigation",
+            "module_specific_problem_statement": "Production API latency increases during peak traffic.",
+            "pressure_points": "Engineers rely on print statements and cannot locate failure source.",
+            "student_confusion": "How backend systems fail under load.",
+            "learning_content": {
+              "major_concepts": "System architecture, request lifecycle, observability overview",
+              "implementation_context_when_to_use": "Understanding system interactions before debugging",
+              "reason_behind_concept": "Logs investigation"
+            },
+            "support": {
+              "ai_support_tips": "Foundation for logging module",
+              "module_continuity_link": "Output becomes input baseline for Module 2 structured logging."
+            },
+            "knowledge": {
+              "technical_concepts_learnt": "Operating systems basics",
+              "academic_refresher_concepts": "Logs dashboards"
+            },
+            "tools": {
+              "tools_used": "Free",
+              "tool_type_free_or_paid": "free"
+            },
+            "status": "available",
+            "completion_percentage": 0,
+            "artifact_submitted": false,
+            "estimatedTime": "2.5 hrs",
+            "stages": [
+              {
+                "key": "engage",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "explore",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "explain",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "express",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "empower",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "evolve",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              }
+            ],
+            "content": [
+              {
+                "id": "c9",
+                "stage": "empower",
+                "order": 1,
+                "title": "Final: Incident Investigation Report",
+                "content_type": "doc",
+                "url": "#",
+                "status": "published",
+                "isViewed": false,
+                "facilitator": [
+                  {
+                    "question": "Looking at the Final Incident Investigation Report requirements, what section do you think will be hardest to complete well, and what makes it challenging?",
+                    "follow_up": "Agreed - that section trips up a lot of engineers. What is your strategy to tackle it?"
+                  }
+                ]
+              },
+              {
+                "id": "c1",
+                "stage": "engage",
+                "order": 1,
+                "title": "Incident Kickoff: API Latency Spike",
+                "content_type": "video",
+                "duration_seconds": 540,
+                "url": "#",
+                "status": "published",
+                "isViewed": false,
+                "facilitator": [
+                  {
+                    "question": "You just watched the Incident Kickoff video. In your own words, what was the primary symptom of the API latency spike, and what made it hard to diagnose at first?",
+                    "follow_up": "Interesting take. How do you think the on-call engineer should have prioritised their first 15 minutes of investigation?"
+                  },
+                  {
+                    "question": "What signals from the video would you look for first if you were the engineer on call during that incident?",
+                    "follow_up": "Good thinking. Would those signals alone be enough to identify the root cause, or would you need more data?"
+                  }
+                ]
+              },
+              {
+                "id": "c2",
+                "stage": "engage",
+                "order": 2,
+                "title": "Failure Investigation Worksheet",
+                "content_type": "pdf",
+                "url": "#",
+                "status": "published",
+                "isViewed": false,
+                "facilitator": [
+                  {
+                    "question": "After reviewing the Failure Investigation Worksheet, what do you think is the most important column to fill in first, and why?",
+                    "follow_up": "Nice reasoning. How would you handle a situation where you don't have enough data to fill that column?"
+                  }
+                ]
+              },
+              {
+                "id": "c10",
+                "stage": "evolve",
+                "order": 1,
+                "title": "Reflection Prompts & Next Steps",
+                "content_type": "text",
+                "url": "#",
+                "status": "published",
+                "isViewed": false,
+                "facilitator": [
+                  {
+                    "question": "Reflecting on everything you have done in this module: what is one mental model or habit you would do differently in your next real incident, and why?",
+                    "follow_up": "That is a meaningful reflection. How would you share that learning with a teammate who was not on this incident?"
+                  }
+                ]
+              },
+              {
+                "id": "c6",
+                "stage": "explain",
+                "order": 1,
+                "title": "System Architecture Overview",
+                "content_type": "slide",
+                "url": "#",
+                "status": "published",
+                "isViewed": false,
+                "facilitator": [
+                  {
+                    "question": "You have just reviewed the System Architecture Overview slides. What part of the architecture surprised you most, and how does it affect the way you would approach debugging a failure in it?",
+                    "follow_up": "That is a thoughtful observation. How would you document that insight so that a new team member could benefit from it?"
+                  },
+                  {
+                    "question": "Based on the slides, where in the system would you instrument logging first if you had to pick just one layer - and what would you capture there?",
+                    "follow_up": "Good choice. What would you sacrifice by instrumenting only that layer, and how would you compensate?"
+                  }
+                ]
+              },
+              {
+                "id": "c7",
+                "stage": "explain",
+                "order": 2,
+                "title": "Request Lifecycle Deep Dive",
+                "content_type": "video",
+                "duration_seconds": 960,
+                "url": "#",
+                "status": "published",
+                "isViewed": false,
+                "facilitator": [
+                  {
+                    "question": "The Request Lifecycle Deep Dive covered many hops. Identify the single hop where you believe latency is most likely to accumulate silently, and explain why.",
+                    "follow_up": "Strong reasoning. What metric would you define to detect latency accumulating at that hop before it becomes a user-visible incident?"
+                  }
+                ]
+              },
+              {
+                "id": "c3",
+                "stage": "explore",
+                "order": 1,
+                "title": "Structured Log Analysis Guide",
+                "content_type": "pdf",
+                "url": "#",
+                "status": "published",
+                "isViewed": false,
+                "facilitator": [
+                  {
+                    "question": "The Structured Log Analysis Guide covers several log fields. Which field do you think gives the most diagnostic value during an incident, and what's your reasoning?",
+                    "follow_up": "Good point. How does that field help you narrow down from hundreds of log lines to the ones that actually matter?"
+                  }
+                ]
+              },
+              {
+                "id": "c4",
+                "stage": "explore",
+                "order": 2,
+                "title": "Service Architecture Diagram",
+                "content_type": "image",
+                "url": "#",
+                "status": "published",
+                "isViewed": false,
+                "facilitator": [
+                  {
+                    "question": "Looking at the Service Architecture Diagram, which service boundary do you think is the most likely source of latency under high load, and why?",
+                    "follow_up": "Solid analysis. What observability would you add at that boundary to catch issues earlier?"
+                  }
+                ]
+              },
+              {
+                "id": "c5",
+                "stage": "explore",
+                "order": 3,
+                "title": "Reading Trace IDs in Distributed Systems",
+                "content_type": "video",
+                "duration_seconds": 780,
+                "url": "#",
+                "status": "published",
+                "isViewed": false,
+                "facilitator": [
+                  {
+                    "question": "After watching the Trace IDs video, explain in your own words how a trace ID flows through a distributed system and why it matters for debugging.",
+                    "follow_up": "Great explanation. Can you think of a scenario where trace IDs alone would not be enough to diagnose a problem?"
+                  }
+                ]
+              },
+              {
+                "id": "c8",
+                "stage": "express",
+                "order": 1,
+                "title": "Practice: Draft Logging Schema",
+                "content_type": "doc",
+                "url": "#",
+                "status": "published",
+                "isViewed": false,
+                "facilitator": [
+                  {
+                    "question": "You have started drafting your logging schema. What is one design decision you are least confident about, and what tradeoffs are you weighing?",
+                    "follow_up": "That is exactly the kind of thinking senior engineers do. What would help you make that decision with more confidence?"
+                  }
+                ]
+              }
+            ],
+            "artifacts": {
+              "express": {
+                "id": "ma-001-e",
+                "artifact_type": "practice",
+                "total_score": 0,
+                "passing_score": null,
+                "allow_resubmission": true,
+                "require_review_unlock": false,
+                "max_attempts": null,
+                "questions": [
+                  {
+                    "id": "aq-001",
+                    "order": 1,
+                    "title": "Failure Investigation Map",
+                    "description": "Create a first-pass incident map showing service boundaries and symptom points.",
+                    "instructions": "1) Read incident context. 2) Draw request flow. 3) Mark weak signals.",
+                    "submission_required": false,
+                    "expected_submission_type": "text"
+                  },
+                  {
+                    "id": "aq-002",
+                    "order": 2,
+                    "title": "Hypothesis List",
+                    "description": "List at least 3 root-cause hypotheses based on your investigation map.",
+                    "instructions": "1) Review your map. 2) List hypotheses. 3) Rank by likelihood.",
+                    "submission_required": false,
+                    "expected_submission_type": "text"
+                  }
+                ],
+                "submissions": [],
+                "templates": []
+              },
+              "empower": {
+                "id": "ma-001-f",
+                "artifact_type": "final",
+                "total_score": 100,
+                "passing_score": 70,
+                "allow_resubmission": true,
+                "require_review_unlock": true,
+                "max_attempts": 3,
+                "questions": [
+                  {
+                    "id": "aq-003",
+                    "order": 1,
+                    "title": "Evidence Mapping Spreadsheet",
+                    "description": "Download the Excel template and map log/trace evidence to each root-cause hypothesis.",
+                    "instructions": "1) Download evidence-mapping-template.xlsx. 2) Fill in log entries. 3) Map to hypotheses. 4) Upload completed file.",
+                    "submission_required": true,
+                    "expected_submission_type": "file",
+                    "accepted_file_types": [
+                      ".xlsx",
+                      ".xls"
+                    ]
+                  },
+                  {
+                    "id": "aq-004",
+                    "order": 2,
+                    "title": "Root Cause Analysis Code",
+                    "description": "Write Python code to analyze the log patterns and identify the root cause.",
+                    "instructions": "1) Use the provided log data. 2) Write analysis script. 3) Submit your code.",
+                    "submission_required": true,
+                    "expected_submission_type": "code",
+                    "accepted_file_types": [
+                      ".py"
+                    ]
+                  },
+                  {
+                    "id": "aq-005",
+                    "order": 3,
+                    "title": "GitHub Repository Link",
+                    "description": "Create a GitHub repository with your complete investigation.",
+                    "instructions": "1) Create GitHub repo. 2) Push all files. 3) Submit repository URL.",
+                    "submission_required": true,
+                    "expected_submission_type": "url"
+                  }
+                ],
+                "submissions": [],
+                "templates": [
+                  {
+                    "id": "at-001",
+                    "artifact_id": "ma-001-f",
+                    "question_id": "aq-003",
+                    "file_name": "evidence-mapping-template.xlsx",
+                    "file_url": "https://content.rareminds.dev/templates/mod-001/evidence-mapping-template.xlsx",
+                    "file_type": "excel",
+                    "version": 1,
+                    "is_downloadable": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "mod-002",
+            "module_no": 2,
+            "title": "Structured Logging",
+            "description": "Learn how to produce high-signal logs for faster incident diagnosis.",
+            "engineering_workflow_stage": "Signal Analysis (Logging)",
+            "module_specific_problem_statement": "System failures lack traceability due to poor logging.",
+            "pressure_points": "Developers rely on console prints.",
+            "student_confusion": "What meaningful logs look like.",
+            "learning_content": {
+              "major_concepts": "Structured logging, log levels",
+              "implementation_context_when_to_use": "Implement logs for observability",
+              "reason_behind_concept": "Review poorly logged systems"
+            },
+            "support": {
+              "ai_support_tips": "Feeds debugging workflow",
+              "module_continuity_link": "Log report guides debugger inspection in Module 3."
+            },
+            "knowledge": {
+              "technical_concepts_learnt": "Programming basics",
+              "academic_refresher_concepts": "Python logging"
+            },
+            "tools": {
+              "tools_used": "Free",
+              "tool_type_free_or_paid": "free"
+            },
+            "status": "available",
+            "completion_percentage": 0,
+            "artifact_submitted": false,
+            "estimatedTime": "2 hrs",
+            "stages": [
+              {
+                "key": "engage",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "explore",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "explain",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "express",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "empower",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "evolve",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              }
+            ],
+            "content": [],
+            "artifacts": {
+              "express": {
+                "id": "ma-002-e",
+                "artifact_type": "practice",
+                "total_score": 0,
+                "passing_score": null,
+                "allow_resubmission": true,
+                "require_review_unlock": false,
+                "max_attempts": null,
+                "questions": [
+                  {
+                    "id": "aq-201",
+                    "order": 1,
+                    "title": "Log Schema Draft",
+                    "description": "Design a structured log schema for a backend service with appropriate fields and severity levels.",
+                    "instructions": "1) Identify key log fields. 2) Define severity levels. 3) Add correlation ID strategy.",
+                    "submission_required": false,
+                    "expected_submission_type": "text"
+                  },
+                  {
+                    "id": "aq-202",
+                    "order": 2,
+                    "title": "Log Level Mapping",
+                    "description": "Map common application events to appropriate log levels (DEBUG, INFO, WARN, ERROR, FATAL).",
+                    "instructions": "1) List 10 application events. 2) Assign log levels. 3) Justify each choice.",
+                    "submission_required": false,
+                    "expected_submission_type": "text"
+                  }
+                ],
+                "submissions": [],
+                "templates": []
+              },
+              "empower": {
+                "id": "ma-002-f",
+                "artifact_type": "final",
+                "total_score": 100,
+                "passing_score": 70,
+                "allow_resubmission": true,
+                "require_review_unlock": true,
+                "max_attempts": 3,
+                "questions": [
+                  {
+                    "id": "aq-203",
+                    "order": 1,
+                    "title": "Structured Logging Implementation",
+                    "description": "Implement structured logging in a Python service using the provided starter code.",
+                    "instructions": "1) Download starter code. 2) Add structured logging. 3) Include correlation IDs. 4) Submit your code.",
+                    "submission_required": true,
+                    "expected_submission_type": "code",
+                    "accepted_file_types": [
+                      ".py"
+                    ]
+                  },
+                  {
+                    "id": "aq-204",
+                    "order": 2,
+                    "title": "Log Analysis Report",
+                    "description": "Analyze the provided log samples and write a report identifying patterns and anomalies.",
+                    "instructions": "1) Review log samples. 2) Identify patterns. 3) Document anomalies. 4) Submit your report.",
+                    "submission_required": true,
+                    "expected_submission_type": "text"
+                  },
+                  {
+                    "id": "aq-205",
+                    "order": 3,
+                    "title": "GitHub Repository",
+                    "description": "Push your logging implementation to a GitHub repository.",
+                    "instructions": "1) Create repo. 2) Push implementation. 3) Submit URL.",
+                    "submission_required": true,
+                    "expected_submission_type": "url"
+                  }
+                ],
+                "submissions": [],
+                "templates": [
+                  {
+                    "id": "at-002",
+                    "artifact_id": "ma-002-f",
+                    "question_id": "aq-203",
+                    "file_name": "logging-starter.py",
+                    "file_url": "https://content.rareminds.dev/templates/mod-002/logging-starter.py",
+                    "file_type": "text",
+                    "version": 1,
+                    "is_downloadable": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "mod-003",
+            "module_no": 3,
+            "title": "Debugging Tools",
+            "description": "Use breakpoints and runtime inspection to isolate backend failures.",
+            "engineering_workflow_stage": "Runtime Diagnosis (Debugging)",
+            "module_specific_problem_statement": "Backend bug crashes services in production.",
+            "pressure_points": "Developers cannot reproduce bugs locally.",
+            "student_confusion": "Debugger usage unclear.",
+            "learning_content": {
+              "major_concepts": "Breakpoints, stack traces",
+              "implementation_context_when_to_use": "Use debugging tools systematically",
+              "reason_behind_concept": "Inspect failing backend service"
+            },
+            "support": {
+              "ai_support_tips": "Builds on logging analysis",
+              "module_continuity_link": "Debug trace identifies conditions to reproduce in Module 4."
+            },
+            "knowledge": {
+              "technical_concepts_learnt": "Processes and threads",
+              "academic_refresher_concepts": "VS Code debugger"
+            },
+            "tools": {
+              "tools_used": "Free",
+              "tool_type_free_or_paid": "free"
+            },
+            "status": "available",
+            "completion_percentage": 0,
+            "artifact_submitted": false,
+            "estimatedTime": "3 hrs",
+            "stages": [
+              {
+                "key": "engage",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "explore",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "explain",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "express",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "empower",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "evolve",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              }
+            ],
+            "content": [],
+            "artifacts": {
+              "express": {
+                "id": "ma-003-e",
+                "artifact_type": "practice",
+                "total_score": 0,
+                "passing_score": null,
+                "allow_resubmission": true,
+                "require_review_unlock": false,
+                "max_attempts": null,
+                "questions": [
+                  {
+                    "id": "aq-301",
+                    "order": 1,
+                    "title": "Breakpoint Strategy",
+                    "description": "Plan a breakpoint strategy for debugging the provided failing service.",
+                    "instructions": "1) Review the service code. 2) Identify critical breakpoint locations. 3) Explain what you expect to observe at each.",
+                    "submission_required": false,
+                    "expected_submission_type": "text"
+                  },
+                  {
+                    "id": "aq-302",
+                    "order": 2,
+                    "title": "Stack Trace Analysis",
+                    "description": "Analyze the provided stack trace and identify the root cause.",
+                    "instructions": "1) Read the stack trace. 2) Identify the failure point. 3) Describe the call chain leading to the error.",
+                    "submission_required": false,
+                    "expected_submission_type": "text"
+                  }
+                ],
+                "submissions": [],
+                "templates": []
+              },
+              "empower": {
+                "id": "ma-003-f",
+                "artifact_type": "final",
+                "total_score": 100,
+                "passing_score": 70,
+                "allow_resubmission": true,
+                "require_review_unlock": true,
+                "max_attempts": 3,
+                "questions": [
+                  {
+                    "id": "aq-303",
+                    "order": 1,
+                    "title": "Debug Session Recording",
+                    "description": "Record a debug session walkthrough using VS Code debugger on the provided buggy service.",
+                    "instructions": "1) Set up the debugger. 2) Step through the failure. 3) Document findings. 4) Submit your report.",
+                    "submission_required": true,
+                    "expected_submission_type": "text"
+                  },
+                  {
+                    "id": "aq-304",
+                    "order": 2,
+                    "title": "Fixed Code Submission",
+                    "description": "Submit the fixed version of the buggy service with comments explaining each fix.",
+                    "instructions": "1) Fix the identified bugs. 2) Add inline comments. 3) Submit your code.",
+                    "submission_required": true,
+                    "expected_submission_type": "code",
+                    "accepted_file_types": [
+                      ".py",
+                      ".js",
+                      ".ts"
+                    ]
+                  },
+                  {
+                    "id": "aq-305",
+                    "order": 3,
+                    "title": "GitHub Repository",
+                    "description": "Push your fixed code and debug notes to a GitHub repository.",
+                    "instructions": "1) Create repo. 2) Push fixed code. 3) Submit URL.",
+                    "submission_required": true,
+                    "expected_submission_type": "url"
+                  }
+                ],
+                "submissions": [],
+                "templates": [
+                  {
+                    "id": "at-003",
+                    "artifact_id": "ma-003-f",
+                    "question_id": "aq-303",
+                    "file_name": "buggy-service.py",
+                    "file_url": "https://content.rareminds.dev/templates/mod-003/buggy-service.py",
+                    "file_type": "text",
+                    "version": 1,
+                    "is_downloadable": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "mod-004",
+            "module_no": 4,
+            "title": "Reproducing Bugs",
+            "description": "Create controlled test setups to reproduce intermittent production defects.",
+            "engineering_workflow_stage": "Bug Reproduction",
+            "module_specific_problem_statement": "Intermittent production bug cannot be replicated.",
+            "pressure_points": "Developers guess fixes.",
+            "student_confusion": "How to reproduce bugs systematically.",
+            "learning_content": {
+              "major_concepts": "Test cases, controlled reproduction",
+              "implementation_context_when_to_use": "Recreate failure conditions",
+              "reason_behind_concept": "Analyze intermittent bug"
+            },
+            "support": {
+              "ai_support_tips": "Supports root cause discovery",
+              "module_continuity_link": "Reproduction plan supplies validated failure conditions for Module 5 RCA."
+            },
+            "knowledge": {
+              "technical_concepts_learnt": "Operating systems",
+              "academic_refresher_concepts": "Test frameworks"
+            },
+            "tools": {
+              "tools_used": "Free",
+              "tool_type_free_or_paid": "free"
+            },
+            "status": "available",
+            "completion_percentage": 0,
+            "artifact_submitted": false,
+            "estimatedTime": "2 hrs",
+            "stages": [
+              {
+                "key": "engage",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "explore",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "explain",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "express",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "empower",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "evolve",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              }
+            ],
+            "content": [],
+            "artifacts": {
+              "express": {
+                "id": "ma-004-e",
+                "artifact_type": "practice",
+                "total_score": 0,
+                "passing_score": null,
+                "allow_resubmission": true,
+                "require_review_unlock": false,
+                "max_attempts": null,
+                "questions": [
+                  {
+                    "id": "aq-401",
+                    "order": 1,
+                    "title": "Reproduction Conditions",
+                    "description": "List the exact conditions required to reproduce the intermittent bug described in the scenario.",
+                    "instructions": "1) Read the bug report. 2) Identify environmental factors. 3) List reproduction steps.",
+                    "submission_required": false,
+                    "expected_submission_type": "text"
+                  },
+                  {
+                    "id": "aq-402",
+                    "order": 2,
+                    "title": "Test Case Design",
+                    "description": "Design a minimal test case that reliably triggers the bug.",
+                    "instructions": "1) Define inputs. 2) Define expected vs actual output. 3) Write pseudocode for the test.",
+                    "submission_required": false,
+                    "expected_submission_type": "text"
+                  }
+                ],
+                "submissions": [],
+                "templates": []
+              },
+              "empower": {
+                "id": "ma-004-f",
+                "artifact_type": "final",
+                "total_score": 100,
+                "passing_score": 70,
+                "allow_resubmission": true,
+                "require_review_unlock": true,
+                "max_attempts": 3,
+                "questions": [
+                  {
+                    "id": "aq-403",
+                    "order": 1,
+                    "title": "Reproduction Plan Document",
+                    "description": "Write a formal reproduction plan document for the intermittent production bug.",
+                    "instructions": "1) Document environment setup. 2) List exact reproduction steps. 3) Define success criteria.",
+                    "submission_required": true,
+                    "expected_submission_type": "text"
+                  },
+                  {
+                    "id": "aq-404",
+                    "order": 2,
+                    "title": "Automated Test Suite",
+                    "description": "Write automated tests that reliably reproduce and verify the fix for the bug.",
+                    "instructions": "1) Write test cases. 2) Ensure tests fail before fix. 3) Ensure tests pass after fix. 4) Submit code.",
+                    "submission_required": true,
+                    "expected_submission_type": "code",
+                    "accepted_file_types": [
+                      ".py",
+                      ".js",
+                      ".ts"
+                    ]
+                  },
+                  {
+                    "id": "aq-405",
+                    "order": 3,
+                    "title": "GitHub Repository",
+                    "description": "Push your reproduction tests and documentation to GitHub.",
+                    "instructions": "1) Create repo. 2) Push tests and docs. 3) Submit URL.",
+                    "submission_required": true,
+                    "expected_submission_type": "url"
+                  }
+                ],
+                "submissions": [],
+                "templates": [
+                  {
+                    "id": "at-004b",
+                    "artifact_id": "ma-004-f",
+                    "question_id": "aq-403",
+                    "file_name": "reproduction-plan-template.docx",
+                    "file_url": "https://content.rareminds.dev/templates/mod-004/reproduction-plan-template.docx",
+                    "file_type": "doc",
+                    "version": 1,
+                    "is_downloadable": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "mod-005",
+            "module_no": 5,
+            "title": "Root Cause Analysis",
+            "description": "Separate symptom and cause to produce evidence-based corrective actions.",
+            "engineering_workflow_stage": "Root Cause Identification",
+            "module_specific_problem_statement": "Engineers fix symptoms rather than root cause.",
+            "pressure_points": "Temporary fixes hide underlying issue.",
+            "student_confusion": "Root cause analysis process.",
+            "learning_content": {
+              "major_concepts": "Root cause analysis frameworks",
+              "implementation_context_when_to_use": "Identify underlying system issue",
+              "reason_behind_concept": "Review production incident"
+            },
+            "support": {
+              "ai_support_tips": "Leads into final project",
+              "module_continuity_link": "RCA report drives final resolution and validation in Module 6."
+            },
+            "knowledge": {
+              "technical_concepts_learnt": "System concepts",
+              "academic_refresher_concepts": "Logs debugger"
+            },
+            "tools": {
+              "tools_used": "Free",
+              "tool_type_free_or_paid": "free"
+            },
+            "status": "available",
+            "completion_percentage": 0,
+            "artifact_submitted": false,
+            "estimatedTime": "2 hrs",
+            "stages": [
+              {
+                "key": "engage",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "explore",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "explain",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "express",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "empower",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "evolve",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              }
+            ],
+            "content": [],
+            "artifacts": {
+              "express": {
+                "id": "ma-005-e",
+                "artifact_type": "practice",
+                "total_score": 0,
+                "passing_score": null,
+                "allow_resubmission": true,
+                "require_review_unlock": false,
+                "max_attempts": null,
+                "questions": [
+                  {
+                    "id": "aq-501",
+                    "order": 1,
+                    "title": "5 Whys Analysis",
+                    "description": "Apply the 5 Whys technique to the provided production incident to identify the root cause.",
+                    "instructions": "1) Start with the symptom. 2) Ask 'why' 5 times. 3) Document each answer.",
+                    "submission_required": false,
+                    "expected_submission_type": "text"
+                  },
+                  {
+                    "id": "aq-502",
+                    "order": 2,
+                    "title": "Fishbone Diagram",
+                    "description": "Create a fishbone (Ishikawa) diagram mapping all contributing factors to the incident.",
+                    "instructions": "1) Identify the problem. 2) Map categories (People, Process, Technology). 3) List contributing factors.",
+                    "submission_required": false,
+                    "expected_submission_type": "text"
+                  }
+                ],
+                "submissions": [],
+                "templates": []
+              },
+              "empower": {
+                "id": "ma-005-f",
+                "artifact_type": "final",
+                "total_score": 100,
+                "passing_score": 70,
+                "allow_resubmission": true,
+                "require_review_unlock": true,
+                "max_attempts": 3,
+                "questions": [
+                  {
+                    "id": "aq-503",
+                    "order": 1,
+                    "title": "RCA Report",
+                    "description": "Write a complete Root Cause Analysis report for the production incident using the provided template.",
+                    "instructions": "1) Download RCA template. 2) Fill in all sections. 3) Include evidence and timeline. 4) Upload completed report.",
+                    "submission_required": true,
+                    "expected_submission_type": "file",
+                    "accepted_file_types": [
+                      ".pdf",
+                      ".docx"
+                    ]
+                  },
+                  {
+                    "id": "aq-504",
+                    "order": 2,
+                    "title": "Corrective Action Plan",
+                    "description": "Define corrective and preventive actions to prevent recurrence.",
+                    "instructions": "1) List immediate fixes. 2) Define long-term preventive measures. 3) Assign owners and timelines.",
+                    "submission_required": true,
+                    "expected_submission_type": "text"
+                  },
+                  {
+                    "id": "aq-505",
+                    "order": 3,
+                    "title": "GitHub Repository",
+                    "description": "Push your RCA documentation and any supporting code to GitHub.",
+                    "instructions": "1) Create repo. 2) Push all artifacts. 3) Submit URL.",
+                    "submission_required": true,
+                    "expected_submission_type": "url"
+                  }
+                ],
+                "submissions": [],
+                "templates": [
+                  {
+                    "id": "at-005",
+                    "artifact_id": "ma-005-f",
+                    "question_id": "aq-503",
+                    "file_name": "rca-report-template.docx",
+                    "file_url": "https://content.rareminds.dev/templates/mod-005/rca-report-template.docx",
+                    "file_type": "doc",
+                    "version": 1,
+                    "is_downloadable": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "mod-006",
+            "module_no": 6,
+            "title": "Observability Capstone",
+            "description": "Execute end-to-end incident handling from investigation to validated fix and communication.",
+            "engineering_workflow_stage": "Incident Resolution Capstone",
+            "module_specific_problem_statement": "Learners must investigate, diagnose, and resolve a realistic backend production incident.",
+            "pressure_points": "Engineers must combine logs, debugging, and RCA.",
+            "student_confusion": "Complete debugging workflow.",
+            "learning_content": {
+              "major_concepts": "Full observability workflow, incident comms, post-mortems",
+              "implementation_context_when_to_use": "End to end investigation",
+              "reason_behind_concept": "Review full production scenario"
+            },
+            "support": {
+              "ai_support_tips": "Integrates all modules",
+              "module_continuity_link": "Integrates all prior module artifacts into one capstone output."
+            },
+            "knowledge": {
+              "technical_concepts_learnt": "Programming OS",
+              "academic_refresher_concepts": "Logs debugger monitoring"
+            },
+            "tools": {
+              "tools_used": "Free",
+              "tool_type_free_or_paid": "free"
+            },
+            "status": "available",
+            "completion_percentage": 0,
+            "artifact_submitted": false,
+            "estimatedTime": "4 hrs",
+            "stages": [
+              {
+                "key": "engage",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "explore",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "explain",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "express",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "empower",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              },
+              {
+                "key": "evolve",
+                "status": "not_started",
+                "time_spent_seconds": 0
+              }
+            ],
+            "content": [],
+            "artifacts": {
+              "express": {
+                "id": "ma-006-e",
+                "artifact_type": "practice",
+                "total_score": 0,
+                "passing_score": null,
+                "allow_resubmission": true,
+                "require_review_unlock": false,
+                "max_attempts": null,
+                "questions": [
+                  {
+                    "id": "aq-601",
+                    "order": 1,
+                    "title": "Incident Response Checklist",
+                    "description": "Draft an incident response checklist covering all phases: detection, investigation, resolution, and communication.",
+                    "instructions": "1) List detection signals. 2) Define investigation steps. 3) Outline resolution process. 4) Plan stakeholder communication.",
+                    "submission_required": false,
+                    "expected_submission_type": "text"
+                  },
+                  {
+                    "id": "aq-602",
+                    "order": 2,
+                    "title": "Observability Stack Design",
+                    "description": "Design an observability stack (logs, metrics, traces) for the capstone scenario service.",
+                    "instructions": "1) Choose tools for each pillar. 2) Define what to instrument. 3) Describe alert thresholds.",
+                    "submission_required": false,
+                    "expected_submission_type": "text"
+                  }
+                ],
+                "submissions": [],
+                "templates": []
+              },
+              "empower": {
+                "id": "ma-006-f",
+                "artifact_type": "final",
+                "total_score": 100,
+                "passing_score": 75,
+                "allow_resubmission": true,
+                "require_review_unlock": true,
+                "max_attempts": 3,
+                "questions": [
+                  {
+                    "id": "aq-603",
+                    "order": 1,
+                    "title": "Full Incident Report",
+                    "description": "Write a complete incident report covering investigation, root cause, resolution, and post-mortem.",
+                    "instructions": "1) Download incident report template. 2) Complete all sections. 3) Include logs, traces, and evidence. 4) Upload completed report.",
+                    "submission_required": true,
+                    "expected_submission_type": "file",
+                    "accepted_file_types": [
+                      ".pdf",
+                      ".docx"
+                    ]
+                  },
+                  {
+                    "id": "aq-604",
+                    "order": 2,
+                    "title": "Observability Implementation",
+                    "description": "Implement the observability stack you designed - add logging, metrics, and tracing to the capstone service.",
+                    "instructions": "1) Instrument the service. 2) Add structured logs. 3) Add metrics. 4) Submit your code.",
+                    "submission_required": true,
+                    "expected_submission_type": "code",
+                    "accepted_file_types": [
+                      ".py",
+                      ".js",
+                      ".ts"
+                    ]
+                  },
+                  {
+                    "id": "aq-605",
+                    "order": 3,
+                    "title": "GitHub Repository",
+                    "description": "Push your complete capstone project - code, reports, and documentation - to GitHub.",
+                    "instructions": "1) Create repo. 2) Push all deliverables. 3) Submit URL.",
+                    "submission_required": true,
+                    "expected_submission_type": "url"
+                  }
+                ],
+                "submissions": [],
+                "templates": [
+                  {
+                    "id": "at-006a",
+                    "artifact_id": "ma-006-f",
+                    "question_id": "aq-603",
+                    "file_name": "incident-report-template.docx",
+                    "file_url": "https://content.rareminds.dev/templates/mod-006/incident-report-template.docx",
+                    "file_type": "doc",
+                    "version": 1,
+                    "is_downloadable": true
+                  },
+                  {
+                    "id": "at-006b",
+                    "artifact_id": "ma-006-f",
+                    "question_id": "aq-604",
+                    "file_name": "capstone-starter.py",
+                    "file_url": "https://content.rareminds.dev/templates/mod-006/capstone-starter.py",
+                    "file_type": "text",
+                    "version": 1,
+                    "is_downloadable": true
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "lpc-002",
+        "course_id": "crs-react-l3",
+        "course_code": "REACT-L3",
+        "title": "React: Advanced Patterns & Performance Optimization",
+        "description": "Deep dive into scalable React patterns, code splitting, and performance optimization.",
+        "thumbnail_url": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=2631&auto=format&fit=crop",
+        "job_pathway_role": "Frontend Engineer",
+        "capability_name": "Frontend Frameworks (React)",
+        "level_label": "Applied Skill",
+        "duration": "38 hours",
+        "difficulty_level": "advanced",
+        "status": "not_started",
+        "completion_percentage": 0,
+        "xp_reward": 650,
+        "badge": "none",
+        "current_level": 1,
+        "required_level": 3,
+        "gap": 2,
+        "priority_band": "A",
+        "why_needed": "Build scalable frontend applications with optimal performance",
+        "how_to_build": "Master React hooks, state management, and performance optimization techniques",
+        "sequence_no": 2,
+        "started_at": null,
+        "completed_at": null,
+        "problem_statement": {
+          "title": "",
+          "description": ""
+        },
+        "problem_artifacts": [],
+        "modules": []
+      },
+      {
+        "id": "lpc-003",
+        "course_id": "crs-api-l3",
+        "course_code": "API-L3",
+        "title": "API Design: REST, GraphQL & Scalability",
+        "description": "Design robust, scalable APIs using REST and GraphQL with strong contracts.",
+        "thumbnail_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2670",
+        "job_pathway_role": "Backend Engineer",
+        "capability_name": "API Architecture",
+        "level_label": "Advanced Skill",
+        "domain_name": "Software Engineering",
+        "duration": "38 hours",
+        "difficulty_level": "advanced",
+        "certification_value": "Industry-recognized certificate",
+        "status": "in_progress",
+        "completion_percentage": 8,
+        "xp_reward": 600,
+        "badge": "none",
+        "current_level": 2,
+        "required_level": 4,
+        "gap": 2,
+        "priority_band": "A",
+        "why_needed": "Design and scale production APIs",
+        "how_to_build": "Build REST & GraphQL services with versioning",
+        "sequence_no": 3,
+        "started_at": "2024-02-01T00:00:00Z",
+        "completed_at": null,
+        "common_course_problem_statement": "Teams ship inconsistent, breaking APIs without contracts or versioning.",
+        "problem_statement": {
+          "title": "",
+          "description": ""
+        },
+        "problem_artifacts": [],
+        "modules": []
+      },
+      {
+        "id": "lpc-004",
+        "course_id": "crs-sql-l2",
+        "course_code": "SQL-L2",
+        "title": "Database Design: Schema & Query Optimization",
+        "description": "Design efficient database schemas and master query optimization techniques.",
+        "thumbnail_url": "/course.png",
+        "job_pathway_role": "Backend Engineer",
+        "capability_name": "Database Design & Querying",
+        "level_label": "Working Knowledge",
+        "duration": "32 hours",
+        "difficulty_level": "beginner",
+        "status": "in_progress",
+        "completion_percentage": 55,
+        "xp_reward": 450,
+        "badge": "none",
+        "current_level": 1,
+        "required_level": 3,
+        "gap": 2,
+        "priority_band": "B",
+        "why_needed": "Optimize database performance and structure data efficiently",
+        "how_to_build": "Learn schema design, normalization, indexing, and query optimization",
+        "sequence_no": 4,
+        "started_at": "2024-02-01T00:00:00Z",
+        "completed_at": null,
+        "problem_statement": {
+          "title": "",
+          "description": ""
+        },
+        "problem_artifacts": [],
+        "modules": []
+      },
+      {
+        "id": "lpc-005",
+        "course_id": "crs-auth-l2",
+        "course_code": "AUTH-L2",
+        "title": "Security: Authentication & Authorization Patterns",
+        "description": "Implement secure auth flows, JWT, OAuth2, and RBAC in backend services.",
+        "thumbnail_url": "/couesr2.jpg",
+        "job_pathway_role": "Backend Engineer",
+        "capability_name": "Security & Authentication",
+        "level_label": "Working Knowledge",
+        "duration": "28 hours",
+        "difficulty_level": "intermediate",
+        "status": "not_started",
+        "completion_percentage": 0,
+        "xp_reward": 550,
+        "badge": "none",
+        "current_level": 0,
+        "required_level": 2,
+        "gap": 2,
+        "priority_band": "A",
+        "why_needed": "Build secure systems with proper authentication and authorization",
+        "how_to_build": "Study JWT, OAuth2, RBAC, encryption, and security best practices",
+        "sequence_no": 5,
+        "started_at": null,
+        "completed_at": null,
+        "problem_statement": {
+          "title": "",
+          "description": ""
+        },
+        "problem_artifacts": [],
+        "modules": []
+      },
+      {
+        "id": "lpc-006",
+        "course_id": "crs-devops-l1",
+        "course_code": "DEVOPS-L1",
+        "title": "DevOps Fundamentals: CI/CD & Deployment",
+        "description": "Build deployment pipelines and ship applications reliably to production environments.",
+        "thumbnail_url": "/course 3.jpg",
+        "job_pathway_role": "Backend Engineer",
+        "capability_name": "DevOps & Deployment",
+        "level_label": "Basic Awareness",
+        "duration": "20 hours",
+        "difficulty_level": "beginner",
+        "status": "not_started",
+        "completion_percentage": 0,
+        "xp_reward": 300,
+        "badge": "none",
+        "current_level": 0,
+        "required_level": 1,
+        "gap": 1,
+        "priority_band": "B",
+        "why_needed": "Understand deployment processes and CI/CD principles",
+        "how_to_build": "Learn containerization, CI/CD tools, and deployment best practices",
+        "sequence_no": 6,
+        "started_at": null,
+        "completed_at": null,
+        "problem_statement": {
+          "title": "",
+          "description": ""
+        },
+        "problem_artifacts": [],
+        "modules": []
+      }
+    ]
+  },
+  "stageMeta": {
+    "engage": {
+      "label": "Engage",
+      "purposeTag": "Hook & Context",
+      "description": "Hook into the real-world problem. Understand the context and stakes.",
+      "color": "#6366f1",
+      "estLabel": "20-30 minutes"
+    },
+    "explore": {
+      "label": "Explore",
+      "purposeTag": "Investigate",
+      "description": "Investigate, gather signals, and form initial hypotheses.",
+      "color": "#8b5cf6",
+      "estLabel": "20-30 minutes"
+    },
+    "explain": {
+      "label": "Explain",
+      "purposeTag": "Learn Concepts",
+      "description": "Understand the core concepts and principles behind the solution.",
+      "color": "#0ea5e9",
+      "estLabel": "20-30 minutes"
+    },
+    "express": {
+      "label": "Express",
+      "purposeTag": "Practice Artifact",
+      "description": "Apply knowledge - draft your practice artifact.",
+      "color": "#f59e0b",
+      "estLabel": "20-30 minutes"
+    },
+    "empower": {
+      "label": "Empower",
+      "purposeTag": "Final Artifact",
+      "description": "Build and submit your final evaluated artifact.",
+      "color": "#10b981",
+      "estLabel": "20-30 minutes"
+    },
+    "evolve": {
+      "label": "Evolve",
+      "purposeTag": "Reflect & Grow",
+      "description": "Reflect on feedback. Advance your understanding beyond basics.",
+      "color": "#ec4899",
+      "estLabel": "20-30 minutes"
+    }
+  }
+}

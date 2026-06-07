@@ -1,0 +1,15 @@
+/**
+ * Central export for constants
+ */
+
+export {
+  DIFFICULTY_META,
+  CAPABILITY_LEVEL_META,
+  FIT_LEVEL_META,
+  SUBMISSION_STATUS_META,
+  EVALUATION_STAGE_META,
+  STAGE_META,
+  FILE_TYPE_META,
+  CONTENT_TYPE_META,
+  PRIORITY_COLORS,
+} from './metadata';
