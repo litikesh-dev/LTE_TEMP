@@ -25,7 +25,7 @@ import { CourseCard } from '@/widgets/CourseCard/ui/CourseCard';
 import { ProfileSnapshot } from '@/widgets/ProfileSnapshot';
 import { LevelProgress } from '@/widgets/LevelProgress';
 import { getLearnerProfile } from '@/shared/api/mockData';
-import { loadDashboard } from '@/shared/api/configLoader';
+import { loadDashboard, loadCourses } from '@/shared/api/configLoader';
 import './dashboard.css';
 
 /* icon map so JSON can reference icons by name */
@@ -80,11 +80,28 @@ interface LeaderboardEntry {
   isCurrentUser?: boolean;
 }
 
-/* all dashboard content loaded from mockDataConfig.json (edit there) */
+/* all dashboard content loaded from the active account in the DB */
 const dashboardData = loadDashboard();
 
-const inProgress = dashboardData.inProgress as InProgressCourse[];
-const enrollments = dashboardData.enrollments as EnrollmentCard[];
+/* In-progress + enrollment cards are derived from the SAME source as the
+   My Courses page (course_content.courses), so the dashboard and the courses
+   list always stay in sync. */
+const COURSE_THUMBS = ['#eef2ff', '#ede9fe', '#eef9f4', '#fef3e8'];
+const allCourses = loadCourses() as Array<EnrollmentCard & { modules?: unknown[]; id?: string }>;
+
+const inProgress: InProgressCourse[] = allCourses.map((c, i) => ({
+  id: c.id ?? c.course_id,
+  type: 'Course',
+  title: c.title,
+  materials: c.modules?.length ?? 0,
+  completion: c.status === 'not_started' ? null : (c.completion_percentage ?? 0),
+  deadline: c.status === 'in_progress' ? '12 hrs' : '1 Day',
+  deadlineUrgent: c.status === 'in_progress',
+  action: c.status === 'in_progress' ? 'Continue' : 'Start',
+  thumbColor: COURSE_THUMBS[i % COURSE_THUMBS.length],
+}));
+
+const enrollments: EnrollmentCard[] = allCourses;
 const leaderboard = dashboardData.leaderboard.entries as LeaderboardEntry[];
 const pathNodes = dashboardData.pathNodes;
 const sixEStages = dashboardData.sixEStages;
@@ -194,7 +211,7 @@ export function Dashboard() {
   const [animIn, setAnimIn] = useState(false);
   const mounted = useRef(false);
 
-  /* ── Points earned from artifact submissions (temporary local store) ── */
+  /* ── Points earned from artifact submissions (stored locally) ── */
   const [earnedXp, setEarnedXp] = useState(() => {
     try { return Number(localStorage.getItem(XP_STORAGE_KEY) || '0'); } catch { return 0; }
   });

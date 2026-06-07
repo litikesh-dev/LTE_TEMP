@@ -16,6 +16,8 @@ export const env = createEnv({
       .optional(),
     VITE_GOOGLE_ANALYTICS_ID: z.string().startsWith('G-').optional(),
     VITE_SENTRY_DSN: z.string().url().optional(),
+    VITE_SUPABASE_URL: z.string().url(),
+    VITE_SUPABASE_ANON_KEY: z.string().min(1),
   },
   runtimeEnv: import.meta.env,
   emptyStringAsUndefined: true,

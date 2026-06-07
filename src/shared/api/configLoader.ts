@@ -1,10 +1,13 @@
 /**
  * Configuration Loader
- * This file loads mock data from mockDataConfig.json
- * Update only mockDataConfig.json to change dummy data across the entire application
+ *
+ * Loads the active account's data from Supabase (see accountData.ts). The
+ * payload has the same top-level shape the old mockDataConfig.json had, so the
+ * loader functions below are unchanged. Switch accounts by toggling
+ * accounts.is_active in the database.
  */
 
-import mockDataConfig from './mockDataConfig.json';
+import { accountData as mockDataConfig } from './accountData';
 import type {
   Domain,
   Role,

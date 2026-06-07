@@ -125,212 +125,16 @@ const STAGES_ORDER: StageKey[] = ['engage', 'explore', 'explain', 'express', 'em
   });
 }
 
-/* ── Mock data (same as CourseDetails) ── */
-const MOCK_CONTENT_MAP: Record<string, ContentItem[]> = {
-  engage:  [{ id: 'c1', title: 'Incident Kickoff: API Latency Spike', content_type: 'video', duration_seconds: 540, url: '#', status: 'published', isViewed: true }, { id: 'c2', title: 'Failure Investigation Worksheet', content_type: 'pdf', url: '#', status: 'published', isViewed: true }],
-  explore: [{ id: 'c3', title: 'Structured Log Analysis Guide', content_type: 'pdf', url: '#', status: 'published', isViewed: true }, { id: 'c4', title: 'Service Architecture Diagram', content_type: 'image', url: '#', status: 'published', isViewed: false }, { id: 'c5', title: 'Reading Trace IDs in Distributed Systems', content_type: 'video', duration_seconds: 780, url: '#', status: 'published', isViewed: false }],
-  explain: [{ id: 'c6', title: 'System Architecture Overview', content_type: 'slide', url: '#', status: 'published', isViewed: true }, { id: 'c7', title: 'Request Lifecycle Deep Dive', content_type: 'video', duration_seconds: 960, url: '#', status: 'published', isViewed: true }],
-  express: [{ id: 'c8', title: 'Practice: Draft Logging Schema', content_type: 'doc', url: '#', status: 'published', isViewed: false }],
-  empower: [{ id: 'c9', title: 'Final: Incident Investigation Report', content_type: 'doc', url: '#', status: 'published', isViewed: false }],
-  evolve:  [{ id: 'c10', title: 'Reflection Prompts & Next Steps', content_type: 'text', url: '#', status: 'published', isViewed: false }],
-};
 
 
-const ARTIFACT_MAP: Record<string, { express?: ModuleArtifact; empower?: ModuleArtifact }> = {
-  'mod-001': {
-    express: {
-      id: 'ma-001-e', artifact_type: 'practice', total_score: 0, passing_score: null,
-      allow_resubmission: true, require_review_unlock: false, max_attempts: null,
-      questions: [
-        { id: 'aq-001', order: 1, title: 'Failure Investigation Map', description: 'Create a first-pass incident map showing service boundaries and symptom points.', instructions: '1) Read incident context. 2) Draw request flow. 3) Mark weak signals.', submission_required: false, expected_submission_type: 'text' },
-        { id: 'aq-002', order: 2, title: 'Hypothesis List', description: 'List at least 3 root-cause hypotheses based on your investigation map.', instructions: '1) Review your map. 2) List hypotheses. 3) Rank by likelihood.', submission_required: false, expected_submission_type: 'text' },
-      ],
-      submissions: [], templates: [],
-    },
-    empower: {
-      id: 'ma-001-f', artifact_type: 'final', total_score: 100, passing_score: 70,
-      allow_resubmission: true, require_review_unlock: true, max_attempts: 3,
-      questions: [
-        { id: 'aq-003', order: 1, title: 'Evidence Mapping Spreadsheet', description: 'Download the Excel template and map log/trace evidence to each root-cause hypothesis.', instructions: '1) Download evidence-mapping-template.xlsx. 2) Fill in log entries. 3) Map to hypotheses. 4) Upload completed file.', submission_required: true, expected_submission_type: 'file', accepted_file_types: ['.xlsx', '.xls'] },
-        { id: 'aq-004', order: 2, title: 'Root Cause Analysis Code', description: 'Write Python code to analyze the log patterns and identify the root cause.', instructions: '1) Use the provided log data. 2) Write analysis script. 3) Submit your code.', submission_required: true, expected_submission_type: 'code', accepted_file_types: ['.py'] },
-        { id: 'aq-005', order: 3, title: 'GitHub Repository Link', description: 'Create a GitHub repository with your complete investigation.', instructions: '1) Create GitHub repo. 2) Push all files. 3) Submit repository URL.', submission_required: true, expected_submission_type: 'url' },
-      ],
-      submissions: [
-        { id: 'as-001', attempt_no: 1, version_label: 'v1', is_latest: false, previous_submission_id: null, submission_mode: 'normal', submission_text: 'Root cause likely originates from unbounded DB retries under high load.', submission_url: null, status: 'returned_for_rework', overall_status: 'returned_for_rework', ai_score: 62, ai_feedback: 'Clear incident context. Add stronger evidence correlation.', ai_improvements: 'Strengthen evidence chain with trace IDs.', staff_score: 58, staff_feedback: 'Strong framing. Improve hypothesis prioritization and add trace correlation.', current_eval_stage: 'staff', rubric: [{ criterion: 'Evidence Quality', score: 2, max: 4 }, { criterion: 'Hypothesis Prioritization', score: 1, max: 4 }, { criterion: 'Trace Correlation', score: 1, max: 4 }, { criterion: 'Report Clarity', score: 2, max: 4 }], submitted_at: '2024-01-21T10:15:00Z', sealed_at: '2024-01-21T10:15:00Z' },
-        { id: 'as-002', attempt_no: 2, version_label: 'v2', is_latest: true, previous_submission_id: 'as-001', submission_mode: 'fast', submission_text: 'Updated report includes trace-to-service mapping and ranked hypotheses with confidence scores.', submission_url: null, status: 'approved', overall_status: 'approved', ai_score: 88, ai_feedback: 'Excellent trace correlation and structured hypotheses.', ai_improvements: 'Minor: could expand on remediation timeline.', staff_score: 90, staff_feedback: 'Strong investigation methodology. Well-ranked hypotheses with solid evidence.', current_eval_stage: 'staff', rubric: [{ criterion: 'Evidence Quality', score: 4, max: 4 }, { criterion: 'Hypothesis Prioritization', score: 4, max: 4 }, { criterion: 'Trace Correlation', score: 3, max: 4 }, { criterion: 'Report Clarity', score: 3, max: 4 }], submitted_at: '2024-01-22T09:20:00Z', sealed_at: '2024-01-22T09:20:00Z' },
-      ],
-      templates: [{ id: 'at-001', artifact_id: 'ma-001-f', question_id: 'aq-003', file_name: 'evidence-mapping-template.xlsx', file_url: 'https://content.rareminds.dev/templates/mod-001/evidence-mapping-template.xlsx', file_type: 'excel', version: 1, is_downloadable: true }],
-    },
-  },
-  'mod-002': {
-    express: {
-      id: 'ma-002-e', artifact_type: 'practice', total_score: 0, passing_score: null,
-      allow_resubmission: true, require_review_unlock: false, max_attempts: null,
-      questions: [
-        { id: 'aq-201', order: 1, title: 'Log Schema Draft', description: 'Design a structured log schema for a backend service with appropriate fields and severity levels.', instructions: '1) Identify key log fields. 2) Define severity levels. 3) Add correlation ID strategy.', submission_required: false, expected_submission_type: 'text' },
-        { id: 'aq-202', order: 2, title: 'Log Level Mapping', description: 'Map common application events to appropriate log levels (DEBUG, INFO, WARN, ERROR, FATAL).', instructions: '1) List 10 application events. 2) Assign log levels. 3) Justify each choice.', submission_required: false, expected_submission_type: 'text' },
-      ],
-      submissions: [], templates: [],
-    },
-    empower: {
-      id: 'ma-002-f', artifact_type: 'final', total_score: 100, passing_score: 70,
-      allow_resubmission: true, require_review_unlock: true, max_attempts: 3,
-      questions: [
-        { id: 'aq-203', order: 1, title: 'Structured Logging Implementation', description: 'Implement structured logging in a Python service using the provided starter code.', instructions: '1) Download starter code. 2) Add structured logging. 3) Include correlation IDs. 4) Submit your code.', submission_required: true, expected_submission_type: 'code', accepted_file_types: ['.py'] },
-        { id: 'aq-204', order: 2, title: 'Log Analysis Report', description: 'Analyze the provided log samples and write a report identifying patterns and anomalies.', instructions: '1) Review log samples. 2) Identify patterns. 3) Document anomalies. 4) Submit your report.', submission_required: true, expected_submission_type: 'text' },
-        { id: 'aq-205', order: 3, title: 'GitHub Repository', description: 'Push your logging implementation to a GitHub repository.', instructions: '1) Create repo. 2) Push implementation. 3) Submit URL.', submission_required: true, expected_submission_type: 'url' },
-      ],
-      submissions: [],
-      templates: [{ id: 'at-002', artifact_id: 'ma-002-f', question_id: 'aq-203', file_name: 'logging-starter.py', file_url: 'https://content.rareminds.dev/templates/mod-002/logging-starter.py', file_type: 'text', version: 1, is_downloadable: true }],
-    },
-  },
-  'mod-003': {
-    express: {
-      id: 'ma-003-e', artifact_type: 'practice', total_score: 0, passing_score: null,
-      allow_resubmission: true, require_review_unlock: false, max_attempts: null,
-      questions: [
-        { id: 'aq-301', order: 1, title: 'Breakpoint Strategy', description: 'Plan a breakpoint strategy for debugging the provided failing service.', instructions: '1) Review the service code. 2) Identify critical breakpoint locations. 3) Explain what you expect to observe at each.', submission_required: false, expected_submission_type: 'text' },
-        { id: 'aq-302', order: 2, title: 'Stack Trace Analysis', description: 'Analyze the provided stack trace and identify the root cause.', instructions: '1) Read the stack trace. 2) Identify the failure point. 3) Describe the call chain leading to the error.', submission_required: false, expected_submission_type: 'text' },
-      ],
-      submissions: [], templates: [],
-    },
-    empower: {
-      id: 'ma-003-f', artifact_type: 'final', total_score: 100, passing_score: 70,
-      allow_resubmission: true, require_review_unlock: true, max_attempts: 3,
-      questions: [
-        { id: 'aq-303', order: 1, title: 'Debug Session Recording', description: 'Record a debug session walkthrough using VS Code debugger on the provided buggy service.', instructions: '1) Set up the debugger. 2) Step through the failure. 3) Document findings. 4) Submit your report.', submission_required: true, expected_submission_type: 'text' },
-        { id: 'aq-304', order: 2, title: 'Fixed Code Submission', description: 'Submit the fixed version of the buggy service with comments explaining each fix.', instructions: '1) Fix the identified bugs. 2) Add inline comments. 3) Submit your code.', submission_required: true, expected_submission_type: 'code', accepted_file_types: ['.py', '.js', '.ts'] },
-        { id: 'aq-305', order: 3, title: 'GitHub Repository', description: 'Push your fixed code and debug notes to a GitHub repository.', instructions: '1) Create repo. 2) Push fixed code. 3) Submit URL.', submission_required: true, expected_submission_type: 'url' },
-      ],
-      submissions: [],
-      templates: [{ id: 'at-003', artifact_id: 'ma-003-f', question_id: 'aq-303', file_name: 'buggy-service.py', file_url: 'https://content.rareminds.dev/templates/mod-003/buggy-service.py', file_type: 'text', version: 1, is_downloadable: true }],
-    },
-  },
-  'mod-004': {
-    express: {
-      id: 'ma-004-e', artifact_type: 'practice', total_score: 0, passing_score: null,
-      allow_resubmission: true, require_review_unlock: false, max_attempts: null,
-      questions: [
-        { id: 'aq-401', order: 1, title: 'Reproduction Conditions', description: 'List the exact conditions required to reproduce the intermittent bug described in the scenario.', instructions: '1) Read the bug report. 2) Identify environmental factors. 3) List reproduction steps.', submission_required: false, expected_submission_type: 'text' },
-        { id: 'aq-402', order: 2, title: 'Test Case Design', description: 'Design a minimal test case that reliably triggers the bug.', instructions: '1) Define inputs. 2) Define expected vs actual output. 3) Write pseudocode for the test.', submission_required: false, expected_submission_type: 'text' },
-      ],
-      submissions: [], templates: [],
-    },
-    empower: {
-      id: 'ma-004-f', artifact_type: 'final', total_score: 100, passing_score: 70,
-      allow_resubmission: true, require_review_unlock: true, max_attempts: 3,
-      questions: [
-        { id: 'aq-403', order: 1, title: 'Reproduction Plan Document', description: 'Write a formal reproduction plan document for the intermittent production bug.', instructions: '1) Document environment setup. 2) List exact reproduction steps. 3) Define success criteria.', submission_required: true, expected_submission_type: 'text' },
-        { id: 'aq-404', order: 2, title: 'Automated Test Suite', description: 'Write automated tests that reliably reproduce and verify the fix for the bug.', instructions: '1) Write test cases. 2) Ensure tests fail before fix. 3) Ensure tests pass after fix. 4) Submit code.', submission_required: true, expected_submission_type: 'code', accepted_file_types: ['.py', '.js', '.ts'] },
-        { id: 'aq-405', order: 3, title: 'GitHub Repository', description: 'Push your reproduction tests and documentation to GitHub.', instructions: '1) Create repo. 2) Push tests and docs. 3) Submit URL.', submission_required: true, expected_submission_type: 'url' },
-      ],
-      submissions: [],
-      templates: [{ id: 'at-004b', artifact_id: 'ma-004-f', question_id: 'aq-403', file_name: 'reproduction-plan-template.docx', file_url: 'https://content.rareminds.dev/templates/mod-004/reproduction-plan-template.docx', file_type: 'doc', version: 1, is_downloadable: true }],
-    },
-  },
-  'mod-005': {
-    express: {
-      id: 'ma-005-e', artifact_type: 'practice', total_score: 0, passing_score: null,
-      allow_resubmission: true, require_review_unlock: false, max_attempts: null,
-      questions: [
-        { id: 'aq-501', order: 1, title: '5 Whys Analysis', description: 'Apply the 5 Whys technique to the provided production incident to identify the root cause.', instructions: '1) Start with the symptom. 2) Ask "why" 5 times. 3) Document each answer.', submission_required: false, expected_submission_type: 'text' },
-        { id: 'aq-502', order: 2, title: 'Fishbone Diagram', description: 'Create a fishbone (Ishikawa) diagram mapping all contributing factors to the incident.', instructions: '1) Identify the problem. 2) Map categories (People, Process, Technology). 3) List contributing factors.', submission_required: false, expected_submission_type: 'text' },
-      ],
-      submissions: [], templates: [],
-    },
-    empower: {
-      id: 'ma-005-f', artifact_type: 'final', total_score: 100, passing_score: 70,
-      allow_resubmission: true, require_review_unlock: true, max_attempts: 3,
-      questions: [
-        { id: 'aq-503', order: 1, title: 'RCA Report', description: 'Write a complete Root Cause Analysis report for the production incident using the provided template.', instructions: '1) Download RCA template. 2) Fill in all sections. 3) Include evidence and timeline. 4) Upload completed report.', submission_required: true, expected_submission_type: 'file', accepted_file_types: ['.pdf', '.docx'] },
-        { id: 'aq-504', order: 2, title: 'Corrective Action Plan', description: 'Define corrective and preventive actions to prevent recurrence.', instructions: '1) List immediate fixes. 2) Define long-term preventive measures. 3) Assign owners and timelines.', submission_required: true, expected_submission_type: 'text' },
-        { id: 'aq-505', order: 3, title: 'GitHub Repository', description: 'Push your RCA documentation and any supporting code to GitHub.', instructions: '1) Create repo. 2) Push all artifacts. 3) Submit URL.', submission_required: true, expected_submission_type: 'url' },
-      ],
-      submissions: [],
-      templates: [{ id: 'at-005', artifact_id: 'ma-005-f', question_id: 'aq-503', file_name: 'rca-report-template.docx', file_url: 'https://content.rareminds.dev/templates/mod-005/rca-report-template.docx', file_type: 'doc', version: 1, is_downloadable: true }],
-    },
-  },
-  'mod-006': {
-    express: {
-      id: 'ma-006-e', artifact_type: 'practice', total_score: 0, passing_score: null,
-      allow_resubmission: true, require_review_unlock: false, max_attempts: null,
-      questions: [
-        { id: 'aq-601', order: 1, title: 'Incident Response Checklist', description: 'Draft an incident response checklist covering all phases: detection, investigation, resolution, and communication.', instructions: '1) List detection signals. 2) Define investigation steps. 3) Outline resolution process. 4) Plan stakeholder communication.', submission_required: false, expected_submission_type: 'text' },
-        { id: 'aq-602', order: 2, title: 'Observability Stack Design', description: 'Design an observability stack (logs, metrics, traces) for the capstone scenario service.', instructions: '1) Choose tools for each pillar. 2) Define what to instrument. 3) Describe alert thresholds.', submission_required: false, expected_submission_type: 'text' },
-      ],
-      submissions: [], templates: [],
-    },
-    empower: {
-      id: 'ma-006-f', artifact_type: 'final', total_score: 100, passing_score: 75,
-      allow_resubmission: true, require_review_unlock: true, max_attempts: 3,
-      questions: [
-        { id: 'aq-603', order: 1, title: 'Full Incident Report', description: 'Write a complete incident report covering investigation, root cause, resolution, and post-mortem.', instructions: '1) Download incident report template. 2) Complete all sections. 3) Include logs, traces, and evidence. 4) Upload completed report.', submission_required: true, expected_submission_type: 'file', accepted_file_types: ['.pdf', '.docx'] },
-        { id: 'aq-604', order: 2, title: 'Observability Implementation', description: 'Implement the observability stack you designed — add logging, metrics, and tracing to the capstone service.', instructions: '1) Instrument the service. 2) Add structured logs. 3) Add metrics. 4) Submit your code.', submission_required: true, expected_submission_type: 'code', accepted_file_types: ['.py', '.js', '.ts'] },
-        { id: 'aq-605', order: 3, title: 'GitHub Repository', description: 'Push your complete capstone project — code, reports, and documentation — to GitHub.', instructions: '1) Create repo. 2) Push all deliverables. 3) Submit URL.', submission_required: true, expected_submission_type: 'url' },
-      ],
-      submissions: [],
-      templates: [
-        { id: 'at-006a', artifact_id: 'ma-006-f', question_id: 'aq-603', file_name: 'incident-report-template.docx', file_url: 'https://content.rareminds.dev/templates/mod-006/incident-report-template.docx', file_type: 'doc', version: 1, is_downloadable: true },
-        { id: 'at-006b', artifact_id: 'ma-006-f', question_id: 'aq-604', file_name: 'capstone-starter.py', file_url: 'https://content.rareminds.dev/templates/mod-006/capstone-starter.py', file_type: 'text', version: 1, is_downloadable: true },
-      ],
-    },
-  },
-};
-
-const MOCK_MODULES: ModuleProg[] = [
-  { id: 'mod-001', module_no: 1, title: 'System Failure Investigation', description: 'Learn how to investigate and debug system failures in production environments.', engineering_workflow_stage: 'System Investigation', module_specific_problem_statement: 'Production API latency increases during peak traffic.', pressure_points: 'Engineers rely on print statements and cannot locate failure source.', student_confusion: 'How backend systems fail under load.', learning_content: { major_concepts: 'System architecture, request lifecycle, observability overview', implementation_context_when_to_use: 'Understanding system interactions before debugging', reason_behind_concept: 'Logs investigation' }, support: { ai_support_tips: 'Foundation for logging module', module_continuity_link: 'Output becomes input baseline for Module 2 structured logging.' }, knowledge: { technical_concepts_learnt: 'Operating systems basics', academic_refresher_concepts: 'Logs dashboards' }, tools: { tools_used: 'Free', tool_type_free_or_paid: null }, status: 'in_progress', completion_percentage: 33, artifact_submitted: false, estimatedTime: '2.5 hrs', stages: [{ key: 'engage', status: 'completed', time_spent_seconds: 3600 }, { key: 'explore', status: 'completed', time_spent_seconds: 2700 }, { key: 'explain', status: 'in_progress', time_spent_seconds: 1200 }, { key: 'express', status: 'not_started', time_spent_seconds: 0 }, { key: 'empower', status: 'not_started', time_spent_seconds: 0 }, { key: 'evolve', status: 'not_started', time_spent_seconds: 0 }] },
-  { id: 'mod-002', module_no: 2, title: 'Structured Logging', description: 'Learn how to produce high-signal logs for faster incident diagnosis.', engineering_workflow_stage: 'Signal Analysis (Logging)', module_specific_problem_statement: 'System failures lack traceability due to poor logging.', pressure_points: 'Developers rely on console prints.', student_confusion: 'What meaningful logs look like.', learning_content: { major_concepts: 'Structured logging, log levels', implementation_context_when_to_use: 'Implement logs for observability', reason_behind_concept: 'Review poorly logged systems' }, support: { ai_support_tips: 'Feeds debugging workflow', module_continuity_link: 'Log report guides debugger inspection in Module 3.' }, knowledge: { technical_concepts_learnt: 'Programming basics', academic_refresher_concepts: 'Python logging' }, tools: { tools_used: 'Free', tool_type_free_or_paid: null }, status: 'available', completion_percentage: 0, artifact_submitted: false, estimatedTime: '2 hrs', stages: STAGES_ORDER.map(k => ({ key: k, status: 'not_started' as StageStatus, time_spent_seconds: 0 })) },
-  { id: 'mod-003', module_no: 3, title: 'Debugging Tools', description: 'Use breakpoints and runtime inspection to isolate backend failures.', engineering_workflow_stage: 'Runtime Diagnosis (Debugging)', module_specific_problem_statement: 'Backend bug crashes services in production.', pressure_points: 'Developers cannot reproduce bugs locally.', student_confusion: 'Debugger usage unclear.', learning_content: { major_concepts: 'Breakpoints, stack traces', implementation_context_when_to_use: 'Use debugging tools systematically', reason_behind_concept: 'Inspect failing backend service' }, support: { ai_support_tips: 'Builds on logging analysis', module_continuity_link: 'Debug trace identifies conditions to reproduce in Module 4.' }, knowledge: { technical_concepts_learnt: 'Processes and threads', academic_refresher_concepts: 'VS Code debugger' }, tools: { tools_used: 'Free', tool_type_free_or_paid: null }, status: 'available', completion_percentage: 0, artifact_submitted: false, estimatedTime: '3 hrs', stages: STAGES_ORDER.map(k => ({ key: k, status: 'not_started' as StageStatus, time_spent_seconds: 0 })) },
-  { id: 'mod-004', module_no: 4, title: 'Reproducing Bugs', description: 'Create controlled test setups to reproduce intermittent production defects.', engineering_workflow_stage: 'Bug Reproduction', module_specific_problem_statement: 'Intermittent production bug cannot be replicated.', pressure_points: 'Developers guess fixes.', student_confusion: 'How to reproduce bugs systematically.', learning_content: { major_concepts: 'Test cases, controlled reproduction', implementation_context_when_to_use: 'Recreate failure conditions', reason_behind_concept: 'Analyze intermittent bug' }, support: { ai_support_tips: 'Supports root cause discovery', module_continuity_link: 'Reproduction plan supplies validated failure conditions for Module 5 RCA.' }, knowledge: { technical_concepts_learnt: 'Operating systems', academic_refresher_concepts: 'Test frameworks' }, tools: { tools_used: 'Free', tool_type_free_or_paid: null }, status: 'available', completion_percentage: 0, artifact_submitted: false, estimatedTime: '2 hrs', stages: STAGES_ORDER.map(k => ({ key: k, status: 'not_started' as StageStatus, time_spent_seconds: 0 })) },
-  { id: 'mod-005', module_no: 5, title: 'Root Cause Analysis', description: 'Separate symptom and cause to produce evidence-based corrective actions.', engineering_workflow_stage: 'Root Cause Identification', module_specific_problem_statement: 'Engineers fix symptoms rather than root cause.', pressure_points: 'Temporary fixes hide underlying issue.', student_confusion: 'Root cause analysis process.', learning_content: { major_concepts: 'Root cause analysis frameworks', implementation_context_when_to_use: 'Identify underlying system issue', reason_behind_concept: 'Review production incident' }, support: { ai_support_tips: 'Leads into final project', module_continuity_link: 'RCA report drives final resolution and validation in Module 6.' }, knowledge: { technical_concepts_learnt: 'System concepts', academic_refresher_concepts: 'Logs debugger' }, tools: { tools_used: 'Free', tool_type_free_or_paid: null }, status: 'available', completion_percentage: 0, artifact_submitted: false, estimatedTime: '2 hrs', stages: STAGES_ORDER.map(k => ({ key: k, status: 'not_started' as StageStatus, time_spent_seconds: 0 })) },
-  { id: 'mod-006', module_no: 6, title: 'Observability Capstone', description: 'Execute end-to-end incident handling from investigation to validated fix and communication.', engineering_workflow_stage: 'Incident Resolution Capstone', module_specific_problem_statement: 'Learners must investigate, diagnose, and resolve a realistic backend production incident.', pressure_points: 'Engineers must combine logs, debugging, and RCA.', student_confusion: 'Complete debugging workflow.', learning_content: { major_concepts: 'Full observability workflow, incident comms, post-mortems', implementation_context_when_to_use: 'End to end investigation', reason_behind_concept: 'Review full production scenario' }, support: { ai_support_tips: 'Integrates all modules', module_continuity_link: 'Integrates all prior module artifacts into one capstone output.' }, knowledge: { technical_concepts_learnt: 'Programming OS', academic_refresher_concepts: 'Logs debugger monitoring' }, tools: { tools_used: 'Free', tool_type_free_or_paid: null }, status: 'available', completion_percentage: 0, artifact_submitted: false, estimatedTime: '4 hrs', stages: STAGES_ORDER.map(k => ({ key: k, status: 'not_started' as StageStatus, time_spent_seconds: 0 })) },
-];
-
-/* ── AI Facilitator questions per content item ── */
-const AI_FACILITATOR_QUESTIONS: Record<string, { question: string; followUp: string }[]> = {
-  c1: [
-    { question: "You just watched the Incident Kickoff video. In your own words, what was the primary symptom of the API latency spike, and what made it hard to diagnose at first?", followUp: "Interesting take. How do you think the on-call engineer should have prioritised their first 15 minutes of investigation?" },
-    { question: "What signals from the video would you look for first if you were the engineer on call during that incident?", followUp: "Good thinking. Would those signals alone be enough to identify the root cause, or would you need more data?" },
-  ],
-  c2: [
-    { question: "After reviewing the Failure Investigation Worksheet, what do you think is the most important column to fill in first, and why?", followUp: "Nice reasoning. How would you handle a situation where you don't have enough data to fill that column?" },
-  ],
-  c3: [
-    { question: "The Structured Log Analysis Guide covers several log fields. Which field do you think gives the most diagnostic value during an incident, and what's your reasoning?", followUp: "Good point. How does that field help you narrow down from hundreds of log lines to the ones that actually matter?" },
-  ],
-  c4: [
-    { question: "Looking at the Service Architecture Diagram, which service boundary do you think is the most likely source of latency under high load, and why?", followUp: "Solid analysis. What observability would you add at that boundary to catch issues earlier?" },
-  ],
-  c5: [
-    { question: "After watching the Trace IDs video, explain in your own words how a trace ID flows through a distributed system and why it matters for debugging.", followUp: "Great explanation. Can you think of a scenario where trace IDs alone would not be enough to diagnose a problem?" },
-  ],
-  c6: [
-    { question: "You have just reviewed the System Architecture Overview slides. What part of the architecture surprised you most, and how does it affect the way you would approach debugging a failure in it?", followUp: "That is a thoughtful observation. How would you document that insight so that a new team member could benefit from it?" },
-    { question: "Based on the slides, where in the system would you instrument logging first if you had to pick just one layer — and what would you capture there?", followUp: "Good choice. What would you sacrifice by instrumenting only that layer, and how would you compensate?" },
-  ],
-  c7: [
-    { question: "The Request Lifecycle Deep Dive covered many hops. Identify the single hop where you believe latency is most likely to accumulate silently, and explain why.", followUp: "Strong reasoning. What metric would you define to detect latency accumulating at that hop before it becomes a user-visible incident?" },
-  ],
-  c8: [
-    { question: "You have started drafting your logging schema. What is one design decision you are least confident about, and what tradeoffs are you weighing?", followUp: "That is exactly the kind of thinking senior engineers do. What would help you make that decision with more confidence?" },
-  ],
-  c9: [
-    { question: "Looking at the Final Incident Investigation Report requirements, what section do you think will be hardest to complete well, and what makes it challenging?", followUp: "Agreed — that section trips up a lot of engineers. What is your strategy to tackle it?" },
-  ],
-  c10: [
-    { question: "Reflecting on everything you have done in this module: what is one mental model or habit you would do differently in your next real incident, and why?", followUp: "That is a meaningful reflection. How would you share that learning with a teammate who was not on this incident?" },
-  ],
-};
 
 const DEFAULT_FACILITATOR_QUESTIONS = [
   { question: "Now that you have reviewed this content, what is the most important concept you took away, and how does it connect to the module's main problem statement?", followUp: "Good thinking. How might you apply that concept in a real-world scenario you have encountered before?" },
 ];
 
-/* ── Merge config-driven course content (from mockDataConfig.json → courseContent)
-   over the built-in demo data. Config modules/content/facilitator prompts override or
-   extend the built-ins by id, so editing the Excel (then running scripts/xlsx_to_json.py)
-   — or editing courseContent in mockDataConfig.json directly — updates the player.
-   Anything the config doesn't define falls back to the built-in demo data. ── */
+/* ── Course content comes entirely from the DB (accounts.course_content via
+   loadCourseContent()). Each course shows only its own modules / content /
+   artifacts / facilitator prompts — there is no built-in demo data. ── */
 type ConfigFacilitator = { question: string; follow_up: string };
 type ConfigContent = ContentItem & { stage: StageKey; order?: number; facilitator?: ConfigFacilitator[] };
 type ConfigModule = ModuleProg & {
@@ -338,9 +142,11 @@ type ConfigModule = ModuleProg & {
   content?: ConfigContent[];
 };
 
-/* The built-in demo modules are the seed content for the Observability course only.
-   Every other course shows its own config modules — never the debugging defaults. */
-const SEED_COURSE_ID = 'crs-obs-l2';
+/* First course in the active account — used when no :courseId is in the URL. */
+const FIRST_COURSE_ID =
+  (loadCourseContent()[0] as { course_id?: string; id?: string } | undefined)?.course_id ??
+  (loadCourseContent()[0] as { course_id?: string; id?: string } | undefined)?.id ??
+  '';
 
 interface CourseBucket {
   modules: Map<string, ModuleProg>;
@@ -350,14 +156,9 @@ interface CourseBucket {
 
 function buildCourseData() {
   const byCourse: Record<string, CourseBucket> = {};
-  const facilitatorByContent: Record<string, { question: string; followUp: string }[]> = { ...AI_FACILITATOR_QUESTIONS };
+  const facilitatorByContent: Record<string, { question: string; followUp: string }[]> = {};
   const bucket = (cid: string): CourseBucket =>
     (byCourse[cid] ??= { modules: new Map(), artMap: {}, content: {} });
-
-  // Seed the Observability course with the built-in demo data.
-  const seed = bucket(SEED_COURSE_ID);
-  MOCK_MODULES.forEach(m => seed.modules.set(m.id, m));
-  Object.assign(seed.artMap, ARTIFACT_MAP);
 
   const courses = loadCourseContent() as { id?: string; course_id?: string; modules?: ConfigModule[] }[];
   courses.forEach(course => {
@@ -400,13 +201,9 @@ function getCourseArtMap(courseId: string): Record<string, { express?: ModuleArt
   return COURSE_BUCKETS[courseId]?.artMap ?? {};
 }
 
-/* Content for a course+module+stage. The seed course falls back to the generic stage
-   map; other courses show only their own defined content. */
+/* Content for a course+module+stage — purely from the DB. */
 function getStageContent(courseId: string, moduleId: string, stage: StageKey): ContentItem[] {
-  const c = COURSE_BUCKETS[courseId]?.content?.[moduleId]?.[stage];
-  if (c) return c;
-  if (courseId === SEED_COURSE_ID) return MOCK_CONTENT_MAP[stage] ?? [];
-  return [];
+  return COURSE_BUCKETS[courseId]?.content?.[moduleId]?.[stage] ?? [];
 }
 
 /* ── AI Facilitator Modal ── */
@@ -614,7 +411,77 @@ function AIFacilitator({ contentId, contentTitle, contentType, stageMeta, onDism
   );
 }
 
-/* ── XP / points (temporary local persistence) ── */
+/* ── Submissions (stored locally in the browser, per course/module/artifact) ── */
+const SUBS_STORAGE_KEY = 'lte_submissions';
+const subKey = (courseId: string, moduleId: string, artifactId: string) =>
+  `${courseId}|${moduleId}|${artifactId}`;
+
+function loadAllSubs(): Record<string, Submission[]> {
+  try {
+    return JSON.parse(localStorage.getItem(SUBS_STORAGE_KEY) || '{}') as Record<string, Submission[]>;
+  } catch {
+    return {};
+  }
+}
+
+function loadSubs(courseId: string, moduleId: string, artifactId: string): Submission[] {
+  return loadAllSubs()[subKey(courseId, moduleId, artifactId)] ?? [];
+}
+
+function saveSubs(courseId: string, moduleId: string, artifactId: string, subs: Submission[]) {
+  try {
+    const all = loadAllSubs();
+    all[subKey(courseId, moduleId, artifactId)] = subs;
+    localStorage.setItem(SUBS_STORAGE_KEY, JSON.stringify(all));
+  } catch {
+    /* ignore */
+  }
+}
+
+/* Generate a rubric + scores from an overall score (0–100). */
+function buildRubric(score: number): { criterion: string; score: number; max: number }[] {
+  const band = Math.max(1, Math.min(4, Math.round((score / 100) * 4)));
+  const jitter = (d: number) => Math.max(1, Math.min(4, band + d));
+  return [
+    { criterion: 'Clarity & Structure', score: jitter(0), max: 4 },
+    { criterion: 'Evidence & Accuracy', score: jitter(score % 2 ? 0 : -1), max: 4 },
+    { criterion: 'Depth of Analysis', score: jitter(score > 88 ? 0 : -1), max: 4 },
+    { criterion: 'Completeness', score: jitter(0), max: 4 },
+  ];
+}
+
+/* Merge locally-saved submissions into a course's artifact map. */
+function hydrateArtMap(
+  artMap: Record<string, { express?: ModuleArtifact; empower?: ModuleArtifact }>,
+  courseId: string
+): Record<string, { express?: ModuleArtifact; empower?: ModuleArtifact }> {
+  const out: typeof artMap = {};
+  for (const [modId, arts] of Object.entries(artMap)) {
+    const hydrated: { express?: ModuleArtifact; empower?: ModuleArtifact } = {};
+    (['express', 'empower'] as const).forEach(k => {
+      const art = arts[k];
+      if (!art) return;
+      const saved = loadSubs(courseId, modId, art.id);
+      hydrated[k] = saved.length ? { ...art, submissions: saved } : art;
+    });
+    out[modId] = hydrated;
+  }
+  return out;
+}
+
+/* ── In-progress artifact drafts, kept in memory per artifact id so switching
+   between the Practice (express) and Final (empower) artifacts — or navigating
+   stages — does not wipe what the learner has typed. ── */
+type QuestionDraft = {
+  type: 'text' | 'url' | 'file' | 'code';
+  text: string;
+  url: string;
+  file: File | null;
+  codeLanguage: string;
+};
+const draftCache: Record<string, Record<string, QuestionDraft>> = {};
+
+/* ── XP / points (stored locally in the browser) ── */
 const XP_STORAGE_KEY = 'lte_earned_xp';
 
 function awardXp(amount: number): number {
@@ -725,15 +592,37 @@ function ArtifactPanel({ artifact, onSubmit }: ArtifactPanelProps) {
   const [questionSubmissions, setQuestionSubmissions] = useState<Record<string, { type: 'text' | 'url' | 'file' | 'code'; text: string; url: string; file: File | null; codeLanguage: string; }>>({});
   const [activeAttempt, setActiveAttempt] = useState(artifact.submissions.length > 0 ? artifact.submissions.length : 0);
 
+  // Pick the right tab for the current artifact: Final artifacts with a
+  // submission open Feedback; everything else opens the Submit form. This also
+  // prevents a blank panel when switching from Final (Feedback) to Practice.
   React.useEffect(() => {
+    if (artifact.artifact_type === 'final' && artifact.submissions.length > 0) {
+      setActiveAttempt(artifact.submissions.length);
+      setTab('feedback');
+    } else {
+      setTab('submit');
+    }
+  }, [artifact.id, artifact.submissions.length, artifact.artifact_type]);
+
+  // Keep an expanded question that actually belongs to the current artifact,
+  // so switching between Practice/Final always shows a question (not a blank panel).
+  React.useEffect(() => {
+    setExpandedQ(prev =>
+      artifact.questions.some(q => q.id === prev) ? prev : (artifact.questions[0]?.id ?? null)
+    );
+  }, [artifact.id, artifact.questions]);
+
+  React.useEffect(() => {
+    const cached = draftCache[artifact.id];
     const initial: typeof questionSubmissions = {};
     artifact.questions.forEach(q => {
       if (artifact.artifact_type === 'practice' || q.submission_required) {
-        initial[q.id] = { type: q.expected_submission_type || 'text', text: '', url: '', file: null, codeLanguage: 'javascript' };
+        initial[q.id] =
+          cached?.[q.id] ?? { type: q.expected_submission_type || 'text', text: '', url: '', file: null, codeLanguage: 'javascript' };
       }
     });
     setQuestionSubmissions(initial);
-  }, [artifact.questions, artifact.artifact_type]);
+  }, [artifact.questions, artifact.artifact_type, artifact.id]);
 
   const latestSub = artifact.submissions.find(s => s.is_latest);
   const canSubmit = !latestSub || (artifact.allow_resubmission && (!artifact.require_review_unlock || ['returned_for_rework', 'approved', 'rejected'].includes(latestSub.overall_status)));
@@ -758,6 +647,7 @@ function ArtifactPanel({ artifact, onSubmit }: ArtifactPanelProps) {
     artifact.questions.forEach(q => {
       if (q.submission_required) reset[q.id] = { type: q.expected_submission_type || 'text', text: '', url: '', file: null, codeLanguage: 'javascript' };
     });
+    delete draftCache[artifact.id]; // clear saved draft once submitted
     setQuestionSubmissions(reset);
   };
 
@@ -774,7 +664,11 @@ function ArtifactPanel({ artifact, onSubmit }: ArtifactPanelProps) {
   };
 
   const updateQuestionSubmission = (questionId: string, updates: Partial<typeof questionSubmissions[string]>) => {
-    setQuestionSubmissions(prev => ({ ...prev, [questionId]: { ...prev[questionId], ...updates } }));
+    setQuestionSubmissions(prev => {
+      const next = { ...prev, [questionId]: { ...prev[questionId], ...updates } };
+      draftCache[artifact.id] = next; // keep draft across stage switches
+      return next;
+    });
   };
 
   const hasFeedback = artifact.submissions.length > 0;
@@ -912,10 +806,36 @@ function ArtifactPanel({ artifact, onSubmit }: ArtifactPanelProps) {
               </div>
               <EvalPipeline submission={displaySub} />
               <div className="cd-ap-submission-display">
-                <div className="cd-ap-submission-type-badge">
-                  {displaySub.submission_url ? (displaySub.submission_url.includes('github.com') ? <><Code2 size={10} /> GitHub Link</> : <><Layers size={10} /> URL Link</>) : <><FileText size={10} /> Text Submission</>}
-                </div>
-                {displaySub.submission_url ? (<a href={displaySub.submission_url} target="_blank" rel="noopener noreferrer" className="cd-ap-submission-url"><Layers size={14} />{displaySub.submission_url}<ChevronRight size={14} /></a>) : displaySub.submission_text ? (<div className="cd-ap-submission-content">{displaySub.submission_text}</div>) : (<p className="cd-ap-submission-content" style={{ color: '#94a3b8' }}>No content available</p>)}
+                {(() => {
+                  const u = displaySub.submission_url || '';
+                  const isFile = u.includes('storage.example.com/submissions/');
+                  const isGithub = u.includes('github.com');
+                  const label = isFile ? decodeURIComponent(u.split('/').pop() || u) : u;
+                  return (
+                    <>
+                      <div className="cd-ap-submission-type-badge">
+                        {u
+                          ? isFile
+                            ? <><Paperclip size={10} /> File Upload</>
+                            : isGithub
+                              ? <><Code2 size={10} /> GitHub Link</>
+                              : <><Layers size={10} /> URL Link</>
+                          : <><FileText size={10} /> Text Submission</>}
+                      </div>
+                      {u ? (
+                        <a href={u} target="_blank" rel="noopener noreferrer" className="cd-ap-submission-url" title={label}>
+                          {isFile ? <FileText size={14} /> : <Layers size={14} />}
+                          <span className="cd-ap-submission-url-text">{label}</span>
+                          <ChevronRight size={14} />
+                        </a>
+                      ) : displaySub.submission_text ? (
+                        <div className="cd-ap-submission-content">{displaySub.submission_text}</div>
+                      ) : (
+                        <p className="cd-ap-submission-content" style={{ color: '#94a3b8' }}>No content available</p>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
               {displaySub.rubric && (
                 <div className="cd-ap-rubric">
@@ -957,7 +877,7 @@ export function ModuleContent() {
   const [mobileRightVisible, setMobileRightVisible] = useState(false);
 
   /* ── Module / stage state — scoped to the active course (from URL) ── */
-  const activeCourseId = courseId ?? SEED_COURSE_ID;
+  const activeCourseId = courseId ?? FIRST_COURSE_ID;
   const [modules, setModules] = useState<ModuleProg[]>(() => getCourseModules(activeCourseId));
   const activeModId = moduleId ?? modules[0]?.id ?? '';
   const activeStage = initialStage;
@@ -973,8 +893,15 @@ export function ModuleContent() {
     setActiveContentId(items[0]?.id ?? '');
   }, [activeCourseId, activeStage, activeModId]);
 
-  /* ── Artifact state ── */
-  const [artifactMap, setArtifactMap] = useState(() => getCourseArtMap(activeCourseId));
+  /* ── Artifact state (hydrated with any locally-saved submissions) ── */
+  const [artifactMap, setArtifactMap] = useState(() =>
+    hydrateArtMap(getCourseArtMap(activeCourseId), activeCourseId)
+  );
+
+  // Re-hydrate when navigating to a different course.
+  React.useEffect(() => {
+    setArtifactMap(hydrateArtMap(getCourseArtMap(activeCourseId), activeCourseId));
+  }, [activeCourseId]);
 
   /* ── Submission evaluation overlay ── */
   const [evalOverlay, setEvalOverlay] = useState<
@@ -995,7 +922,7 @@ export function ModuleContent() {
 
   const activeMod = modules.find(m => m.id === activeModId) ?? modules[0];
 
-  // Course has no modules defined yet (only the Observability course is seeded).
+  // Course has no modules defined in the DB yet.
   if (!activeMod) {
     return (
       <div className="cd-viewer">
@@ -1094,6 +1021,8 @@ export function ModuleContent() {
       const totalXp = awardXp(xp);
 
       if (isFinal) {
+        const finalScore = score as number;
+        const staffScore = Math.max(60, Math.min(100, finalScore - 2 + Math.floor(Math.random() * 5)));
         setArtifactMap(prev => {
           const pModArts = prev[activeModId] ?? {};
           const pArt = pModArts[key];
@@ -1104,13 +1033,19 @@ export function ModuleContent() {
                   ...s,
                   status: 'evaluated' as SubmissionStatus,
                   overall_status: 'approved' as Submission['overall_status'],
-                  current_eval_stage: 'ai' as const,
-                  ai_score: score as number,
+                  current_eval_stage: 'staff' as const,
+                  ai_score: finalScore,
                   ai_feedback: 'Strong submission. Clear structure and solid evidence — well done.',
                   ai_improvements: 'Consider expanding on edge cases for an even higher score.',
+                  staff_score: staffScore,
+                  staff_feedback:
+                    'Reviewed and approved. Good application of the concepts; tighten the conclusion next time.',
+                  rubric: buildRubric(finalScore),
                 }
               : s
           );
+          // Persist locally so the submission tab + rubric survive reloads.
+          saveSubs(activeCourseId, activeModId, pArt.id, updatedSubs);
           return { ...prev, [activeModId]: { ...pModArts, [key]: { ...pArt, submissions: updatedSubs } } };
         });
         setModules(prev => prev.map(m => (m.id === activeModId ? { ...m, artifact_submitted: true } : m)));

@@ -153,7 +153,6 @@ const STAGE_META: Record<
   },
 };
 
-const STAGES_ORDER: StageKey[] = ['engage', 'explore', 'explain', 'express', 'empower', 'evolve'];
 
 function fmtTime(secs: number) {
   const h = Math.floor(secs / 3600);
@@ -166,300 +165,8 @@ function fmtTime(secs: number) {
    MOCK DATA  (structured exactly like DB rows)
    ═══════════════════════════════════════════════════════════════ */
 
-const MOCK_MODULES: ModuleProg[] = [
-  {
-    id: 'mod-001',
-    module_no: 1,
-    title: 'System Failure Investigation',
-    description: 'Learn how to investigate and debug system failures in production environments.',
-    engineering_workflow_stage: 'System Investigation',
-    module_specific_problem_statement: 'Production API latency increases during peak traffic.',
-    pressure_points: 'Engineers rely on print statements and cannot locate failure source.',
-    student_confusion: 'How backend systems fail under load.',
-    learning_content: {
-      major_concepts: 'System architecture, request lifecycle, observability overview',
-      implementation_context_when_to_use: 'Understanding system interactions before debugging',
-      reason_behind_concept: 'Logs investigation',
-    },
-    support: {
-      ai_support_tips: 'Foundation for logging module',
-      module_continuity_link: 'Output becomes input baseline for Module 2 structured logging.',
-    },
-    knowledge: {
-      technical_concepts_learnt: 'Operating systems basics',
-      academic_refresher_concepts: 'Logs dashboards',
-    },
-    tools: {
-      tools_used: 'Free',
-      tool_type_free_or_paid: null,
-    },
-    status: 'in_progress',
-    completion_percentage: 33,
-    artifact_submitted: false,
-    estimatedTime: '2.5 hrs',
-    stages: [
-      { key: 'engage', status: 'completed', time_spent_seconds: 3600 },
-      { key: 'explore', status: 'completed', time_spent_seconds: 2700 },
-      { key: 'explain', status: 'in_progress', time_spent_seconds: 1200 },
-      { key: 'express', status: 'not_started', time_spent_seconds: 0 },
-      { key: 'empower', status: 'not_started', time_spent_seconds: 0 },
-      { key: 'evolve', status: 'not_started', time_spent_seconds: 0 },
-    ],
-  },
-  {
-    id: 'mod-002',
-    module_no: 2,
-    title: 'Structured Logging',
-    description: 'Learn how to produce high-signal logs for faster incident diagnosis.',
-    engineering_workflow_stage: 'Signal Analysis (Logging)',
-    module_specific_problem_statement: 'System failures lack traceability due to poor logging.',
-    pressure_points: 'Developers rely on console prints.',
-    student_confusion: 'What meaningful logs look like.',
-    learning_content: {
-      major_concepts: 'Structured logging, log levels',
-      implementation_context_when_to_use: 'Implement logs for observability',
-      reason_behind_concept: 'Review poorly logged systems',
-    },
-    support: {
-      ai_support_tips: 'Feeds debugging workflow',
-      module_continuity_link: 'Log report guides debugger inspection in Module 3.',
-    },
-    knowledge: {
-      technical_concepts_learnt: 'Programming basics',
-      academic_refresher_concepts: 'Python logging',
-    },
-    tools: {
-      tools_used: 'Free',
-      tool_type_free_or_paid: null,
-    },
-    status: 'available',
-    completion_percentage: 0,
-    artifact_submitted: false,
-    estimatedTime: '2 hrs',
-    stages: STAGES_ORDER.map(k => ({
-      key: k,
-      status: 'not_started' as StageStatus,
-      time_spent_seconds: 0,
-    })),
-  },
-  {
-    id: 'mod-003',
-    module_no: 3,
-    title: 'Debugging Tools',
-    description: 'Use breakpoints and runtime inspection to isolate backend failures.',
-    engineering_workflow_stage: 'Runtime Diagnosis (Debugging)',
-    module_specific_problem_statement: 'Backend bug crashes services in production.',
-    pressure_points: 'Developers cannot reproduce bugs locally.',
-    student_confusion: 'Debugger usage unclear.',
-    learning_content: {
-      major_concepts: 'Breakpoints, stack traces',
-      implementation_context_when_to_use: 'Use debugging tools systematically',
-      reason_behind_concept: 'Inspect failing backend service',
-    },
-    support: {
-      ai_support_tips: 'Builds on logging analysis',
-      module_continuity_link: 'Debug trace identifies conditions to reproduce in Module 4.',
-    },
-    knowledge: {
-      technical_concepts_learnt: 'Processes and threads',
-      academic_refresher_concepts: 'VS Code debugger',
-    },
-    tools: {
-      tools_used: 'Free',
-      tool_type_free_or_paid: null,
-    },
-    status: 'available',
-    completion_percentage: 0,
-    artifact_submitted: false,
-    estimatedTime: '3 hrs',
-    stages: STAGES_ORDER.map(k => ({
-      key: k,
-      status: 'not_started' as StageStatus,
-      time_spent_seconds: 0,
-    })),
-  },
-  {
-    id: 'mod-004',
-    module_no: 4,
-    title: 'Reproducing Bugs',
-    description: 'Create controlled test setups to reproduce intermittent production defects.',
-    engineering_workflow_stage: 'Bug Reproduction',
-    module_specific_problem_statement: 'Intermittent production bug cannot be replicated.',
-    pressure_points: 'Developers guess fixes.',
-    student_confusion: 'How to reproduce bugs systematically.',
-    learning_content: {
-      major_concepts: 'Test cases, controlled reproduction',
-      implementation_context_when_to_use: 'Recreate failure conditions',
-      reason_behind_concept: 'Analyze intermittent bug',
-    },
-    support: {
-      ai_support_tips: 'Supports root cause discovery',
-      module_continuity_link: 'Reproduction plan supplies validated failure conditions for Module 5 RCA.',
-    },
-    knowledge: {
-      technical_concepts_learnt: 'Operating systems',
-      academic_refresher_concepts: 'Test frameworks',
-    },
-    tools: {
-      tools_used: 'Free',
-      tool_type_free_or_paid: null,
-    },
-    status: 'available',
-    completion_percentage: 0,
-    artifact_submitted: false,
-    estimatedTime: '2 hrs',
-    stages: STAGES_ORDER.map(k => ({
-      key: k,
-      status: 'not_started' as StageStatus,
-      time_spent_seconds: 0,
-    })),
-  },
-  {
-    id: 'mod-005',
-    module_no: 5,
-    title: 'Root Cause Analysis',
-    description: 'Separate symptom and cause to produce evidence-based corrective actions.',
-    engineering_workflow_stage: 'Root Cause Identification',
-    module_specific_problem_statement: 'Engineers fix symptoms rather than root cause.',
-    pressure_points: 'Temporary fixes hide underlying issue.',
-    student_confusion: 'Root cause analysis process.',
-    learning_content: {
-      major_concepts: 'Root cause analysis frameworks',
-      implementation_context_when_to_use: 'Identify underlying system issue',
-      reason_behind_concept: 'Review production incident',
-    },
-    support: {
-      ai_support_tips: 'Leads into final project',
-      module_continuity_link: 'RCA report drives final resolution and validation in Module 6.',
-    },
-    knowledge: {
-      technical_concepts_learnt: 'System concepts',
-      academic_refresher_concepts: 'Logs debugger',
-    },
-    tools: {
-      tools_used: 'Free',
-      tool_type_free_or_paid: null,
-    },
-    status: 'available',
-    completion_percentage: 0,
-    artifact_submitted: false,
-    estimatedTime: '2 hrs',
-    stages: STAGES_ORDER.map(k => ({
-      key: k,
-      status: 'not_started' as StageStatus,
-      time_spent_seconds: 0,
-    })),
-  },
-  {
-    id: 'mod-006',
-    module_no: 6,
-    title: 'Observability Capstone',
-    description:
-      'Execute end-to-end incident handling from investigation to validated fix and communication.',
-    engineering_workflow_stage: 'Incident Resolution Capstone',
-    module_specific_problem_statement:
-      'Learners must investigate, diagnose, and resolve a realistic backend production incident.',
-    pressure_points: 'Engineers must combine logs, debugging, and RCA.',
-    student_confusion: 'Complete debugging workflow.',
-    learning_content: {
-      major_concepts: 'Full observability workflow, incident comms, post-mortems',
-      implementation_context_when_to_use: 'End to end investigation',
-      reason_behind_concept: 'Review full production scenario',
-    },
-    support: {
-      ai_support_tips: 'Integrates all modules',
-      module_continuity_link: 'Integrates all prior module artifacts into one capstone output.',
-    },
-    knowledge: {
-      technical_concepts_learnt: 'Programming OS',
-      academic_refresher_concepts: 'Logs debugger monitoring',
-    },
-    tools: {
-      tools_used: 'Free',
-      tool_type_free_or_paid: null,
-    },
-    status: 'available',
-    completion_percentage: 0,
-    artifact_submitted: false,
-    estimatedTime: '4 hrs',
-    stages: STAGES_ORDER.map(k => ({
-      key: k,
-      status: 'not_started' as StageStatus,
-      time_spent_seconds: 0,
-    })),
-  },
-];
-
-const INIT_PROBLEM_ARTIFACTS: ProblemArtifact[] = [
-  {
-    id: 'pa1',
-    no: 1,
-    title: 'System Failure Investigation Report',
-    module: 'System Failure Investigation',
-    prompt:
-      'Production API latency increases during peak traffic. Create a first-pass incident map and list root-cause hypotheses.',
-    text: '',
-    status: 'not_started',
-    score: 0,
-  },
-  {
-    id: 'pa2',
-    no: 2,
-    title: 'Structured Logging Plan',
-    module: 'Structured Logging',
-    prompt:
-      'System failures lack traceability. Design a structured logging schema with severity levels and correlation IDs.',
-    text: '',
-    status: 'not_started',
-    score: 0,
-  },
-  {
-    id: 'pa3',
-    no: 3,
-    title: 'Debugging Trace & Root Cause',
-    module: 'Debugging Tools',
-    prompt: 'Backend bug crashes services. Produce a debug trace and identify the root cause.',
-    text: '',
-    status: 'not_started',
-    score: 0,
-  },
-  {
-    id: 'pa4',
-    no: 4,
-    title: 'Bug Reproduction Plan',
-    module: 'Reproducing Bugs',
-    prompt:
-      'Intermittent production bug cannot be replicated. Create a controlled reproduction plan.',
-    text: '',
-    status: 'not_started',
-    score: 0,
-  },
-  {
-    id: 'pa5',
-    no: 5,
-    title: 'Root Cause Analysis Document',
-    module: 'Root Cause Analysis',
-    prompt:
-      'Engineers fix symptoms rather than root cause. Produce an evidence-based RCA document.',
-    text: '',
-    status: 'not_started',
-    score: 0,
-  },
-  {
-    id: 'pa6',
-    no: 6,
-    title: 'Incident Resolution Capstone',
-    module: 'Observability Capstone',
-    prompt:
-      'Investigate, diagnose, and resolve a realistic backend production incident using a full observability workflow.',
-    text: '',
-    status: 'not_started',
-    score: 0,
-  },
-];
-
-/* ── Config-driven course content (from mockDataConfig.json → courseContent).
-   Falls back to the built-in demo data when the config doesn't define a course. ── */
+/* ── Course content comes entirely from the DB (accounts.course_content via
+   loadCourseContent()). No built-in demo data. ── */
 interface ConfigCourse {
   id: string;
   course_id?: string;
@@ -475,10 +182,6 @@ interface ConfigCourse {
   modules?: ModuleProg[];
 }
 
-/* The built-in module set is the seed content for the Observability course only —
-   other courses show their own modules (or an empty state), never the debugging ones. */
-const SEED_COURSE_ID = 'crs-obs-l2';
-
 function cap(s?: string) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 }
@@ -488,12 +191,6 @@ function getConfigCourse(courseId?: string): ConfigCourse | undefined {
   if (!CONFIG_COURSES.length) return undefined;
   return CONFIG_COURSES.find(c => c.id === courseId || c.course_id === courseId) ?? CONFIG_COURSES[0];
 }
-
-const FALLBACK_PROBLEM = {
-  title: 'Production backend service begins failing under load',
-  description:
-    'A production backend service fails under load and engineers must identify root causes using logs, debugging tools and structured investigation. Complete 6 progressive artifacts to resolve this incident using a professional observability workflow.',
-};
 
 /* ═══════════════════════════════════════════════════════════════
    MAIN COMPONENT
@@ -508,38 +205,21 @@ export function CourseDetails() {
   /* ── Problem track state (config-driven, falls back to built-in) ── */
   const configCourse = getConfigCourse(courseId);
 
-  /* ── Module data — scoped to the resolved course ──
-     Observability (seed) shows the built-in modules merged with any config overrides;
-     every other course shows only its own config modules (empty until defined). */
-  const modules: ModuleProg[] = (() => {
-    if (configCourse?.course_id === SEED_COURSE_ID) {
-      const byId = new Map<string, ModuleProg>(MOCK_MODULES.map(m => [m.id, m]));
-      (configCourse.modules ?? []).forEach(m => byId.set(m.id, m));
-      return Array.from(byId.values()).sort((a, b) => a.module_no - b.module_no);
-    }
-    return configCourse?.modules ?? [];
-  })();
-  // When a real course is resolved, use ITS own track — never leak another course's
-  // (e.g. the Observability) artifacts. The hardcoded fallback applies only when no
-  // course content exists in config at all.
-  const initProblemArtifacts = configCourse
-    ? (configCourse.problem_artifacts ?? [])
-    : INIT_PROBLEM_ARTIFACTS;
-  const problemBanner = configCourse
-    ? (configCourse.problem_statement?.title
-        ? configCourse.problem_statement
-        : { title: configCourse.title || '', description: configCourse.description || '' })
-    : FALLBACK_PROBLEM;
+  /* ── Module data — entirely from the DB (course_content for this course). ── */
+  const modules: ModuleProg[] = configCourse?.modules ?? [];
+  const initProblemArtifacts = configCourse?.problem_artifacts ?? [];
+  const problemBanner =
+    configCourse?.problem_statement?.title
+      ? configCourse.problem_statement
+      : { title: configCourse?.title || '', description: configCourse?.description || '' };
 
-  /* ── Hero (driven by the resolved course) ── */
-  const heroTitle = configCourse?.title || 'Debugging & Observability for Backend Systems';
-  const heroDesc =
-    configCourse?.description ||
-    'Master production-grade debugging and observability using real-world incident scenarios. Build from structured logging through full incident resolution.';
-  const heroTag = configCourse?.job_pathway_role || configCourse?.domain_name || 'Backend Engineering';
-  const heroLevel = cap(configCourse?.difficulty_level) || 'Beginner';
-  const heroDuration = configCourse?.duration || '45 hours';
-  const heroCert = configCourse?.certification_value || 'Certificate';
+  /* ── Hero (driven entirely by the resolved course from the DB) ── */
+  const heroTitle = configCourse?.title || '';
+  const heroDesc = configCourse?.description || '';
+  const heroTag = configCourse?.job_pathway_role || configCourse?.domain_name || '';
+  const heroLevel = cap(configCourse?.difficulty_level) || '';
+  const heroDuration = configCourse?.duration || '';
+  const heroCert = configCourse?.certification_value || '';
 
   const [problemArtifacts, setProblemArtifacts] =
     useState<ProblemArtifact[]>(initProblemArtifacts);

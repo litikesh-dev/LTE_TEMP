@@ -2431,9 +2431,10 @@
 }
 
 .cd-ap-submission-url {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 6px;
+  max-width: 100%;
   padding: 8px 12px;
   background: white;
   border: 1px solid var(--cd-border-lt);
@@ -2444,6 +2445,17 @@
   font-weight: 500;
   transition: all 0.2s;
   font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+}
+
+.cd-ap-submission-url svg {
+  flex-shrink: 0;
+}
+
+.cd-ap-submission-url-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .cd-ap-submission-url:hover {
