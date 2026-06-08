@@ -351,6 +351,63 @@
   letter-spacing: 0.02em;
 }
 
+/* ── Level bar ─────────────────────────────────────────────────── */
+.cc-level {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 4px 0 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-light);
+}
+
+.cc-level-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cc-level-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-dark, #1e293b);
+}
+
+.cc-level-info {
+  color: var(--text-light, #94a3b8);
+}
+
+.cc-level-target {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-light, #94a3b8);
+}
+
+.cc-level-track {
+  display: flex;
+  gap: 4px;
+}
+
+.cc-level-seg {
+  flex: 1;
+  height: 6px;
+  border-radius: 99px;
+  background: #e2e8f0;
+  transition: background 0.3s ease;
+}
+
+.cc-level-seg--filled {
+  background: linear-gradient(90deg, #6366f1, #818cf8);
+}
+
+.cc-level-seg--target {
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.35);
+}
+
 /* ── Stats ─────────────────────────────────────────────────────── */
 .cc-stats {
   display: flex;

@@ -912,6 +912,9 @@ export function ModuleContent() {
   /* ── AI Facilitator state ── */
   const [viewedContent, setViewedContent] = useState<Set<string>>(new Set());
   const [facilitatorContentId, setFacilitatorContentId] = useState<string | null>(null);
+  // When the learner clicks "Mark Done & Next", open the AI facilitator first;
+  // advance to the next stage only after they finish/close it.
+  const [advanceAfterFacilitator, setAdvanceAfterFacilitator] = useState(false);
 
   const handleMarkContentViewed = (contentId: string) => {
     if (!viewedContent.has(contentId)) {
@@ -1205,17 +1208,30 @@ export function ModuleContent() {
             <div className="cd-content-body">
               {/* Video */}
               {(!activeContent || activeContent.content_type === 'video') && (
-                <div className="cd-video-ph">
-                  <PlayCircle size={56} className="cd-video-play" />
-                  <p>{activeContent?.title}</p>
-                  {activeContent && (
-                    viewedContent.has(activeContent.id)
-                      ? <span className="cd-content-viewed-badge"><CheckCircle2 size={13} /> Watched</span>
-                      : <button className="cd-content-done-trigger" onClick={() => handleMarkContentViewed(activeContent.id)}>
-                          <CheckCircle2 size={14} /> Mark as Watched
-                        </button>
-                  )}
-                </div>
+                activeContent?.url ? (
+                  <div className="cd-video-player-wrap">
+                    <video
+                      key={activeContent.id}
+                      className="cd-video-player"
+                      src={activeContent.url}
+                      controls
+                      controlsList="nodownload"
+                      onEnded={() => handleMarkContentViewed(activeContent.id)}
+                    />
+                  </div>
+                ) : (
+                  <div className="cd-video-ph">
+                    <PlayCircle size={56} className="cd-video-play" />
+                    <p>{activeContent?.title}</p>
+                    {activeContent && (
+                      viewedContent.has(activeContent.id)
+                        ? <span className="cd-content-viewed-badge"><CheckCircle2 size={13} /> Watched</span>
+                        : <button className="cd-content-done-trigger" onClick={() => handleMarkContentViewed(activeContent.id)}>
+                            <CheckCircle2 size={14} /> Mark as Watched
+                          </button>
+                    )}
+                  </div>
+                )
               )}
               {/* PDF */}
               {activeContent?.content_type === 'pdf' && (
@@ -1272,12 +1288,6 @@ export function ModuleContent() {
             </div>
 
             {/* Removed inline / floating facilitator nudge -> moved to header */}
-
-            <div className="cd-stage-ctx" style={{ borderColor: `${stageMeta.color}30` } as React.CSSProperties}>
-              <span className="cd-stage-ctx-badge" style={{ background: `${stageMeta.color}15`, color: stageMeta.color } as React.CSSProperties}>{stageMeta.icon} {stageMeta.label}</span>
-              <p className="cd-stage-ctx-desc">{stageMeta.description}</p>
-              <span className="cd-stage-ctx-purpose">{stageMeta.purposeTag}</span>
-            </div>
           </div>
 
           {/* AI Facilitator — full overlay modal, outside the content viewer */}
@@ -1288,7 +1298,14 @@ export function ModuleContent() {
               contentTitle={activeContent.title}
               contentType={activeContent.content_type}
               stageMeta={stageMeta}
-              onDismiss={() => setFacilitatorContentId(null)}
+              onDismiss={() => {
+                setFacilitatorContentId(null);
+                if (advanceAfterFacilitator) {
+                  setAdvanceAfterFacilitator(false);
+                  completeStage(activeModId, activeStage);
+                  goStage('next');
+                }
+              }}
             />
           )}
 
@@ -1298,7 +1315,17 @@ export function ModuleContent() {
               {STAGES_ORDER.map((k, i) => (<div key={k} className={`cd-footer-dot${i === stageIdx ? ' cd-footer-dot--active' : activeMod.stages[i]?.status === 'completed' ? ' cd-footer-dot--done' : ''}`} />))}
             </div>
             {stageIdx < STAGES_ORDER.length - 1 ? (
-              <button className="cd-btn-primary-sm" onClick={() => { completeStage(activeModId, activeStage); goStage('next'); }}>Mark Done & Next <ChevronRight size={15} /></button>
+              <button className="cd-btn-primary-sm" onClick={() => {
+                if (activeContent) {
+                  // Open the AI facilitator first; advancing happens after it's dismissed.
+                  if (!viewedContent.has(activeContent.id)) setViewedContent(prev => new Set([...prev, activeContent.id]));
+                  setAdvanceAfterFacilitator(true);
+                  setFacilitatorContentId(activeContent.id);
+                } else {
+                  completeStage(activeModId, activeStage);
+                  goStage('next');
+                }
+              }}>Mark Done & Next <ChevronRight size={15} /></button>
             ) : (
               <button className="cd-btn-primary-sm" onClick={() => completeStage(activeModId, activeStage)}><CheckCircle2 size={15} /> Complete Module</button>
             )}

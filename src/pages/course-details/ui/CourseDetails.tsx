@@ -470,15 +470,31 @@ export function CourseDetails() {
                     <h4 className="cd-prob-artifact-title">{activeProblem.title}</h4>
                     <p className="cd-prob-artifact-mod">{activeProblem.module}</p>
                   </div>
-                  <span className={`cd-prob-status cd-prob-status--${activeProblem.status}`}>
-                    {activeProblem.status === 'not_started'
-                      ? 'Not Started'
-                      : activeProblem.status === 'in_progress'
-                        ? 'In Progress'
-                        : activeProblem.status === 'approved'
-                          ? '✓ Approved'
-                          : '✓ Submitted'}
-                  </span>
+                  <div className="cd-prob-header-actions">
+                    {(() => {
+                      const mod =
+                        modules.find(m => m.module_no === activeProblem.no) ??
+                        modules[activeProblem.no - 1];
+                      return mod ? (
+                        <button
+                          className="cd-prob-goto-btn"
+                          onClick={() => enterViewer(mod.id, 'engage')}
+                          title={`Go to module: ${mod.title}`}
+                        >
+                          <BookOpen size={13} /> Go to Module
+                        </button>
+                      ) : null;
+                    })()}
+                    <span className={`cd-prob-status cd-prob-status--${activeProblem.status}`}>
+                      {activeProblem.status === 'not_started'
+                        ? 'Not Started'
+                        : activeProblem.status === 'in_progress'
+                          ? 'In Progress'
+                          : activeProblem.status === 'approved'
+                            ? '✓ Approved'
+                            : '✓ Submitted'}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="cd-prob-prompt">
@@ -611,6 +627,11 @@ export function CourseDetails() {
                             />
                           </div>
                           <span className="cd-mod-progress-text">{mod.completion_percentage}%</span>
+                        </div>
+                      )}
+                      {mod.status === 'completed' && (
+                        <div className="cd-mod-completed-pill">
+                          <CheckCircle2 size={12} /> Completed
                         </div>
                       )}
                       {mod.status === 'completed' && mod.score && (

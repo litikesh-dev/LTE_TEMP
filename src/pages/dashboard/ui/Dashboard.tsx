@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Award,
   BookOpen,
@@ -103,12 +104,26 @@ const inProgress: InProgressCourse[] = allCourses.map((c, i) => ({
 
 const enrollments: EnrollmentCard[] = allCourses;
 const leaderboard = dashboardData.leaderboard.entries as LeaderboardEntry[];
-const pathNodes = dashboardData.pathNodes;
+/* Timeline nodes carry an optional course/module target (added per-account in the
+   DB) so each node can deep-link into the course module viewer. */
+interface PathNode {
+  id: string;
+  label: string;
+  status: 'completed' | 'current' | 'upcoming';
+  courseId?: string;
+  moduleId?: string;
+  stage?: string;
+}
+const pathNodes = dashboardData.pathNodes as unknown as PathNode[];
 const sixEStages = dashboardData.sixEStages;
 const greeting = dashboardData.greeting;
 const statBadges = dashboardData.statBadges;
 const levelProgressCfg = dashboardData.levelProgress;
-const currentModule = dashboardData.currentModule;
+const currentModule = dashboardData.currentModule as typeof dashboardData.currentModule & {
+  courseId?: string;
+  moduleId?: string;
+  stage?: string;
+};
 const rightStats = dashboardData.rightStats;
 const activityStreak = dashboardData.activityStreak;
 const goalsCfg = dashboardData.goals;
@@ -206,6 +221,20 @@ const BADGE_COLORS = ['dash-badge-icon--yellow', 'dash-badge-icon--orange', 'das
 const XP_STORAGE_KEY = 'lte_earned_xp';
 
 export function Dashboard() {
+  const navigate = useNavigate();
+
+  /* Navigate to the course module a timeline node / current-module CTA points to.
+     Nodes carry an optional courseId (+ moduleId) from the DB. With a moduleId we
+     open the module viewer; with only a courseId we open the course overview. */
+  const goToModule = (target?: { courseId?: string; moduleId?: string; stage?: string }) => {
+    if (!target?.courseId) return;
+    if (target.moduleId) {
+      navigate(`/courses/${target.courseId}/modules/${target.moduleId}?stage=${target.stage ?? 'engage'}`);
+    } else {
+      navigate(`/courses/${target.courseId}`);
+    }
+  };
+
   const [goalProgress] = useState(goalsCfg.progress);
   const [goalMax] = useState(goalsCfg.max);
   const [animIn, setAnimIn] = useState(false);
@@ -371,19 +400,39 @@ export function Dashboard() {
             <div className="dash-timeline-card">
               <div className="dash-timeline-track-wrapper">
                 <div className="dash-timeline-track">
-                  {pathNodes.map((node, i) => (
-                    <div key={node.id} className={`dash-timeline-node ${node.status}`}>
-                      <div className="dash-node-circle">
-                        {node.status === 'completed' ? (
-                          <CheckCircle2 size={14} color="#fff" />
-                        ) : node.status === 'current' ? (
-                          <div className="dash-node-dot" />
-                        ) : null}
+                  {pathNodes.map((node, i) => {
+                    const clickable = Boolean(node.courseId);
+                    return (
+                      <div
+                        key={node.id}
+                        className={`dash-timeline-node ${node.status}${clickable ? ' clickable' : ''}`}
+                        role={clickable ? 'button' : undefined}
+                        tabIndex={clickable ? 0 : undefined}
+                        title={clickable ? `Go to ${node.label}` : undefined}
+                        onClick={clickable ? () => goToModule(node) : undefined}
+                        onKeyDown={
+                          clickable
+                            ? e => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault();
+                                  goToModule(node);
+                                }
+                              }
+                            : undefined
+                        }
+                      >
+                        <div className="dash-node-circle">
+                          {node.status === 'completed' ? (
+                            <CheckCircle2 size={14} color="#fff" />
+                          ) : node.status === 'current' ? (
+                            <div className="dash-node-dot" />
+                          ) : null}
+                        </div>
+                        <span className="dash-node-label">{node.label}</span>
+                        {i < pathNodes.length - 1 && <div className="dash-node-line" />}
                       </div>
-                      <span className="dash-node-label">{node.label}</span>
-                      {i < pathNodes.length - 1 && <div className="dash-node-line" />}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
@@ -393,7 +442,7 @@ export function Dashboard() {
                     <span className="dash-tm-subtitle">{currentModule.subtitle}</span>
                     <h3 className="dash-tm-title">{currentModule.title}</h3>
                   </div>
-                  <button className="dash-tm-cta">
+                  <button className="dash-tm-cta" onClick={() => goToModule(currentModule)}>
                     {currentModule.cta} <ChevronRight size={16} />
                   </button>
                 </div>
@@ -401,10 +450,32 @@ export function Dashboard() {
                 <div className="dash-tm-progress-breakdown">
                   <p className="dash-tm-breakdown-title">6E Learning Framework Progress</p>
                   <div className="dash-6e-stages">
-                    {sixEStages.map(stage => (
+                    {sixEStages.map(stage => {
+                      const stageClickable = Boolean(currentModule.courseId && currentModule.moduleId);
+                      const openStage = () =>
+                        goToModule({
+                          courseId: currentModule.courseId,
+                          moduleId: currentModule.moduleId,
+                          stage: stage.name.toLowerCase(),
+                        });
+                      return (
                       <div
                         key={stage.name}
-                        className={`dash-6e-stage dash-6e-stage--${stage.status}`}
+                        className={`dash-6e-stage dash-6e-stage--${stage.status}${stageClickable ? ' clickable' : ''}`}
+                        role={stageClickable ? 'button' : undefined}
+                        tabIndex={stageClickable ? 0 : undefined}
+                        title={stageClickable ? `Open ${stage.name} stage` : undefined}
+                        onClick={stageClickable ? openStage : undefined}
+                        onKeyDown={
+                          stageClickable
+                            ? e => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault();
+                                  openStage();
+                                }
+                              }
+                            : undefined
+                        }
                       >
                         <div className="dash-6e-icon-wrapper">
                           {stage.status === 'completed' ? (
@@ -425,7 +496,8 @@ export function Dashboard() {
                           </div>
                         )}
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -639,7 +711,6 @@ export function Dashboard() {
                 <tr>
                   <th>Rank</th>
                   <th>Student</th>
-                  <th>Role</th>
                   <th>Total Score</th>
                 </tr>
               </thead>
@@ -670,9 +741,6 @@ export function Dashboard() {
                         <span className="dash-lbm-student-name">{entry.name}</span>
                         {entry.isCurrentUser && <span className="dash-lbm-you-tag">You</span>}
                       </div>
-                    </td>
-                    <td>
-                      <span className="dash-lbm-role-badge">{entry.role}</span>
                     </td>
                     <td>
                       <div className="dash-lbm-col-points">

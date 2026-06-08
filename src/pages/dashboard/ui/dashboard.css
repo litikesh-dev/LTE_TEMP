@@ -933,9 +933,10 @@
   text-align: center;
 }
 
-.dash-lbm-table th:nth-child(4),
-.dash-lbm-table td:nth-child(4) {
+.dash-lbm-table th:nth-child(3),
+.dash-lbm-table td:nth-child(3) {
   width: 170px;
+  text-align: right;
 }
 
 .dash-lbm-table tbody tr {
@@ -1129,6 +1130,27 @@
   flex: 1;
 }
 
+.dash-timeline-node.clickable {
+  cursor: pointer;
+}
+
+.dash-timeline-node.clickable:hover .dash-node-circle {
+  transform: scale(1.12);
+  box-shadow: 0 0 0 4px var(--dash-primary-light);
+}
+
+.dash-timeline-node.clickable:hover .dash-node-label {
+  color: var(--dash-primary);
+}
+
+.dash-timeline-node.clickable:focus-visible {
+  outline: none;
+}
+
+.dash-timeline-node.clickable:focus-visible .dash-node-circle {
+  box-shadow: 0 0 0 3px var(--dash-primary);
+}
+
 .dash-node-circle {
   width: 28px;
   height: 28px;
@@ -1303,6 +1325,23 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+}
+
+.dash-6e-stage.clickable {
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.dash-6e-stage.clickable:hover {
+  border-color: var(--dash-primary);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+  transform: translateY(-2px);
+}
+
+.dash-6e-stage.clickable:focus-visible {
+  outline: none;
+  border-color: var(--dash-primary);
+  box-shadow: 0 0 0 3px var(--dash-primary-light);
 }
 
 .dash-6e-stage--completed {
