@@ -36,6 +36,12 @@ import {
   Link,
   Paperclip,
   Trophy,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Maximize,
+  RotateCw,
 } from 'lucide-react';
 import '../../../pages/course-details/ui/course-details.css';
 import { loadCourseContent, loadStageMeta } from '@/shared/api/configLoader';
@@ -501,6 +507,109 @@ function fmtDuration(secs?: number) {
   if (!secs) return '';
   const m = Math.floor(secs / 60);
   return m > 0 ? `${m} min` : `${secs}s`;
+}
+
+function fmtClock(secs: number) {
+  if (!isFinite(secs) || secs < 0) secs = 0;
+  const m = Math.floor(secs / 60);
+  const s = Math.floor(secs % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+/* ── Custom video player with branded controls ── */
+function VideoPlayer({ src, poster, onEnded }: { src: string; poster?: string; onEnded?: () => void }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [muted, setMuted] = useState(false);
+  const [rate, setRate] = useState(1);
+  const [showControls, setShowControls] = useState(true);
+  const [ended, setEnded] = useState(false);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const togglePlay = () => {
+    const v = videoRef.current; if (!v) return;
+    if (v.paused) { v.play(); } else { v.pause(); }
+  };
+  const seek = (t: number) => { const v = videoRef.current; if (v) v.currentTime = t; };
+  const skip = (d: number) => { const v = videoRef.current; if (v) v.currentTime = Math.min(Math.max(0, v.currentTime + d), v.duration || 0); };
+  const toggleMute = () => { const v = videoRef.current; if (!v) return; v.muted = !v.muted; setMuted(v.muted); };
+  const changeVolume = (val: number) => { const v = videoRef.current; if (!v) return; v.volume = val; v.muted = val === 0; setVolume(val); setMuted(val === 0); };
+  const cycleRate = () => { const v = videoRef.current; if (!v) return; const rates = [1, 1.25, 1.5, 2, 0.75]; const next = rates[(rates.indexOf(rate) + 1) % rates.length]; v.playbackRate = next; setRate(next); };
+  const toggleFullscreen = () => { const w = wrapRef.current; if (!w) return; if (document.fullscreenElement) document.exitFullscreen(); else w.requestFullscreen?.(); };
+
+  const nudgeControls = () => {
+    setShowControls(true);
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    hideTimer.current = setTimeout(() => { if (videoRef.current && !videoRef.current.paused) setShowControls(false); }, 2600);
+  };
+
+  const pct = duration ? (current / duration) * 100 : 0;
+
+  return (
+    <div
+      ref={wrapRef}
+      className={`vp-root${showControls || !playing ? ' vp-show' : ''}`}
+      onMouseMove={nudgeControls}
+      onMouseLeave={() => playing && setShowControls(false)}
+    >
+      <video
+        ref={videoRef}
+        className="vp-video"
+        src={src}
+        poster={poster}
+        preload="auto"
+        playsInline
+        onClick={togglePlay}
+        onPlay={() => { setPlaying(true); setEnded(false); nudgeControls(); }}
+        onPause={() => { setPlaying(false); setShowControls(true); }}
+        onTimeUpdate={e => setCurrent(e.currentTarget.currentTime)}
+        onLoadedMetadata={e => setDuration(e.currentTarget.duration)}
+        onEnded={() => { setPlaying(false); setEnded(true); setShowControls(true); onEnded?.(); }}
+      />
+
+      {/* Center play / replay button */}
+      {(!playing) && (
+        <button className="vp-center-btn" onClick={togglePlay} aria-label={ended ? 'Replay' : 'Play'}>
+          {ended ? <RotateCw size={30} /> : <Play size={32} fill="currentColor" />}
+        </button>
+      )}
+
+      {/* Control bar */}
+      <div className="vp-controls">
+        <div className="vp-scrub" onClick={e => {
+          const r = e.currentTarget.getBoundingClientRect();
+          seek(((e.clientX - r.left) / r.width) * duration);
+        }}>
+          <div className="vp-scrub-buffered" />
+          <div className="vp-scrub-played" style={{ width: `${pct}%` }}>
+            <span className="vp-scrub-knob" />
+          </div>
+        </div>
+        <div className="vp-bar">
+          <button className="vp-btn" onClick={togglePlay} aria-label="Play/Pause">
+            {playing ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+          </button>
+          <button className="vp-btn" onClick={() => skip(-10)} aria-label="Back 10s"><RotateCw size={17} style={{ transform: 'scaleX(-1)' }} /></button>
+          <button className="vp-btn" onClick={() => skip(10)} aria-label="Forward 10s"><RotateCw size={17} /></button>
+          <div className="vp-volume">
+            <button className="vp-btn" onClick={toggleMute} aria-label="Mute">
+              {muted || volume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
+            </button>
+            <input className="vp-volume-slider" type="range" min={0} max={1} step={0.05}
+              value={muted ? 0 : volume} onChange={e => changeVolume(parseFloat(e.target.value))} />
+          </div>
+          <span className="vp-time">{fmtClock(current)} <span className="vp-time-sep">/</span> {fmtClock(duration)}</span>
+          <div className="vp-spacer" />
+          <button className="vp-btn vp-rate" onClick={cycleRate} aria-label="Playback speed">{rate}x</button>
+          <button className="vp-btn" onClick={toggleFullscreen} aria-label="Fullscreen"><Maximize size={17} /></button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function contentIcon(type: string, size = 15) {
@@ -1210,12 +1319,9 @@ export function ModuleContent() {
               {(!activeContent || activeContent.content_type === 'video') && (
                 activeContent?.url ? (
                   <div className="cd-video-player-wrap">
-                    <video
+                    <VideoPlayer
                       key={activeContent.id}
-                      className="cd-video-player"
                       src={activeContent.url}
-                      controls
-                      controlsList="nodownload"
                       onEnded={() => handleMarkContentViewed(activeContent.id)}
                     />
                   </div>

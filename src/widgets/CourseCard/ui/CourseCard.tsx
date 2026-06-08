@@ -3,13 +3,12 @@ import {
   Clock,
   BookOpen,
   CheckCircle2,
-  Circle,
-  PlayCircle,
   ChevronRight,
   Zap,
   Award,
   Layers,
   Target,
+  Info,
 } from 'lucide-react';
 import './CourseCard.css';
 
@@ -35,19 +34,17 @@ export interface CourseCardProps {
   domain_name?: string;
   certification_value?: string;
   common_course_problem_statement?: string;
+  current_level?: number;
+  required_level?: number;
 }
+
+const TOTAL_LEVELS = 5;
 
 /* ─────────────────────────── helpers ────────────────────────── */
 const DIFFICULTY_META = {
   beginner: { label: 'Beginner', color: '#10b981', bg: '#ecfdf5' },
   intermediate: { label: 'Intermediate', color: '#f59e0b', bg: '#fffbeb' },
   advanced: { label: 'Advanced', color: '#ef4444', bg: '#fef2f2' },
-};
-
-const STATUS_META = {
-  not_started: { label: 'Not Started', icon: Circle, color: '#94a3b8' },
-  in_progress: { label: 'In Progress', icon: PlayCircle, color: '#6366f1' },
-  completed: { label: 'Completed', icon: CheckCircle2, color: '#10b981' },
 };
 
 const THUMB_GRADIENTS = [
@@ -112,11 +109,11 @@ export function CourseCard(props: CourseCardProps) {
     mode = 'dashboard',
     domain_name,
     certification_value,
+    current_level,
+    required_level,
   } = props;
 
   const diffMeta = DIFFICULTY_META[difficulty_level];
-  const statusMeta = STATUS_META[status];
-  const StatusIcon = statusMeta.icon;
   const gradient = getGradient(course_code);
 
   const handleClick = () => navigate(`/courses/${course_id || id}`);
@@ -202,17 +199,34 @@ export function CourseCard(props: CourseCardProps) {
           </span>
         </div>
 
-        {/* Stats */}
-        <div className="cc-stats">
-          <div className="cc-stat">
-            <ProgressRing value={completion_percentage} size={36} />
-            <div className="cc-stat-text">
-              <span className="cc-stat-val">{completion_percentage}%</span>
-              <span className="cc-stat-lbl">Complete</span>
+        {/* Level bar */}
+        {current_level !== undefined && (
+          <div className="cc-level">
+            <div className="cc-level-head">
+              <span className="cc-level-label">
+                Level {current_level} of {TOTAL_LEVELS}
+                <Info size={11} className="cc-level-info" />
+              </span>
+              {required_level !== undefined && (
+                <span className="cc-level-target">TARGET: L{required_level}</span>
+              )}
+            </div>
+            <div className="cc-level-track">
+              {Array.from({ length: TOTAL_LEVELS }, (_, i) => i + 1).map(lvl => (
+                <span
+                  key={lvl}
+                  className={`cc-level-seg${lvl <= current_level ? ' cc-level-seg--filled' : ''}${
+                    required_level !== undefined && lvl === required_level ? ' cc-level-seg--target' : ''
+                  }`}
+                />
+              ))}
             </div>
           </div>
+        )}
 
-          {relevance_score !== undefined && (
+        {/* Stats */}
+        {relevance_score !== undefined && (
+          <div className="cc-stats">
             <div className="cc-stat">
               <ProgressRing value={relevance_score} size={36} />
               <div className="cc-stat-text">
@@ -220,15 +234,8 @@ export function CourseCard(props: CourseCardProps) {
                 <span className="cc-stat-lbl">Relevance</span>
               </div>
             </div>
-          )}
-
-          <div className="cc-stat cc-stat--status">
-            <StatusIcon size={14} style={{ color: statusMeta.color }} />
-            <span className="cc-stat-status" style={{ color: statusMeta.color }}>
-              {statusMeta.label}
-            </span>
           </div>
-        </div>
+        )}
 
         {/* Why recommended */}
         {match_reason && (
