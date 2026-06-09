@@ -192,6 +192,40 @@ function getConfigCourse(courseId?: string): ConfigCourse | undefined {
   return CONFIG_COURSES.find(c => c.id === courseId || c.course_id === courseId) ?? CONFIG_COURSES[0];
 }
 
+/* Break a long task prompt into readable labelled lines. The artifact prompts
+   pack several sections ("Input:", "Action:", "Evidence to cite:", …) into one
+   run of text; we split on those labels so each renders on its own line. */
+const PROMPT_LABELS = [
+  'Final artifact question', 'Practice artifact question', 'Artifact question',
+  'Question', 'Scenario', 'Context', 'Input', 'Action', 'Task',
+  'Evidence to cite', 'Evidence', 'Output decision', 'Output', 'Deliverable',
+  'Constraints', 'Do not',
+];
+
+function renderTaskPrompt(prompt?: string) {
+  if (!prompt) return null;
+  const alt = PROMPT_LABELS
+    .sort((a, b) => b.length - a.length)
+    .map(l => l.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .join('|');
+  // Insert a break before every label (except at the very start).
+  const marked = prompt.replace(new RegExp(`\\s*(?=(?:${alt})\\s*:)`, 'g'), '\n');
+  const lines = marked.split('\n').map(s => s.trim()).filter(Boolean);
+  return (
+    <div className="cd-prob-prompt-lines">
+      {lines.map((line, i) => {
+        const m = line.match(/^([^:]+):\s*(.*)$/s);
+        const isLabel = m && PROMPT_LABELS.some(l => l.toLowerCase() === m[1].trim().toLowerCase());
+        return isLabel ? (
+          <p key={i}><strong>{m![1].trim()}:</strong> {m![2]}</p>
+        ) : (
+          <p key={i}>{line}</p>
+        );
+      })}
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════════ */
@@ -499,7 +533,7 @@ export function CourseDetails() {
 
                 <div className="cd-prob-prompt">
                   <span className="cd-prob-prompt-tag">Your Task</span>
-                  <p>{activeProblem.prompt}</p>
+                  {renderTaskPrompt(activeProblem.prompt)}
                   <p className="cd-prob-prompt-hint">
                     Provide a structured, professional response demonstrating understanding and
                     practical application.

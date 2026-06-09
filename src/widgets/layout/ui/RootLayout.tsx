@@ -17,6 +17,19 @@ import {
   X,
 } from 'lucide-react';
 import './RootLayout.css';
+import { loadDashboard } from '@/shared/api/configLoader';
+
+/* ── Active learner identity for the header chip (from the active account) ── */
+const dashCfg = loadDashboard() as {
+  learnerProfile?: { target_role?: string };
+  leaderboard?: { entries?: Array<{ name: string; role?: string; initials?: string; isCurrentUser?: boolean }> };
+};
+const meEntry = dashCfg.leaderboard?.entries?.find(e => e.isCurrentUser);
+const profileName = meEntry?.name ?? 'Learner';
+const profileRole = meEntry?.role ?? dashCfg.learnerProfile?.target_role ?? '';
+const profileInitials =
+  meEntry?.initials ??
+  profileName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
 const mainNav = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -210,10 +223,10 @@ export function RootLayout() {
 
             {/* Profile chip */}
             <button id="profile-btn" className="rl-profile-chip" aria-label="User profile">
-              <div className="rl-profile-avatar">AJ</div>
+              <div className="rl-profile-avatar">{profileInitials}</div>
               <div className="rl-profile-info">
-                <p className="rl-profile-name">Alex Johnson</p>
-                <p className="rl-profile-role">UI/UX Designer</p>
+                <p className="rl-profile-name">{profileName}</p>
+                <p className="rl-profile-role">{profileRole}</p>
               </div>
               <UserCircle size={14} className="rl-profile-chevron" />
             </button>

@@ -612,6 +612,18 @@ function VideoPlayer({ src, poster, onEnded }: { src: string; poster?: string; o
   );
 }
 
+/* Map a free-text expected_submission_type (e.g. "Excel + PDF", "GitHub link")
+   to one of the canonical input modes the UI knows how to render. */
+function normSubType(raw?: string, acceptedFileTypes?: string[]): 'text' | 'url' | 'file' | 'code' {
+  const s = (raw ?? '').toLowerCase().trim();
+  if (s === 'text' || s === 'url' || s === 'file' || s === 'code') return s;
+  if (acceptedFileTypes && acceptedFileTypes.length > 0) return 'file';
+  if (/file|upload|excel|xlsx|csv|pdf|docx?|pptx?|ppt|slide|zip|sheet|image|png|jpe?g|attachment|workbook|template/.test(s)) return 'file';
+  if (/url|link|github|gitlab|repo|http|drive|figma/.test(s)) return 'url';
+  if (/code|snippet|script|\bsql\b|python|java(script)?|notebook/.test(s)) return 'code';
+  return 'text';
+}
+
 function contentIcon(type: string, size = 15) {
   if (type === 'video') return <PlayCircle size={size} />;
   if (type === 'pdf') return <FileText size={size} />;
@@ -727,7 +739,7 @@ function ArtifactPanel({ artifact, onSubmit }: ArtifactPanelProps) {
     artifact.questions.forEach(q => {
       if (artifact.artifact_type === 'practice' || q.submission_required) {
         initial[q.id] =
-          cached?.[q.id] ?? { type: q.expected_submission_type || 'text', text: '', url: '', file: null, codeLanguage: 'javascript' };
+          cached?.[q.id] ?? { type: normSubType(q.expected_submission_type, q.accepted_file_types), text: '', url: '', file: null, codeLanguage: 'javascript' };
       }
     });
     setQuestionSubmissions(initial);
@@ -754,7 +766,7 @@ function ArtifactPanel({ artifact, onSubmit }: ArtifactPanelProps) {
     onSubmit('', artifact.id, combinedText, 'normal', combinedUrl);
     const reset: typeof questionSubmissions = {};
     artifact.questions.forEach(q => {
-      if (q.submission_required) reset[q.id] = { type: q.expected_submission_type || 'text', text: '', url: '', file: null, codeLanguage: 'javascript' };
+      if (q.submission_required) reset[q.id] = { type: normSubType(q.expected_submission_type, q.accepted_file_types), text: '', url: '', file: null, codeLanguage: 'javascript' };
     });
     delete draftCache[artifact.id]; // clear saved draft once submitted
     setQuestionSubmissions(reset);
@@ -824,10 +836,13 @@ function ArtifactPanel({ artifact, onSubmit }: ArtifactPanelProps) {
                     {artifact.artifact_type === 'final' && q.submission_required && <span className="cd-ap-q-required">Required</span>}
                     {q.expected_submission_type && (
                       <span className="cd-ap-q-type-badge">
-                        {q.expected_submission_type === 'file' && <><Paperclip size={11} /> File</>}
-                        {q.expected_submission_type === 'code' && <><Code2 size={11} /> Code</>}
-                        {q.expected_submission_type === 'url' && <><Link size={11} /> Link</>}
-                        {q.expected_submission_type === 'text' && <><FileText size={11} /> Text</>}
+                        {(() => {
+                          const t = normSubType(q.expected_submission_type, q.accepted_file_types);
+                          if (t === 'file') return <><Paperclip size={11} /> {q.expected_submission_type}</>;
+                          if (t === 'code') return <><Code2 size={11} /> Code</>;
+                          if (t === 'url') return <><Link size={11} /> Link</>;
+                          return <><FileText size={11} /> Text</>;
+                        })()}
                       </span>
                     )}
                   </div>
@@ -990,6 +1005,11 @@ export function ModuleContent() {
   const [modules, setModules] = useState<ModuleProg[]>(() => getCourseModules(activeCourseId));
   const activeModId = moduleId ?? modules[0]?.id ?? '';
   const activeStage = initialStage;
+  /* Course-level scenario (long) — shown collapsed in the right panel. */
+  const [scenarioOpen, setScenarioOpen] = useState(false);
+  const activeCourse = (loadCourseContent() as Array<{ id?: string; course_id?: string; problem_statement?: { title?: string; description?: string } }>)
+    .find(c => c.course_id === activeCourseId || c.id === activeCourseId);
+  const courseProblem = activeCourse?.problem_statement;
   /* ── Reset content when stage/module changes via URL ── */
   const [activeContentId, setActiveContentId] = useState(() => {
     const items = getStageContent(activeCourseId, activeModId, activeStage);
@@ -1391,6 +1411,25 @@ export function ModuleContent() {
                   }
                 </div>
               )}
+              {/* Fallback for any other resource type (case brief, worksheet, explainer, …) */}
+              {activeContent &&
+                !['video', 'pdf', 'slide', 'image', 'doc', 'text'].includes(activeContent.content_type) && (
+                <div className="cd-doc-ph">
+                  {contentIcon(activeContent.content_type, 44)}
+                  <p>{activeContent.title}</p>
+                  {activeContent.url && activeContent.url !== '#' && (
+                    <a className="cd-btn-sm-outline" href={activeContent.url} target="_blank" rel="noopener noreferrer">
+                      <Download size={12} /> Open Resource
+                    </a>
+                  )}
+                  {viewedContent.has(activeContent.id)
+                    ? <span className="cd-content-viewed-badge"><CheckCircle2 size={13} /> Completed</span>
+                    : <button className="cd-content-done-trigger" onClick={() => handleMarkContentViewed(activeContent.id)}>
+                        <CheckCircle2 size={14} /> Mark as Completed
+                      </button>
+                  }
+                </div>
+              )}
             </div>
 
             {/* Removed inline / floating facilitator nudge -> moved to header */}
@@ -1448,6 +1487,29 @@ export function ModuleContent() {
             </div>
           </div>
           <div className="cd-panel-body">
+            {activeMod.module_specific_problem_statement && (
+              <div className="cd-stage-problem-card">
+                <div className="cd-stage-problem-head">
+                  <Target size={13} />
+                  <span>Problem Statement</span>
+                </div>
+                <p className="cd-stage-problem-text">{activeMod.module_specific_problem_statement}</p>
+              </div>
+            )}
+            {courseProblem?.description && (
+              <div className="cd-course-scenario-card">
+                <button className="cd-course-scenario-head" onClick={() => setScenarioOpen(o => !o)} aria-expanded={scenarioOpen}>
+                  <span className="cd-course-scenario-title"><BookOpen size={13} /> {courseProblem.title || 'Course Scenario'}</span>
+                  {scenarioOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                </button>
+                <p className={`cd-course-scenario-text${scenarioOpen ? ' cd-course-scenario-text--open' : ''}`}>
+                  {courseProblem.description}
+                </p>
+                {!scenarioOpen && (
+                  <button className="cd-course-scenario-more" onClick={() => setScenarioOpen(true)}>Read more</button>
+                )}
+              </div>
+            )}
             {isArtifactStage && currentArtifact ? (
               <ArtifactPanel artifact={currentArtifact} moduleId={activeModId} onSubmit={handleArtifactSubmit} />
             ) : (
@@ -1469,7 +1531,6 @@ export function ModuleContent() {
                 </div>
                 <div className="cd-mod-context-card">
                   <h5>Module Context</h5>
-                  <p className="cd-mod-context-problem">{activeMod.module_specific_problem_statement}</p>
                   <div className="cd-mod-context-concepts"><span>Concepts: </span>{activeMod.learning_content.major_concepts}</div>
                 </div>
                 <div className="cd-ask-ai-card">

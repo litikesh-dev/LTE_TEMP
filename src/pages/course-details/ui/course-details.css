@@ -635,6 +635,10 @@
 
 .cd-prob-prompt p { font-size: 0.88rem; color: var(--cd-text-dark); line-height: 1.6; margin: 0 0 6px; }
 
+.cd-prob-prompt-lines { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+.cd-prob-prompt-lines p { margin: 0; }
+.cd-prob-prompt-lines strong { color: var(--cd-primary); font-weight: 700; }
+
 .cd-prob-prompt-hint {
   font-size: 0.78rem; color: var(--cd-text-light) !important;
 }
@@ -1632,6 +1636,51 @@
   display: flex; align-items: center; gap: 6px;
   font-size: 0.78rem; color: var(--cd-text-light);
   padding: 5px 0; border-top: 1px solid var(--cd-border);
+}
+
+.cd-stage-problem-card {
+  background: #f8f9ff;
+  border: 1px solid var(--cd-border);
+  border-left: 3px solid var(--cd-primary);
+  border-radius: 0 12px 12px 0;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.cd-stage-problem-head {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: var(--cd-primary); margin-bottom: 7px;
+}
+.cd-stage-problem-text {
+  font-size: 0.84rem; color: var(--cd-text-dark); line-height: 1.6; margin: 0;
+}
+
+.cd-course-scenario-card {
+  background: #ffffff; border: 1px solid var(--cd-border);
+  border-radius: 12px; padding: 12px 14px; margin-bottom: 14px;
+}
+.cd-course-scenario-head {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+  width: 100%; background: none; border: none; padding: 0; cursor: pointer;
+  font-family: inherit; color: var(--cd-text-dark);
+}
+.cd-course-scenario-title {
+  display: inline-flex; align-items: flex-start; gap: 6px;
+  font-size: 0.82rem; font-weight: 700;
+  color: var(--cd-text-dark); text-align: left; line-height: 1.4;
+}
+.cd-course-scenario-title svg { flex-shrink: 0; margin-top: 2px; color: var(--cd-primary); }
+.cd-course-scenario-head svg:last-child { flex-shrink: 0; color: var(--cd-text-light); }
+.cd-course-scenario-text {
+  font-size: 0.82rem; color: var(--cd-text-mid); line-height: 1.6;
+  margin: 8px 0 0;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cd-course-scenario-text--open { -webkit-line-clamp: unset; overflow: visible; }
+.cd-course-scenario-more {
+  background: none; border: none; padding: 4px 0 0; cursor: pointer;
+  font-family: inherit; font-size: 0.76rem; font-weight: 700; color: var(--cd-primary);
 }
 
 .cd-mod-context-card {

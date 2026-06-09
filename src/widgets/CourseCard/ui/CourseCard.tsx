@@ -39,9 +39,11 @@ export interface CourseCardProps {
 const TOTAL_LEVELS = 5;
 
 /* ─────────────────────────── helpers ────────────────────────── */
-const DIFFICULTY_META = {
+const DIFFICULTY_META: Record<string, { label: string; color: string; bg: string }> = {
   beginner: { label: 'Beginner', color: '#10b981', bg: '#ecfdf5' },
+  'beginner-plus': { label: 'Beginner+', color: '#059669', bg: '#ecfdf5' },
   intermediate: { label: 'Intermediate', color: '#f59e0b', bg: '#fffbeb' },
+  'advanced-intermediate': { label: 'Advanced Intermediate', color: '#f97316', bg: '#fff7ed' },
   advanced: { label: 'Advanced', color: '#ef4444', bg: '#fef2f2' },
 };
 
@@ -109,7 +111,9 @@ export function CourseCard(props: CourseCardProps) {
     required_level,
   } = props;
 
-  const diffMeta = DIFFICULTY_META[difficulty_level];
+  const diffMeta =
+    DIFFICULTY_META[String(difficulty_level).toLowerCase() as keyof typeof DIFFICULTY_META] ??
+    DIFFICULTY_META.beginner;
   const gradient = getGradient(course_code);
 
   const handleClick = () => navigate(`/courses/${course_id || id}`);

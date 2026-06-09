@@ -6,8 +6,8 @@ import {
   CheckCircle2,
   ChevronRight,
   Clock,
-  FileText,
   Info,
+  Layers,
   LayoutDashboard,
   Medal,
   ScrollText,
@@ -44,9 +44,11 @@ const ICONS: Record<string, LucideIcon> = {
 
 interface InProgressCourse {
   id: string;
+  courseId: string;
   type: 'Course';
   title: string;
-  materials: number;
+  currentLevel: number;
+  requiredLevel: number;
   completion: number | null;
   deadline: string;
   deadlineUrgent: boolean;
@@ -88,13 +90,17 @@ const dashboardData = loadDashboard();
    My Courses page (course_content.courses), so the dashboard and the courses
    list always stay in sync. */
 const COURSE_THUMBS = ['#eef2ff', '#ede9fe', '#eef9f4', '#fef3e8'];
-const allCourses = loadCourses() as Array<EnrollmentCard & { modules?: unknown[]; id?: string }>;
+const allCourses = loadCourses() as Array<
+  EnrollmentCard & { modules?: unknown[]; id?: string; current_level?: number; required_level?: number }
+>;
 
 const inProgress: InProgressCourse[] = allCourses.map((c, i) => ({
   id: c.id ?? c.course_id,
+  courseId: c.course_id ?? c.id ?? '',
   type: 'Course',
   title: c.title,
-  materials: c.modules?.length ?? 0,
+  currentLevel: c.current_level ?? 1,
+  requiredLevel: c.required_level ?? 3,
   completion: c.status === 'not_started' ? null : (c.completion_percentage ?? 0),
   deadline: c.status === 'in_progress' ? '12 hrs' : '1 Day',
   deadlineUrgent: c.status === 'in_progress',
@@ -532,12 +538,12 @@ export function Dashboard() {
                     <p className="dash-ip-title">{course.title}</p>
                   </div>
 
-                  {/* content */}
+                  {/* level */}
                   <div className="dash-ip-meta">
-                    <span className="dash-ip-meta-label">Content</span>
+                    <span className="dash-ip-meta-label">Level</span>
                     <span className="dash-ip-meta-val">
-                      <FileText size={13} className="dash-meta-icon" />
-                      {course.materials} Material
+                      <Layers size={13} className="dash-meta-icon" />
+                      L{course.currentLevel} → Target L{course.requiredLevel}
                     </span>
                   </div>
 
@@ -554,19 +560,9 @@ export function Dashboard() {
                     )}
                   </div>
 
-                  {/* deadline */}
-                  <div className="dash-ip-meta">
-                    <span className="dash-ip-meta-label">Deadline</span>
-                    <span
-                      className={`dash-ip-meta-val${course.deadlineUrgent ? ' dash-urgent' : ''}`}
-                    >
-                      <Clock size={13} className="dash-meta-icon" />
-                      {course.deadline}
-                    </span>
-                  </div>
-
                   <button
                     className={`dash-action-btn${course.action === 'Continue' ? ' dash-action-btn--outline' : ''}`}
+                    onClick={() => navigate(`/courses/${course.courseId}`)}
                   >
                     {course.action}
                   </button>
