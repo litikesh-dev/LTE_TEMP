@@ -11,6 +11,7 @@
  * is_active in the database (only one row may be active at a time).
  */
 import { supabase } from './supabaseClient';
+import { getSessionSlug } from './session';
 // Type-only import: gives `accountData` the same rich shape the loaders expect
 // without bundling the JSON at runtime (erased during build).
 import type defaultConfig from './mockDataConfig.json';
@@ -36,19 +37,23 @@ const COLUMN_MAP: Record<string, keyof AccountData> = {
 
 async function fetchActiveAccount(): Promise<AccountData> {
   const columns = Object.keys(COLUMN_MAP).join(', ');
-  const { data, error } = await supabase
-    .from('accounts')
-    .select(`persona, name, ${columns}`)
-    .eq('is_active', true)
+  // Prefer the account chosen at "login" (slug in localStorage); otherwise fall
+  // back to the is_active row so the app still works without logging in.
+  const slug = getSessionSlug();
+  const query = supabase.from('accounts').select(`persona, name, ${columns}`);
+  const { data, error } = await (slug
+    ? query.eq('slug', slug)
+    : query.eq('is_active', true)
+  )
     .limit(1)
     .maybeSingle();
 
   if (error) {
-    throw new Error(`Supabase: failed to load active account — ${error.message}`);
+    throw new Error(`Supabase: failed to load account — ${error.message}`);
   }
   if (!data) {
     throw new Error(
-      'Supabase: no active account. Set accounts.is_active = true for exactly one row.'
+      'Supabase: account not found. Log in again or set accounts.is_active = true for one row.'
     );
   }
 

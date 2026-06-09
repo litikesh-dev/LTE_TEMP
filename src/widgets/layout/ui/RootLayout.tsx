@@ -15,9 +15,11 @@ import {
   UserCircle,
   Menu,
   X,
+  LogOut,
 } from 'lucide-react';
 import './RootLayout.css';
 import { loadDashboard } from '@/shared/api/configLoader';
+import { clearSession } from '@/shared/api/session';
 
 /* ── Active learner identity for the header chip (from the active account) ── */
 const dashCfg = loadDashboard() as {
@@ -229,6 +231,16 @@ export function RootLayout() {
                 <p className="rl-profile-role">{profileRole}</p>
               </div>
               <UserCircle size={14} className="rl-profile-chevron" />
+            </button>
+
+            {/* Logout */}
+            <button
+              className="rl-logout-btn"
+              aria-label="Log out"
+              title="Log out"
+              onClick={() => { clearSession(); window.location.assign('/'); }}
+            >
+              <LogOut size={16} />
             </button>
           </div>
         </header>
