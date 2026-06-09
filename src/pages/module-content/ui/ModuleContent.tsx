@@ -1487,15 +1487,6 @@ export function ModuleContent() {
             </div>
           </div>
           <div className="cd-panel-body">
-            {activeMod.module_specific_problem_statement && (
-              <div className="cd-stage-problem-card">
-                <div className="cd-stage-problem-head">
-                  <Target size={13} />
-                  <span>Problem Statement</span>
-                </div>
-                <p className="cd-stage-problem-text">{activeMod.module_specific_problem_statement}</p>
-              </div>
-            )}
             {courseProblem?.description && (
               <div className="cd-course-scenario-card">
                 <button className="cd-course-scenario-head" onClick={() => setScenarioOpen(o => !o)} aria-expanded={scenarioOpen}>
@@ -1508,6 +1499,15 @@ export function ModuleContent() {
                 {!scenarioOpen && (
                   <button className="cd-course-scenario-more" onClick={() => setScenarioOpen(true)}>Read more</button>
                 )}
+              </div>
+            )}
+            {activeMod.module_specific_problem_statement && (
+              <div className="cd-stage-problem-card">
+                <div className="cd-stage-problem-head">
+                  <Target size={13} />
+                  <span>Problem Statement</span>
+                </div>
+                <p className="cd-stage-problem-text">{activeMod.module_specific_problem_statement}</p>
               </div>
             )}
             {isArtifactStage && currentArtifact ? (

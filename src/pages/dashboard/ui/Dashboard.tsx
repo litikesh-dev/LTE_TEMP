@@ -540,10 +540,10 @@ export function Dashboard() {
 
                   {/* level */}
                   <div className="dash-ip-meta">
-                    <span className="dash-ip-meta-label">Level</span>
+                    <span className="dash-ip-meta-label">Current Level</span>
                     <span className="dash-ip-meta-val">
                       <Layers size={13} className="dash-meta-icon" />
-                      L{course.currentLevel} → Target L{course.requiredLevel}
+                      L{course.currentLevel}
                     </span>
                   </div>
 
