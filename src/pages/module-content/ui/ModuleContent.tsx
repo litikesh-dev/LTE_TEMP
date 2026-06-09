@@ -1414,21 +1414,38 @@ export function ModuleContent() {
               {/* Fallback for any other resource type (case brief, worksheet, explainer, …) */}
               {activeContent &&
                 !['video', 'pdf', 'slide', 'image', 'doc', 'text'].includes(activeContent.content_type) && (
-                <div className="cd-doc-ph">
-                  {contentIcon(activeContent.content_type, 44)}
-                  <p>{activeContent.title}</p>
-                  {activeContent.url && activeContent.url !== '#' && (
-                    <a className="cd-btn-sm-outline" href={activeContent.url} target="_blank" rel="noopener noreferrer">
-                      <Download size={12} /> Open Resource
-                    </a>
-                  )}
-                  {viewedContent.has(activeContent.id)
-                    ? <span className="cd-content-viewed-badge"><CheckCircle2 size={13} /> Completed</span>
-                    : <button className="cd-content-done-trigger" onClick={() => handleMarkContentViewed(activeContent.id)}>
-                        <CheckCircle2 size={14} /> Mark as Completed
-                      </button>
+                (() => {
+                  const url = activeContent.url ?? '';
+                  const hasUrl = url && url !== '#';
+                  const isOffice = /\.(pptx?|docx?|xlsx?)(\?|$)/i.test(url);
+                  const isPdf = /\.pdf(\?|$)/i.test(url);
+                  if (hasUrl && (isOffice || isPdf)) {
+                    const viewerSrc = isOffice
+                      ? `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`
+                      : url;
+                    return (
+                      <div className="cd-embed-wrap">
+                        <iframe className="cd-embed-frame" src={viewerSrc} title={activeContent.title} allowFullScreen />
+                      </div>
+                    );
                   }
-                </div>
+                  return (
+                    <div className="cd-doc-ph">
+                      {contentIcon(activeContent.content_type, 44)}
+                      <p>{activeContent.title}</p>
+                      {hasUrl && (
+                        <a className="cd-btn-sm-outline" href={url} target="_blank" rel="noopener noreferrer">
+                          <Download size={12} /> Open Resource
+                        </a>
+                      )}
+                      {viewedContent.has(activeContent.id)
+                        ? <span className="cd-content-viewed-badge"><CheckCircle2 size={13} /> Completed</span>
+                        : <button className="cd-content-done-trigger" onClick={() => handleMarkContentViewed(activeContent.id)}>
+                            <CheckCircle2 size={14} /> Mark as Completed
+                          </button>}
+                    </div>
+                  );
+                })()
               )}
             </div>
 
