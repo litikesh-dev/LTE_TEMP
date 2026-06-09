@@ -6,8 +6,6 @@ import {
   ChevronRight,
   Zap,
   Award,
-  Layers,
-  Target,
   Info,
 } from 'lucide-react';
 import './CourseCard.css';
@@ -98,7 +96,6 @@ export function CourseCard(props: CourseCardProps) {
     title,
     course_code,
     thumbnail_url,
-    job_pathway_role,
     duration,
     difficulty_level,
     status,
@@ -107,7 +104,6 @@ export function CourseCard(props: CourseCardProps) {
     match_reason,
     sequence_no,
     mode = 'dashboard',
-    domain_name,
     certification_value,
     current_level,
     required_level,
@@ -158,20 +154,6 @@ export function CourseCard(props: CourseCardProps) {
 
       {/* ── Body ── */}
       <div className="cc-body">
-        {/* Domain & Role tags */}
-        <div className="cc-tags-row">
-          {domain_name && (
-            <div className="cc-domain-tag">
-              <Layers size={10} />
-              {domain_name}
-            </div>
-          )}
-          <div className="cc-role-tag">
-            <Target size={10} />
-            {job_pathway_role}
-          </div>
-        </div>
-
         {/* Title */}
         <h3 className="cc-title" title={title}>
           {title}
@@ -179,7 +161,7 @@ export function CourseCard(props: CourseCardProps) {
 
         {/* Certification badge */}
         {certification_value && (
-          <div className="cc-cert-badge">
+          <div className="cc-cert-badge" title={certification_value}>
             <Award size={11} />
             <span>{certification_value}</span>
           </div>
@@ -199,7 +181,28 @@ export function CourseCard(props: CourseCardProps) {
           </span>
         </div>
 
-        {/* Level bar */}
+        {/* Stats */}
+        {relevance_score !== undefined && (
+          <div className="cc-stats">
+            <div className="cc-stat">
+              <ProgressRing value={relevance_score} size={36} />
+              <div className="cc-stat-text">
+                <span className="cc-stat-val">{relevance_score}%</span>
+                <span className="cc-stat-lbl">Relevance</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Why recommended */}
+        {match_reason && (
+          <div className="cc-match-reason">
+            <Zap size={11} />
+            <span>{match_reason}</span>
+          </div>
+        )}
+
+        {/* Level bar — pinned to the bottom, just above the CTA */}
         {current_level !== undefined && (
           <div className="cc-level">
             <div className="cc-level-head">
@@ -221,27 +224,6 @@ export function CourseCard(props: CourseCardProps) {
                 />
               ))}
             </div>
-          </div>
-        )}
-
-        {/* Stats */}
-        {relevance_score !== undefined && (
-          <div className="cc-stats">
-            <div className="cc-stat">
-              <ProgressRing value={relevance_score} size={36} />
-              <div className="cc-stat-text">
-                <span className="cc-stat-val">{relevance_score}%</span>
-                <span className="cc-stat-lbl">Relevance</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Why recommended */}
-        {match_reason && (
-          <div className="cc-match-reason">
-            <Zap size={11} />
-            <span>{match_reason}</span>
           </div>
         )}
 

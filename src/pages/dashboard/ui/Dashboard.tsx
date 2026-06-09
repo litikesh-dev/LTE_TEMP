@@ -575,23 +575,6 @@ export function Dashboard() {
             </div>
           </section>
 
-          <section className="dash-section">
-            <div className="dash-section-head">
-              <h2 className="dash-section-title">
-                New enrollment
-                <Info size={14} className="dash-info-icon" />
-              </h2>
-              <a href="#" className="dash-view-all">
-                View all
-              </a>
-            </div>
-
-            <div className="dash-enroll-grid">
-              {enrollments.map(card => (
-                <CourseCard key={card.id} {...card} />
-              ))}
-            </div>
-          </section>
         </div>
 
         <aside className="dash-right">
@@ -695,6 +678,24 @@ export function Dashboard() {
             </div>
           </div>
         </aside>
+
+        <section className="dash-section dash-section--full">
+          <div className="dash-section-head">
+            <h2 className="dash-section-title">
+              New enrollment
+              <Info size={14} className="dash-info-icon" />
+            </h2>
+            <a href="#" className="dash-view-all">
+              View all
+            </a>
+          </div>
+
+          <div className="dash-enroll-grid">
+            {enrollments.map(card => (
+              <CourseCard key={card.id} {...card} />
+            ))}
+          </div>
+        </section>
 
         <section className="dash-section dash-section--full dash-section--leaderboard">
           <div className="dash-section-head">
