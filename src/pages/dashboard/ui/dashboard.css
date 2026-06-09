@@ -527,6 +527,23 @@
   box-shadow: 0 4px 12px rgb(79 70 229 / 20%);
 }
 
+.dash-action-btn--locked {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-color: #e2e8f0;
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+.dash-action-btn--locked:hover {
+  background: #f1f5f9;
+  color: #94a3b8;
+  transform: none;
+  box-shadow: none;
+}
+
 /* ── enrollment grid ─────────────────────────────────────────── */
 .dash-enroll-grid {
   display: grid;

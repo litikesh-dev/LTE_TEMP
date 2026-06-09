@@ -18,6 +18,10 @@ export function Login() {
       setError('Please enter your email.');
       return;
     }
+    if (!password.trim()) {
+      setError('Please enter your password.');
+      return;
+    }
     setLoading(true);
     const { data, error: dbError } = await supabase
       .from('accounts')

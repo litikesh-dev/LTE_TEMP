@@ -8,6 +8,7 @@ import {
   Clock,
   Info,
   Layers,
+  Lock,
   LayoutDashboard,
   Medal,
   ScrollText,
@@ -52,6 +53,7 @@ interface InProgressCourse {
   completion: number | null;
   deadline: string;
   deadlineUrgent: boolean;
+  locked: boolean;
   action: 'Start' | 'Continue';
   thumbColor: string;
 }
@@ -104,6 +106,8 @@ const inProgress: InProgressCourse[] = allCourses.map((c, i) => ({
   completion: c.status === 'not_started' ? null : (c.completion_percentage ?? 0),
   deadline: c.status === 'in_progress' ? '12 hrs' : '1 Day',
   deadlineUrgent: c.status === 'in_progress',
+  // Only the active (in-progress) course is unlocked; later levels are locked.
+  locked: c.status !== 'in_progress' && c.status !== 'completed',
   action: c.status === 'in_progress' ? 'Continue' : 'Start',
   thumbColor: COURSE_THUMBS[i % COURSE_THUMBS.length],
 }));
@@ -560,12 +564,18 @@ export function Dashboard() {
                     )}
                   </div>
 
-                  <button
-                    className={`dash-action-btn${course.action === 'Continue' ? ' dash-action-btn--outline' : ''}`}
-                    onClick={() => navigate(`/courses/${course.courseId}`)}
-                  >
-                    {course.action}
-                  </button>
+                  {course.locked ? (
+                    <button className="dash-action-btn dash-action-btn--locked" disabled title="Complete the previous level to unlock">
+                      <Lock size={13} /> Locked
+                    </button>
+                  ) : (
+                    <button
+                      className={`dash-action-btn${course.action === 'Continue' ? ' dash-action-btn--outline' : ''}`}
+                      onClick={() => navigate(`/courses/${course.courseId}`)}
+                    >
+                      {course.action}
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
