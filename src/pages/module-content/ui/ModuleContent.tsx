@@ -1373,8 +1373,15 @@ export function ModuleContent() {
                   }
                 </div>
               )}
-              {/* Slide / Image */}
-              {(activeContent?.content_type === 'slide' || activeContent?.content_type === 'image') && (
+              {/* Image — render the actual image when a real URL is present */}
+              {activeContent?.content_type === 'image' && activeContent.url && activeContent.url !== '#' && (
+                <div className="cd-image-wrap">
+                  <img className="cd-image" src={activeContent.url} alt={activeContent.title} />
+                </div>
+              )}
+              {/* Slide / Image placeholder (no real URL) */}
+              {((activeContent?.content_type === 'slide') ||
+                (activeContent?.content_type === 'image' && (!activeContent.url || activeContent.url === '#'))) && (
                 <div className="cd-doc-ph">
                   <Layers size={44} />
                   <p>{activeContent.title}</p>
@@ -1421,7 +1428,7 @@ export function ModuleContent() {
                   const isPdf = /\.pdf(\?|$)/i.test(url);
                   if (hasUrl && (isOffice || isPdf)) {
                     const viewerSrc = isOffice
-                      ? `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`
+                      ? `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`
                       : url;
                     return (
                       <div className="cd-embed-wrap">

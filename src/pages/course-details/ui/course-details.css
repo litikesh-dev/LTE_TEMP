@@ -1480,6 +1480,14 @@
   color: #34d399; font-size: 0.8rem; font-weight: 600;
 }
 
+.cd-image-wrap {
+  width: 100%; height: 100%; display: flex;
+  background: #fff; overflow: auto;
+}
+.cd-image {
+  width: 100%; height: 100%; object-fit: contain; display: block;
+}
+
 .cd-embed-wrap {
   width: 100%; height: 100%; display: flex; flex-direction: column;
   background: #fff;
