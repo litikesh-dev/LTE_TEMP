@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GraduationCap, Mail, ArrowRight, Loader2 } from 'lucide-react';
 import { supabase } from '@/shared/api/supabaseClient';
 import { setSession } from '@/shared/api/session';
@@ -9,6 +9,33 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Auto-login when arriving from SkillPassport with ?email=<address>
+  // (career-track handoff). Looks up the account like the form does and
+  // lands on the dashboard without showing the login screen.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const handoffEmail = params.get('email')?.trim().toLowerCase();
+    if (!handoffEmail) return;
+    setLoading(true);
+    supabase
+      .from('accounts')
+      .select('slug, name, email')
+      .eq('email', handoffEmail)
+      .limit(1)
+      .maybeSingle()
+      .then(({ data, error: dbError }) => {
+        setLoading(false);
+        if (dbError || !data) {
+          setError('No account found for that email.');
+          setEmail(handoffEmail);
+          return;
+        }
+        setSession(data.slug as string, handoffEmail, (data.name as string) ?? '');
+        // Drop the query param so a reload doesn't re-trigger auto-login.
+        window.location.replace('/');
+      });
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
