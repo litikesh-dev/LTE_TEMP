@@ -27,3 +27,6 @@ build
 
 # Local env (secrets)
 .env
+
+# Temporary tooling files
+.temp/
